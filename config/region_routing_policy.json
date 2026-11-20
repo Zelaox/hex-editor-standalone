@@ -9,7 +9,6 @@
   "pe_sections_fail": "fail_closed",
   "plugin_region_strategies": {
     "pe": "pe_sections",
-    "ptx": "whole_file_structural",
     "rtf": "whole_file_structural",
     "html": "whole_file_structural",
     "unknown": "whole_file_unknown"
@@ -29,17 +28,6 @@
       "render_budgets": {
         "max_sections": 16,
         "max_import_dlls": 12
-      }
-    },
-    "ptx": {
-      "structural_module": "ptx_analyze",
-      "append_semantic_plaintext_clusters": true,
-      "semantic_policy_path": "config/semantic_pseudocode_policy.json",
-      "render_budgets": {
-        "max_sections": 8,
-        "max_timecodes": 12,
-        "max_metadata_keys": 16,
-        "max_session_strings": 8
       }
     }
   },
