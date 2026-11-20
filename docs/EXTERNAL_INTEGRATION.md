@@ -17,7 +17,7 @@ Hex Editor does **not** call back into a host. It does **not** load Lab controll
 
 | Surface | Host uses | Hex Editor provides |
 |---------|-----------|---------------------|
-| **MCP stdio** | Spawn `scripts/hex_mcp_server.py` with `cwd` = checkout | 79 tools, JSON schemas, bounded file access |
+| **MCP stdio** | Spawn `scripts/hex_mcp_server.py` with `cwd` = checkout | 58 tools, JSON schemas, bounded file access |
 | **CLI** | `scripts/hex_tool_cli.py list` / `run <tool>` | Same contracts as MCP, no server process |
 | **Desktop bridge** | Write JSON commands to `data/runtime/hex_editor/inbox/` (or `--lab-bridge` runtime dir) | GUI applies `open` / related commands via `hexeditor_tools.desktop` |
 | **Direct GUI** | User double-clicks `main.py` | Full editor; no host |
@@ -63,7 +63,7 @@ Optional GUI live bridge: start `main.py --lab-bridge <runtime_dir>` only when a
 
 `tests/test_standalone_interfaces.py` proves:
 
-- 79 tools enabled and schema-valid
+- 58 tools enabled and schema-valid
 - CLI works from a foreign directory without Lab on `PYTHONPATH`
 - MCP stdio round-trip
 - Owned desktop process accepts an `open` command
