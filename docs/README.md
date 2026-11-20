@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project is a PyQt5 binary workspace: bounded reads/writes, semantic graphs, diffs, snapshots, forensics plugins, and MCP tools. **PTX and session converters** are optional format modules; the core surface is format-agnostic hex and binary analysis.
+This project is a PyQt5 binary workspace: bounded reads/writes, semantic graphs, diffs, snapshots, and MCP tools. **PTX and session converters** are optional format modules; the core surface is format-agnostic hex and binary analysis.
 
 ## Learned plaintext byte profiles
 
@@ -16,9 +16,7 @@ The generated local library is stored below the AI Lab runtime-data root configu
 
 ## Learning DB (cross-run memory index)
 
-Browser-storage parsing, isolated workers, forensic LearnerDB associations, read-only inspection, deterministic replay and finding-to-hex navigation are documented in [Browser storage forensics](BROWSER_STORAGE_FORENSICS.md). That guide states supported formats and remaining limits explicitly.
-
-The hex editor maintains a **config-driven SQLite learning index** that accumulates evidence from forensic rails over time. Binary payloads and manifests stay on disk in the existing artifact store; the DB stores queryable metadata only (hashes, run status, candidate states, findings, parser observations).
+The hex editor maintains a **config-driven SQLite learning index** for decode/parser runs. Binary payloads and manifests stay on disk in the artifact store; the DB stores queryable metadata only (hashes, run status, candidate states, findings, parser observations).
 
 - Policy: `config/learning_db_policy.json` — table definitions, sync behavior, query limits, DB path source
 - Registry: `config/learning_db_registry.json` — indexer field maps from artifact JSON into DB rows (no hardcoded offsets, paths, or thresholds in Python)

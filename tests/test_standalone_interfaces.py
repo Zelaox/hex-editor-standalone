@@ -49,7 +49,7 @@ def test_cli_from_foreign_directory_without_lab(tmp_path):
                               cwd=tmp_path, env=env, text=True, encoding='utf-8', capture_output=True, timeout=30)
     listed = run('list')
     assert listed.returncode == 0, listed.stderr
-    assert json.loads(listed.stdout)['tool_count'] == 79
+    assert json.loads(listed.stdout)['tool_count'] == 68
     result = run('run', 'binary_file_info', '--param', 'path=' + str(source))
     assert result.returncode == 0, result.stderr
     assert json.loads(result.stdout)['source']['sha256'] == hashlib.sha256(source.read_bytes()).hexdigest()

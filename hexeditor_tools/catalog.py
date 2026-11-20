@@ -33,36 +33,9 @@ _ARTIFACT_TAGS = [
 ]
 
 
-def _forensic_definitions() -> Dict[str, Dict[str, Any]]:
-    required = lambda description: {"type": "string", "required": True, "description": description}
-    run = required("Allowlisted saved forensic run directory.")
-    resolve = {"run_path": run, "finding_id": required("Stable finding identity."),
-               "input_root": required("Allowlisted acquisition root."), "case_id": required("Required case scope.")}
-    specs = {
-        "binary_message_transform_probe": ("Bounded isolated XOR/encoding hypotheses using the existing Hex Editor executor and structural validators; sealed candidates, never printability-based decryption claims.", {"spec_path":required("Allowlisted source-copy spec."),"output_workspace":required("Allowlisted sealed output root."),"confirmed":{"type":"boolean","required":True},"policy_path":{"type":"string","required":False},"recovery_policy_path":{"type":"string","required":False},"transform_policy_path":{"type":"string","required":False}}, "reversible_mutation"),
-        "binary_message_recover": ("Inspect saved IndexedDB/V8 and selected JSON schemas; export current-user sealed text candidates, never claim decryption.", {"spec_path": required("Allowlisted source manifest."), "output_workspace": required("Allowlisted private output root."), "confirmed": {"type": "boolean", "required": True}, "policy_path":{"type":"string","required":False}, "recovery_policy_path":{"type":"string","required":False}}, "reversible_mutation"),
-        "binary_message_export": ("Explicitly export authenticated text observations/candidates and locally framed media to UNENCRYPTED HTML, TXT and JSON; no full-history/decryption claim.", {"spec_path":required("Allowlisted export spec with explicit source runs/cases and optional media spec."),"output_workspace":required("Allowlisted output root. Output is plaintext."),"confirmed":{"type":"boolean","required":True}}, "reversible_mutation"),
-        "binary_format_detect": ("Detect storage format in an isolated worker; no decryption claims.", {"path": required("Allowlisted source copy."), "format_hint": {"type": "string", "required": False}}, "evidence_read"),
-        "binary_forensic_analyze": ("Analyze a manifest in isolated workers and export an evidence-bound run.", {"spec_path": required("Allowlisted schema-validated input manifest."), "output_workspace": required("Allowlisted output directory."), "confirmed": {"type": "boolean", "required": True}}, "reversible_mutation"),
-        "binary_forensic_inspect": ("Read verified forensic coverage and status without rerunning parsers.", {"run_path": run}, "evidence_read"),
-        "binary_forensic_replay": ("Replay a saved policy/registry against matching source hashes; compare canonical result digests.", {"run_path": run, "input_root": required("Allowlisted acquisition root."), "output_workspace": required("Allowlisted output directory."), "confirmed": {"type": "boolean", "required": True}}, "reversible_mutation"),
-        "binary_forensic_verify": ("Verify result/journal hashes and optionally the source copies.", {"run_path": run, "input_root": {"type": "string", "required": False}}, "evidence_read"),
-        "binary_forensic_resolve": ("Resolve a finding through verified source maps, without opening UI.", resolve, "evidence_read"),
-        "binary_forensic_open_finding": ("Open verified finding ranges in the desktop editor.", resolve, "irreversible_external"),
-        "binary_learning_db_inspect": ("Read checkpointed LearnerDB without schema creation, migration or sync.", {}, "evidence_read")
-    }
-    return {name: {"description": description, "parameters": params,
-                   "function": getattr(hex_editor_tools, name), "effect": effect,
-                   "tags": _READ_TAGS if effect == "evidence_read" else (
-                       ["hex", "binary", "capability:desktop_control", "effect:"+effect]
-                       if effect == "irreversible_external" else _ARTIFACT_TAGS),
-                   "visibility": "public"} for name, (description, params, effect) in specs.items()}
-
-
 def _definitions() -> Dict[str, Dict[str, Any]]:
     path = {"type": "string", "required": True, "description": "Allowlisted binary file path."}
     return {
-        **_forensic_definitions(),
         "binary_file_info": {
             "description": "Read file identity, SHA-256, size, and a 32-byte binary prefix.",
             "parameters": {"path": path},

@@ -10,17 +10,6 @@
   "max_search_matches": 200,
   "desktop_launch_timeout_seconds": 10,
   "enabled_operations": [
-    "binary_message_recover",
-    "binary_message_export",
-    "binary_message_transform_probe",
-    "binary_format_detect",
-    "binary_forensic_analyze",
-    "binary_forensic_replay",
-    "binary_forensic_inspect",
-    "binary_forensic_verify",
-    "binary_forensic_resolve",
-    "binary_forensic_open_finding",
-    "binary_learning_db_inspect",
     "binary_file_info",
     "binary_read_range",
     "binary_decode_range",
@@ -91,11 +80,6 @@
     "hex_editor_desktop_status"
   ],
   "llm_readonly_tools": [
-    "binary_format_detect",
-    "binary_forensic_inspect",
-    "binary_forensic_verify",
-    "binary_forensic_resolve",
-    "binary_learning_db_inspect",
     "binary_file_info",
     "binary_read_range",
     "binary_decode_range",
@@ -151,8 +135,6 @@
     "binary_write_file"
   ],
   "dashboard_output_operations": [
-    "binary_forensic_replay",
-    "binary_forensic_analyze",
     "export_binary_analysis",
     "extract_ptx_artifacts",
     "ptx_unpack_runtime",
@@ -166,9 +148,6 @@
     "binary_record_family_run",
     "binary_full_decode_run",
     "binary_unresolved_inference_run",
-    "binary_message_transform_probe",
-    "binary_message_recover",
-    "binary_message_export",
     "binary_full_decode_resume",
     "binary_unresolved_inference_resume"
   ]

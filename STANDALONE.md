@@ -25,7 +25,7 @@ Workspace paths: `config/workspace_roots.json` or `HEX_EDITOR_WORKSPACE_CONFIG`.
 
 ## Agent contract
 
-- **79 tools** in catalog; schemas validated in `tests/test_standalone_interfaces.py`
+- **68 tools** in catalog; schemas validated in `tests/test_standalone_interfaces.py`
 - Fail-closed paths, no host database, no Lab MCP package import
 - Optional format pipelines (e.g. PTX) via config—not required for core binary tools
 

@@ -1,6 +1,6 @@
 # Universal Hex Editor for AI Agents
 
-A **standalone** binary workspace for humans and **AI agents**: bounded file access, structured analysis, reversible edits, and **79 MCP/CLI tools** on a single contract—without tying you to one file format or one host application.
+A **standalone** binary workspace for humans and **AI agents**: bounded file access, structured analysis, reversible edits, and **68 MCP/CLI tools** on a single contract—without tying you to one file format or one host application.
 
 - **Desktop GUI** for interactive inspection and editing  
 - **CLI** (`hex_tool_cli.py`) for scripts and CI  
@@ -52,7 +52,7 @@ Set `HEX_EDITOR_WORKSPACE_CONFIG` to a JSON file with `allowed_roots` so tools o
 | **Binary semantic graph** | Offsets, relationships, unresolved bytes, proof-gated claims |
 | **Diff & waterfall** | Cross-snapshot compare without filename magic |
 | **Snapshots & artifacts** | Content-addressed runs under `data/` (local, gitignored) |
-| **Forensics plugins** | PE, browser storage, protobuf/SQLite/LevelDB (policy-bounded) |
+| **PE / structure** | PE snapshots, bounded disassembly, execution trace helpers |
 | **Desktop bridge** | Optional owned GUI process + inbox commands (`hexeditor_tools.desktop`) |
 | **Full decode / transforms** | Registry-driven; no hardcoded case offsets in core paths |
 
@@ -65,7 +65,7 @@ PTX, CPR, and session-specific pipelines are **optional format modules**—not t
 .\.venv\Scripts\python.exe -m pytest tests/test_standalone_interfaces.py -q
 ```
 
-Expect **79** tools, MCP round-trip, CLI from an external cwd, and GUI `open` acknowledgment—without Lab on `PYTHONPATH`.
+Expect **68** tools, MCP round-trip, CLI from an external cwd, and GUI `open` acknowledgment—without Lab on `PYTHONPATH`.
 
 ## Documentation map
 
@@ -74,7 +74,6 @@ Expect **79** tools, MCP round-trip, CLI from an external cwd, and GUI `open` ac
 | [STANDALONE.md](STANDALONE.md) | Install surfaces, env vars |
 | [docs/EXTERNAL_INTEGRATION.md](docs/EXTERNAL_INTEGRATION.md) | UVE, TRIAGE, RE, MCP hosts |
 | [docs/README.md](docs/README.md) | Deep feature index |
-| [docs/BROWSER_STORAGE_FORENSICS.md](docs/BROWSER_STORAGE_FORENSICS.md) | Storage forensics limits |
 | [docs/BINARY_DIFF_VIEW.md](docs/BINARY_DIFF_VIEW.md) | Diff / compatibility |
 | [PTX_ANALYZER.md](PTX_ANALYZER.md) | *Optional* Pro Tools PTX format notes |
 | [PTX_REBUILDER.md](PTX_REBUILDER.md) | *Optional* PTX rebuild CLI |
