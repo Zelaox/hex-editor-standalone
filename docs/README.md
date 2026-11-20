@@ -234,3 +234,7 @@ Expect **58** tools and **4** interface tests (catalog schemas, CLI from foreign
 ## Safety
 
 Keep an untouched copy of any source binary. Bounded tools refuse paths outside workspace config. Write and artifact-export tools require explicit confirmation flags where documented. Parser and decrypt **claims** stay in `model_hypotheses` until byte-backed gates pass — see `hexeditor_tools/evidence.py` epistemic rules.
+
+## License & collaboration
+
+Licensed under the [Apache License 2.0](../LICENSE). Anyone may download, modify, and collaborate on this project. **Vem som helst** kan ladda ner, ändra och samarbeta — fork och pull requests välkomna.

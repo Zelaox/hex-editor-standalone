@@ -45,6 +45,18 @@ Expect **58** tools and **4** interface tests passing.
 | [docs/README.md](docs/README.md) | Feature index |
 | [docs/BINARY_DIFF_VIEW.md](docs/BINARY_DIFF_VIEW.md) | Diff / compatibility |
 
+## Open source & collaboration
+
+This repository is **public and open source** under the [Apache License 2.0](LICENSE).
+
+**English:** Anyone may **clone, download, use, modify, fork, and contribute**. Pull requests, issues, and discussions are welcome. You keep your own copyright on contributions; the license governs redistribution.
+
+**Svenska:** Projektet är **öppen källkod**. **Vem som helst** kan ladda ner, använda, ändra, fork:a och **samarbeta** — välkommen med pull requests och issues.
+
+```powershell
+git clone https://github.com/Zelaox/hex-editor-standalone.git
+```
+
 ## Requirements
 
 Python 3.10+, PyQt5 — see `requirements.txt`, `requirements-mcp.txt`.
