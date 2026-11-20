@@ -154,7 +154,7 @@ def record_family_items(source_sha256: str) -> List[StructureItem]:
     return items
 
 
-def ptx_handler_items(file_handler, *, preview_limit: int) -> List[StructureItem]:
+def handler_structure_items(file_handler, *, preview_limit: int) -> List[StructureItem]:
     items: List[StructureItem] = []
     if file_handler is None:
         return items

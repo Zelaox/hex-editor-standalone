@@ -807,19 +807,6 @@ class HexEditor(QObject):
             self._loaded_stat = self._source_stat(file_path)
             self.logger.info(f"Loaded file: {file_path}, size: {file_size} bytes")
 
-            self.is_ptx_file = self._is_ptx_candidate(file_path)
-            if self.is_ptx_file:
-                from src.ptx_handler import PTXFile
-
-                self.ptx_handler = PTXFile(file_path)
-                parse_generation = self._parse_generation
-                self.parsing_thread = threading.Thread(
-                    target=self._parse_ptx_in_background,
-                    args=(parse_generation, self.ptx_handler),
-                )
-                self.parsing_thread.daemon = True
-                self.parsing_thread.start()
-
             self.setup_file_monitoring(file_path)
             self.is_modified = False
             QTimer.singleShot(0, lambda fp=file_path, sz=file_size: self.file_loaded.emit(fp, sz))

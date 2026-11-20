@@ -86,7 +86,7 @@ def test_all_docks_have_object_names():
         "bookmarks_dock",
         "search_results_dock",
         "file_structure_dock",
-        "ptx_metadata_dock",
+        "runtime_overview_dock",
         "binary_inspector_dock",
     }
     actual = {

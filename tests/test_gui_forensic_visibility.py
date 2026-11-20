@@ -153,7 +153,7 @@ def test_app_wiring_helpers_exist():
     from src.app import HexEditorApp
 
     assert hasattr(HexEditorApp, "_refresh_forensic_context")
-    assert hasattr(HexEditorApp, "goto_next_timecode")
+    assert hasattr(HexEditorApp, "goto_offset_from_signal")
     assert hasattr(HexEditorApp, "analyze_current_binary")
 
 
@@ -224,7 +224,7 @@ def test_snapshot_analysis_starts_even_when_inspector_hidden(monkeypatch):
     controller._pending_forensic_timer = SimpleNamespace(stop=lambda: None)
     controller._cleanup_snapshot_thread = lambda: None
     controller._cleanup_forensic_thread = lambda: None
-    controller._pending_binary_analysis = ("stale.ptx", ".ptx")
+    controller._pending_binary_analysis = ("stale.exe", ".exe")
 
     started = {"ok": False}
 
@@ -244,10 +244,10 @@ def test_snapshot_analysis_starts_even_when_inspector_hidden(monkeypatch):
             finished=SimpleNamespace(connect=lambda *_args, **_kwargs: None),
         ),
     )
-    monkeypatch.setattr("src.runtime.format_router.detect_format_plugin", lambda *_a, **_k: "ptx")
-    monkeypatch.setattr("src.runtime.config.load_binary_dynamic_config", lambda: {"ptx_suffixes": [".ptx"]})
+    monkeypatch.setattr("src.runtime.format_router.detect_format_plugin", lambda *_a, **_k: "pe")
+    monkeypatch.setattr("src.runtime.config.load_binary_dynamic_config", lambda: {"pe_suffixes": [".exe"]})
 
-    HexEditorApp._start_snapshot_analysis(controller, "file.ptx", ".ptx")
+    HexEditorApp._start_snapshot_analysis(controller, "file.exe", ".exe")
     assert started["ok"] is True
     assert controller._pending_binary_analysis is None
 

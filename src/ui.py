@@ -26,40 +26,17 @@ from src.binary_inspector_widget import BinaryInspectorWidget
 # Get a logger for this module
 logger = get_logger('ui')
 
-class PTXMetadataWidget(QWidget):
-    """A widget for displaying PTX metadata."""
-    
-    def __init__(self, parent=None):
-        """Initialize the PTX metadata widget."""
-        super().__init__(parent)
-        self.logger = get_logger('ptx_metadata_widget')
-        self.logger.debug("Initializing PTX Metadata Widget")
-        
-        self.setup_ui()
-        
-    def setup_ui(self):
-        """Set up the user interface."""
-        layout = QVBoxLayout(self)
-        
-        # Create tabs for different views
-        self.tabs = QTabWidget()
-        
-        # Timecode tab
-        self.timecode_widget = QTableWidget()
-        self.timecode_widget.setColumnCount(4)
-        self.timecode_widget.setHorizontalHeaderLabels(["Offset", "Value", "Type", "Go to"])
-        self.timecode_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.timecode_widget.setSelectionBehavior(QTableWidget.SelectRows)
-        self.timecode_widget.setEditTriggers(QTableWidget.NoEditTriggers)
-        
-        # Session metadata tab
-        self.metadata_widget = QTableWidget()
-        self.metadata_widget.setColumnCount(3)
-        self.metadata_widget.setHorizontalHeaderLabels(["Description", "Value", "Go to"])
-        self.metadata_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.metadata_widget.setSelectionBehavior(QTableWidget.SelectRows)
-        self.metadata_widget.setEditTriggers(QTableWidget.NoEditTriggers)
+class RuntimeOverviewWidget(QWidget):
+    """Binary runtime snapshot overview (coverage / session nodes)."""
 
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.logger = get_logger('runtime_overview_widget')
+        self.setup_ui()
+
+    def setup_ui(self):
+        layout = QVBoxLayout(self)
+        self.tabs = QTabWidget()
         self.session_inspector_widget = QTableWidget()
         self.session_inspector_widget.setColumnCount(5)
         self.session_inspector_widget.setHorizontalHeaderLabels(["Kind", "Name", "Offset", "Length", "Confidence"])
@@ -74,38 +51,12 @@ class PTXMetadataWidget(QWidget):
         self.binary_waterfall_widget.setSelectionBehavior(QTableWidget.SelectRows)
         self.binary_waterfall_widget.setEditTriggers(QTableWidget.NoEditTriggers)
         
-        # Add widgets to tabs
-        self.tabs.addTab(self.timecode_widget, "Timecodes")
-        self.tabs.addTab(self.metadata_widget, "Session Metadata")
         self.tabs.addTab(self.session_inspector_widget, "Session Inspector")
         self.tabs.addTab(self.binary_waterfall_widget, "Binary Waterfall")
-        
-        # Add buttons for PTX-specific operations
-        button_layout = QHBoxLayout()
-        
-        self.decrypt_button = QPushButton("Decrypt PTX")
-        self.decrypt_button.clicked.connect(self.on_decrypt_clicked)
-        
-        self.extract_button = QPushButton("Extract Sections")
-        self.extract_button.clicked.connect(self.on_extract_clicked)
-        
-        self.export_json_button = QPushButton("Export as JSON")
-        self.export_json_button.clicked.connect(self.on_export_json_clicked)
-        
-        button_layout.addWidget(self.decrypt_button)
-        button_layout.addWidget(self.extract_button)
-        button_layout.addWidget(self.export_json_button)
-        
-        # Add to layout
         layout.addWidget(self.tabs)
-        layout.addLayout(button_layout)
-        
         self.setLayout(layout)
-        
+
     def clear(self):
-        """Clear all data from the widget."""
-        self.timecode_widget.setRowCount(0)
-        self.metadata_widget.setRowCount(0)
         self.session_inspector_widget.setRowCount(0)
         self.binary_waterfall_widget.setRowCount(0)
 
@@ -154,155 +105,11 @@ class PTXMetadataWidget(QWidget):
                 if column == 0:
                     cell.setData(Qt.UserRole, int(item.get("offset") or 0))
                 self.binary_waterfall_widget.setItem(row_index, column, cell)
-        
-    def update_from_ptx_file(self, ptx_file):
-        """
-        Update the widget with data from a PTX file.
-        
-        Args:
-            ptx_file: PTXFile instance to get data from
-        """
-        self.clear()
-        
-        # Update timecodes
-        if hasattr(ptx_file, 'timecodes') and ptx_file.timecodes:
-            self.update_timecodes(ptx_file.timecodes)
-            
-        # Update metadata
-        if hasattr(ptx_file, 'metadata') and ptx_file.metadata:
-            self.update_metadata(ptx_file.metadata)
-            
-        # Update button states
-        self.decrypt_button.setEnabled(ptx_file.header and ptx_file.header.is_encrypted())
-        self.extract_button.setEnabled(bool(ptx_file.sections))
-        self.export_json_button.setEnabled(True)
-        
-    def update_timecodes(self, timecodes):
-        """
-        Update the timecode widget with the given timecodes.
-        
-        Args:
-            timecodes: List of timecode dictionaries
-        """
-        self.timecode_widget.setRowCount(len(timecodes))
-        
-        for row, tc in enumerate(timecodes):
-            # Offset
-            offset_item = QTableWidgetItem(f"0x{tc['offset']:08x}")
-            self.timecode_widget.setItem(row, 0, offset_item)
-            
-            # Value
-            value_item = QTableWidgetItem(tc['value'])
-            self.timecode_widget.setItem(row, 1, value_item)
-            
-            # Type
-            type_item = QTableWidgetItem(tc['type'])
-            self.timecode_widget.setItem(row, 2, type_item)
-            
-            # Go to button
-            goto_widget = QWidget()
-            goto_layout = QHBoxLayout(goto_widget)
-            goto_button = QPushButton("Go")
-            goto_button.setProperty("offset", tc['offset'])
-            goto_button.clicked.connect(self.on_goto_offset)
-            goto_layout.addWidget(goto_button)
-            goto_layout.setContentsMargins(0, 0, 0, 0)
-            self.timecode_widget.setCellWidget(row, 3, goto_widget)
-    
-    def update_metadata(self, metadata):
-        """
-        Update the metadata widget with the given metadata.
-        
-        Args:
-            metadata: Dictionary containing metadata
-        """
-        # Handle standard metadata first
-        standard_metadata = {k: v for k, v in metadata.items() if not isinstance(k, int)}
-        key_offset_metadata = {k: v for k, v in metadata.items() if isinstance(k, int)}
-        
-        row_count = len(standard_metadata) + len(key_offset_metadata)
-        self.metadata_widget.setRowCount(row_count)
-        
-        row = 0
-        
-        # Add standard metadata
-        for key, value in standard_metadata.items():
-            # Description
-            desc_item = QTableWidgetItem(key)
-            self.metadata_widget.setItem(row, 0, desc_item)
-            
-            # Value
-            if isinstance(value, dict):
-                value_text = json.dumps(value, indent=2)
-            else:
-                value_text = str(value)
-            value_item = QTableWidgetItem(value_text)
-            self.metadata_widget.setItem(row, 1, value_item)
-            
-            # No goto button for standard metadata
-            row += 1
-        
-        # Add key offset metadata
-        for offset, data in key_offset_metadata.items():
-            # Description
-            desc_item = QTableWidgetItem(data['description'])
-            self.metadata_widget.setItem(row, 0, desc_item)
-            
-            # Value - Try to show a readable representation
-            if 'interpretation' in data and 'ascii' in data['interpretation']:
-                value_text = data['interpretation']['ascii']
-            else:
-                value_text = data['data']
-            value_item = QTableWidgetItem(value_text)
-            self.metadata_widget.setItem(row, 1, value_item)
-            
-            # Go to button
-            goto_widget = QWidget()
-            goto_layout = QHBoxLayout(goto_widget)
-            goto_button = QPushButton("Go")
-            goto_button.setProperty("offset", offset)
-            goto_button.clicked.connect(self.on_goto_offset)
-            goto_layout.addWidget(goto_button)
-            goto_layout.setContentsMargins(0, 0, 0, 0)
-            self.metadata_widget.setCellWidget(row, 2, goto_widget)
-            
-            row += 1
-    
-    def on_goto_offset(self):
-        """Handle clicking the Go button to navigate to an offset."""
-        button = self.sender()
-        offset = button.property("offset")
-        
-        if offset is not None:
-            # Emit a signal to navigate to the offset
-            self.parent().parent().goto_offset_signal.emit(offset)
-    
-    def on_decrypt_clicked(self):
-        """Handle clicking the Decrypt PTX button."""
-        # This will be connected to the decrypt_file method in the app
-        self.parent().parent().decrypt_ptx_signal.emit()
-    
-    def on_extract_clicked(self):
-        """Handle clicking the Extract Sections button."""
-        # This will be connected to the extract_ptx_sections method in the app
-        self.parent().parent().extract_ptx_signal.emit()
-    
-    def on_export_json_clicked(self):
-        """Handle clicking the Export as JSON button."""
-        # This will be connected to the export_ptx_json method in the app
-        self.parent().parent().export_ptx_json_signal.emit()
 
 class HexEditorMainWindow(QMainWindow):
     """Main window for the HexEditor application."""
-    
-    # Add signals for PTX operations
+
     goto_offset_signal = pyqtSignal(int)
-    decrypt_ptx_signal = pyqtSignal()
-    extract_ptx_signal = pyqtSignal()
-    export_ptx_json_signal = pyqtSignal()
-    next_timecode_signal = pyqtSignal()
-    prev_timecode_signal = pyqtSignal()
-    goto_timecode_signal = pyqtSignal()
     
     def __init__(self):
         """Initialize the main window."""
@@ -470,14 +277,13 @@ class HexEditorMainWindow(QMainWindow):
         self.file_structure_dock.setWidget(self.file_structure_widget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.file_structure_dock)
         
-        # PTX metadata dock
-        self.ptx_metadata_dock = QDockWidget("PTX Metadata", self)
-        self.ptx_metadata_dock.setObjectName("ptx_metadata_dock")
-        self.ptx_metadata_widget = PTXMetadataWidget(self.ptx_metadata_dock)
-        self.ptx_metadata_dock.setWidget(self.ptx_metadata_widget)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.ptx_metadata_dock)
+        self.runtime_overview_dock = QDockWidget("Runtime Overview", self)
+        self.runtime_overview_dock.setObjectName("runtime_overview_dock")
+        self.runtime_overview_widget = RuntimeOverviewWidget(self.runtime_overview_dock)
+        self.runtime_overview_dock.setWidget(self.runtime_overview_widget)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.runtime_overview_dock)
 
-        # Binary Inspector dock (PTX + PE unified snapshot view)
+        # Binary Inspector dock
         self.binary_inspector_dock = QDockWidget("Binary Inspector", self)
         self.binary_inspector_dock.setObjectName("binary_inspector_dock")
         self.binary_inspector_dock.setAllowedAreas(Qt.AllDockWidgetAreas)
@@ -640,6 +446,8 @@ class HexEditorMainWindow(QMainWindow):
         self.view_menu.addAction(self.file_structure_dock.toggleViewAction())
         if hasattr(self, "binary_inspector_dock"):
             self.view_menu.addAction(self.binary_inspector_dock.toggleViewAction())
+        if hasattr(self, "runtime_overview_dock"):
+            self.view_menu.addAction(self.runtime_overview_dock.toggleViewAction())
         
         # Create the extract menu
         self.extract_menu = self.menu_bar.addMenu("&Extract")
@@ -667,27 +475,6 @@ class HexEditorMainWindow(QMainWindow):
         self.verify_candidate_lineage_action = QAction("Verify Candidate Lineage", self)
         self.verify_candidate_lineage_action.setStatusTip("Verify cross-rail candidate hashes and upstream run linkage")
         self.tools_menu.addAction(self.verify_candidate_lineage_action)
-        
-        # Add PTX-specific actions to the Tools menu
-        self.decrypt_action = QAction("Decrypt PTX File", self)
-        self.decrypt_action.setStatusTip("Decrypt the current PTX file")
-        
-        self.extract_ptx_action = QAction("Extract PTX Sections", self)
-        self.extract_ptx_action.setStatusTip("Extract sections from the current PTX file")
-        
-        self.export_ptx_json_action = QAction("Export PTX as JSON", self)
-        self.export_ptx_json_action.setStatusTip("Export PTX file analysis as JSON")
-        
-        # Initially disable PTX-specific actions
-        self.decrypt_action.setEnabled(False)
-        self.extract_ptx_action.setEnabled(False)
-        self.export_ptx_json_action.setEnabled(False)
-        
-        # Add to Tools menu
-        self.tools_menu.addSeparator()
-        self.tools_menu.addAction(self.decrypt_action)
-        self.tools_menu.addAction(self.extract_ptx_action)
-        self.tools_menu.addAction(self.export_ptx_json_action)
         
         # Create the help menu
         self.help_menu = self.menu_bar.addMenu("&Help")
@@ -938,75 +725,3 @@ class HexEditorMainWindow(QMainWindow):
         self.flush_layout_save(recent_files=list(recent_files or []))
         logger.debug("Settings saved")
 
-    def show_ptx_view(self, visible=True):
-        """
-        Enable PTX-specific actions without forcing dock visibility.
-        
-        Args:
-            visible: Whether PTX menu actions should be enabled
-        """
-        self.decrypt_action.setEnabled(visible)
-        self.extract_ptx_action.setEnabled(visible)
-        self.export_ptx_json_action.setEnabled(visible)
-
-    def enable_ptx_menu(self, enabled: bool):
-        """
-        Enable or disable PTX-specific menu items.
-        
-        Args:
-            enabled: Whether to enable or disable the items
-        """
-        # Make sure the PTX menu exists
-        if not hasattr(self, 'ptx_menu'):
-            self.create_ptx_menu()
-        
-        # Set enabled state for all actions in the menu
-        for action in self.ptx_menu.actions():
-            action.setEnabled(enabled)
-    
-    def create_ptx_menu(self):
-        """Create the PTX menu in the main menu bar."""
-        # Create the PTX menu
-        self.ptx_menu = self.menuBar().addMenu("PTX")
-        
-        # Create decrypt action
-        self.decrypt_action = QAction("Decrypt PTX File", self)
-        self.decrypt_action.setStatusTip("Decrypt an encrypted PTX file")
-        self.decrypt_action.triggered.connect(self.decrypt_ptx_signal.emit)
-        self.ptx_menu.addAction(self.decrypt_action)
-        
-        # Create extract action
-        self.extract_ptx_action = QAction("Extract PTX Sections", self)
-        self.extract_ptx_action.setStatusTip("Extract sections from a PTX file")
-        self.extract_ptx_action.triggered.connect(self.extract_ptx_signal.emit)
-        self.ptx_menu.addAction(self.extract_ptx_action)
-        
-        # Create export action
-        self.export_ptx_json_action = QAction("Export PTX Analysis", self)
-        self.export_ptx_json_action.setStatusTip("Export PTX file analysis as JSON")
-        self.export_ptx_json_action.triggered.connect(self.export_ptx_json_signal.emit)
-        self.ptx_menu.addAction(self.export_ptx_json_action)
-        
-        self.ptx_menu.addSeparator()
-        
-        # Create timecode navigation actions
-        self.next_tc_action = QAction("Next Timecode", self)
-        self.next_tc_action.setStatusTip("Navigate to the next timecode")
-        self.next_tc_action.setShortcut("Ctrl+Right")
-        self.next_tc_action.triggered.connect(self.next_timecode_signal.emit)
-        self.ptx_menu.addAction(self.next_tc_action)
-        
-        self.prev_tc_action = QAction("Previous Timecode", self)
-        self.prev_tc_action.setStatusTip("Navigate to the previous timecode")
-        self.prev_tc_action.setShortcut("Ctrl+Left")
-        self.prev_tc_action.triggered.connect(self.prev_timecode_signal.emit)
-        self.ptx_menu.addAction(self.prev_tc_action)
-        
-        self.goto_tc_action = QAction("Go to Timecode Reference...", self)
-        self.goto_tc_action.setStatusTip("Navigate to a specific timecode reference point")
-        self.goto_tc_action.setShortcut("Ctrl+T")
-        self.goto_tc_action.triggered.connect(self.goto_timecode_signal.emit)
-        self.ptx_menu.addAction(self.goto_tc_action)
-        
-        # Disable all actions initially
-        self.enable_ptx_menu(False) 

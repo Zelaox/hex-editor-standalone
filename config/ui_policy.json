@@ -247,7 +247,7 @@
     "bookmarks_dock": false,
     "search_results_dock": false,
     "file_structure_dock": true,
-    "ptx_metadata_dock": false,
+    "runtime_overview_dock": false,
     "binary_inspector_dock": false
   },
   "dock_layout_hints": {

@@ -18,7 +18,7 @@ from src.hex_editor import HexEditor
 from src.search import SearchWorker, SearchHighlighter, SearchResult, classify_search_query
 from src.disassembler import DisassemblerWorker
 from src.extractor import BinaryExtractor
-from src.ptx_handler import PTXFile, detect_file_type
+from src.ptx_handler import detect_file_type
 from src.services.path_utils import normalize_input_path
 from src.logging_config import get_logger
 from src.utils import setup_logging, exception_hook
@@ -200,21 +200,7 @@ class HexEditorApp:
             self.main_window.pseudocode_text.selectionChanged.connect(self._schedule_pseudocode_to_hex)
         self.main_window.hex_editor.cursorPositionChanged.connect(self._schedule_hex_to_pseudocode)
         
-        # Connect PTX-specific signals
         self.main_window.goto_offset_signal.connect(self.goto_offset_from_signal)
-        self.main_window.decrypt_ptx_signal.connect(self.decrypt_ptx_file)
-        self.main_window.extract_ptx_signal.connect(self.extract_ptx_sections)
-        self.main_window.export_ptx_json_signal.connect(self.export_ptx_json)
-        self.hex_editor.timecodes_found.connect(self.handle_timecodes_found, Qt.QueuedConnection)
-
-        if hasattr(self.main_window, "next_timecode_signal"):
-            self.main_window.next_timecode_signal.connect(self.goto_next_timecode)
-        if hasattr(self.main_window, "prev_timecode_signal"):
-            self.main_window.prev_timecode_signal.connect(self.goto_prev_timecode)
-        if hasattr(self.main_window, "goto_timecode_signal"):
-            self.main_window.goto_timecode_signal.connect(self.goto_timecode_reference)
-
-        self._current_timecode_index = -1
         self._forensic_context: Dict[str, Any] = {}
         self._forensic_generation = 0
         self._pending_forensic_timer = QTimer()
@@ -231,17 +217,6 @@ class HexEditorApp:
         except Exception:
             pass
         
-        # Connect decrypt action
-        if hasattr(self.main_window, 'decrypt_action'):
-            self.main_window.decrypt_action.triggered.connect(self.decrypt_file)
-        
-        # Connect PTX-specific actions
-        if hasattr(self.main_window, 'extract_ptx_action'):
-            self.main_window.extract_ptx_action.triggered.connect(self.extract_ptx_sections)
-        
-        if hasattr(self.main_window, 'export_ptx_json_action'):
-            self.main_window.export_ptx_json_action.triggered.connect(self.export_ptx_json)
-
         if hasattr(self.main_window, 'binary_snapshot_action'):
             self.main_window.binary_snapshot_action.triggered.connect(self.show_binary_snapshot_dialog)
         if hasattr(self.main_window, 'show_scope_on_hex_action'):
@@ -376,7 +351,7 @@ class HexEditorApp:
             file_path = None
         if not file_path:
             logger.info("Opening file dialog")
-            file_filter = "All Files (*);; PTX Files (*.ptx);; PE Files (*.exe *.dll)"
+            file_filter = "All Files (*);; PE Files (*.exe *.dll)"
             file_path = self.main_window.show_file_dialog("Open File", file_filter)
         if not file_path:
             logger.debug("File dialog canceled")
@@ -437,7 +412,7 @@ class HexEditorApp:
                 cached_source_summary,
                 knowledge_metrics_items,
                 preserved_binary_items,
-                ptx_handler_items,
+                handler_structure_items,
                 record_family_items,
             )
             from src.services.local_transform.core import _load_bundle as load_local_transform_bundle
@@ -458,7 +433,7 @@ class HexEditorApp:
                 self.main_window.file_structure_widget.addItem(label)
 
             if self.file_handler:
-                for label, offset in ptx_handler_items(self.file_handler, preview_limit=preview_limit):
+                for label, offset in handler_structure_items(self.file_handler, preview_limit=preview_limit):
                     item = QListWidgetItem(label)
                     if offset is not None:
                         item.setData(Qt.UserRole, offset)
@@ -492,207 +467,6 @@ class HexEditorApp:
 
         self.main_window.deliver_dock_update("file_structure_dock", apply_update)
 
-    def decrypt_file(self):
-        """Decrypt the current file."""
-        if not self.hex_editor.file_path:
-            self.handle_error("No file loaded")
-            return
-            
-        # If this is a PTX file, use the PTX-specific decryption
-        if isinstance(self.file_handler, PTXFile):
-            self.decrypt_ptx_file()
-            return
-        
-        # Generic decryption for other file types
-        # ... existing code ...
-
-    def decrypt_ptx_file(self):
-        """Decrypt a PTX file."""
-        if not self.hex_editor.file_path or not isinstance(self.file_handler, PTXFile):
-            self.handle_error("No PTX file loaded")
-            return
-            
-        if not self.file_handler.header or not self.file_handler.header.is_encrypted():
-            self.handle_error("File is not encrypted or has an unknown encryption type")
-            return
-            
-        # Ask for confirmation
-        msg_box = QMessageBox()
-        msg_box.setIcon(QMessageBox.Question)
-        msg_box.setWindowTitle("Decrypt PTX File")
-        msg_box.setText(f"Decrypt {os.path.basename(self.hex_editor.file_path)}?")
-        msg_box.setInformativeText("This will create a new decrypted file.")
-        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
-        msg_box.setDefaultButton(QMessageBox.Yes)
-        
-        if msg_box.exec_() != QMessageBox.Yes:
-            return
-            
-        # Get the output path
-        output_path = self.main_window.show_save_dialog("Save Decrypted File", 
-                                                     f"{os.path.splitext(self.hex_editor.file_path)[0]}_decrypted.ptx")
-        if not output_path:
-            return
-            
-        # Show progress dialog
-        progress_dialog = QMessageBox(self.main_window)
-        progress_dialog.setIcon(QMessageBox.Information)
-        progress_dialog.setWindowTitle("Decrypting")
-        progress_dialog.setText("Decrypting PTX file...")
-        progress_dialog.setStandardButtons(QMessageBox.NoButton)
-        progress_dialog.show()
-        QApplication.processEvents()
-        
-        try:
-            from src.services.ptx_desktop_decrypt import decrypt_ptx_with_verified_probe
-
-            result = decrypt_ptx_with_verified_probe(self.hex_editor.file_path, output_path)
-            
-            progress_dialog.close()
-            
-            if result.get("ok"):
-                # Successfully decrypted
-                msg_box = QMessageBox()
-                msg_box.setIcon(QMessageBox.Information)
-                msg_box.setWindowTitle("Decryption Successful")
-                msg_box.setText("PTX file decrypted successfully.")
-                msg_box.setInformativeText(f"Decrypted file saved to: {output_path}")
-                msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Open)
-                msg_box.setDefaultButton(QMessageBox.Ok)
-                
-                if msg_box.exec_() == QMessageBox.Open:
-                    # Load the decrypted file
-                    self.hex_editor.load_file(output_path)
-            else:
-                self.handle_error(result.get("error") or "Failed to decrypt PTX file")
-                
-        except Exception as e:
-            progress_dialog.close()
-            self.handle_error(f"Error decrypting PTX file: {str(e)}")
-
-    def extract_ptx_sections(self):
-        """Extract sections from a PTX file."""
-        if not self.hex_editor.file_path or not isinstance(self.file_handler, PTXFile):
-            self.handle_error("No PTX file loaded")
-            return
-            
-        if not self.file_handler.sections:
-            self.handle_error("No sections found in PTX file")
-            return
-            
-        # Ask for output directory
-        output_dir = QFileDialog.getExistingDirectory(self.main_window, "Select Output Directory")
-        if not output_dir:
-            return
-            
-        # Show progress dialog
-        progress_dialog = QMessageBox(self.main_window)
-        progress_dialog.setIcon(QMessageBox.Information)
-        progress_dialog.setWindowTitle("Extracting")
-        progress_dialog.setText("Extracting PTX sections...")
-        progress_dialog.setStandardButtons(QMessageBox.NoButton)
-        progress_dialog.show()
-        QApplication.processEvents()
-        
-        try:
-            # Extract each section
-            extracted_files = []
-            
-            for i, section in enumerate(self.file_handler.sections):
-                output_path = os.path.join(output_dir, f"section_{i:04d}.bin")
-                result = self.file_handler.extract_section_data(i, output_path)
-                
-                if result:
-                    extracted_files.append(result)
-            
-            progress_dialog.close()
-            
-            if extracted_files:
-                # Successfully extracted
-                msg_box = QMessageBox()
-                msg_box.setIcon(QMessageBox.Information)
-                msg_box.setWindowTitle("Extraction Successful")
-                msg_box.setText(f"Extracted {len(extracted_files)} sections to {output_dir}")
-                msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Open)
-                msg_box.setDefaultButton(QMessageBox.Ok)
-                
-                if msg_box.exec_() == QMessageBox.Open:
-                    # Open the output directory
-                    import subprocess
-                    import platform
-                    
-                    if platform.system() == "Windows":
-                        os.startfile(output_dir)
-                    elif platform.system() == "Darwin":  # macOS
-                        subprocess.Popen(["open", output_dir])
-                    else:  # Linux
-                        subprocess.Popen(["xdg-open", output_dir])
-            else:
-                # Failed to extract any sections
-                self.handle_error("Failed to extract any sections from PTX file")
-                
-        except Exception as e:
-            progress_dialog.close()
-            self.handle_error(f"Error extracting PTX sections: {str(e)}")
-        
-    def export_ptx_json(self):
-        """Export PTX file analysis as JSON."""
-        if not self.hex_editor.file_path or not isinstance(self.file_handler, PTXFile):
-            self.handle_error("No PTX file loaded")
-            return
-            
-        # Ask for output file
-        output_path = self.main_window.show_save_dialog(
-            "Save JSON Report",
-            f"{os.path.splitext(self.hex_editor.file_path)[0]}_report.json",
-            "JSON Files (*.json);;All Files (*)",
-        )
-        if not output_path:
-            return
-            
-        try:
-            # Get the summary
-            summary = self.file_handler.get_summary()
-            
-            # Save as JSON
-            destination = Path(output_path).expanduser().resolve()
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            temporary = destination.with_name(f".{destination.name}.tmp")
-            try:
-                with temporary.open("w", encoding="utf-8", newline="\n") as handle:
-                    json.dump(summary, handle, indent=2, ensure_ascii=False, sort_keys=True)
-                    handle.write("\n")
-                    handle.flush()
-                    os.fsync(handle.fileno())
-                os.replace(temporary, destination)
-            finally:
-                if temporary.exists():
-                    temporary.unlink()
-                
-            # Show success message
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setWindowTitle("Export Successful")
-            msg_box.setText("PTX file analysis exported successfully.")
-            msg_box.setInformativeText(f"Report saved to: {output_path}")
-            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Open)
-            msg_box.setDefaultButton(QMessageBox.Ok)
-            
-            if msg_box.exec_() == QMessageBox.Open:
-                # Open the JSON file
-                import subprocess
-                import platform
-                
-                if platform.system() == "Windows":
-                    os.startfile(output_path)
-                elif platform.system() == "Darwin":  # macOS
-                    subprocess.Popen(["open", output_path])
-                else:  # Linux
-                    subprocess.Popen(["xdg-open", output_path])
-                    
-        except Exception as e:
-            self.handle_error(f"Error exporting PTX analysis: {str(e)}")
-    
     def goto_offset_from_signal(self, offset):
         """Navigate to an offset from a signal."""
         self.goto_offset(offset=offset)
@@ -897,12 +671,7 @@ class HexEditorApp:
         file_ext = os.path.splitext(file_path)[1].lower()
         self.file_handler = self._resolve_file_handler(file_path)
 
-        if self._is_ptx_file(file_path):
-            logger.info("PTX file detected - initializing PTX-specific UI")
-            self.main_window.enable_ptx_menu(True)
-            self.main_window.show_ptx_view(True)
-            self.update_file_structure()
-
+        self.update_file_structure()
         self._start_snapshot_analysis(file_path, file_ext)
         from src.services.ui_policy import feature_enabled, load_ui_policy
 
@@ -915,7 +684,7 @@ class HexEditorApp:
 
             try:
                 plugin = detect_format_plugin(file_path, cfg=load_binary_dynamic_config())
-                self.main_window.binary_snapshot_action.setEnabled(plugin in {"ptx", "pe"})
+                self.main_window.binary_snapshot_action.setEnabled(plugin == "pe")
             except Exception:
                 self.main_window.binary_snapshot_action.setEnabled(False)
         
@@ -1004,7 +773,7 @@ class HexEditorApp:
             "Features:\n"
             "- Hex editing of binary files\n"
             "- Disassembly of executable files\n"
-            "- PTX file analysis and decryption\n"
+            "- PE binary snapshot inspection\n"
             "- Extraction of file components\n"
             "- Dark mode support\n\n"
             "Version: 1.0.0\n"
@@ -1041,39 +810,7 @@ class HexEditorApp:
             "Details": {}
         }
         
-        # Handle PTX files
-        if isinstance(self.file_handler, PTXFile):
-            logger.info("Extracting PTX file components")
-            
-            # Make sure the file is parsed
-            if not self.file_handler.parsing_complete:
-                self.file_handler.parse()
-            
-            # Set file type in results
-            extraction_results["File Type"] = "PTX"
-            
-            # Extract all sections
-            ptx_dir = os.path.join(output_dir, "ptx_sections")
-            extracted_files = self.file_handler.extract_all(ptx_dir)
-            
-            # Update extraction results
-            extraction_results["Components Extracted"] = len(extracted_files)
-            extraction_results["Details"] = extracted_files
-            
-            # Add to summary
-            summary_content.append(f"PTX File: {self.hex_editor.file_path}")
-            summary_content.append(f"Version: {self.file_handler.header.version}")
-            summary_content.append(f"Encryption: {self.file_handler.header.get_encryption_info()['description']}")
-            summary_content.append(f"Extracted {len(extracted_files)} components to {ptx_dir}")
-            summary_content.append("")
-            
-            for section_name, file_path in extracted_files.items():
-                summary_content.append(f"  - {section_name}: {os.path.basename(file_path)}")
-            
-            logger.info(f"Extracted {len(extracted_files)} PTX components")
-            
-        # Handle PE files    
-        elif self.extractor and self.extractor.is_pe_file:
+        if self.extractor and self.extractor.is_pe_file:
             logger.info("Extracting PE file components")
             
             # Set file type in results
@@ -1684,20 +1421,7 @@ class HexEditorApp:
         except (ValueError, IndexError):
             logger.error(f"Invalid symbol format: {text}")
     
-    def _is_ptx_file(self, file_path: str) -> bool:
-        from src.runtime.config import load_binary_dynamic_config
-        from src.runtime.format_router import detect_format_plugin
-
-        try:
-            return detect_format_plugin(file_path, cfg=load_binary_dynamic_config()) == "ptx"
-        except Exception:
-            return False
-
     def _resolve_file_handler(self, file_path: str):
-        if self._is_ptx_file(file_path):
-            if self.hex_editor.ptx_handler is not None:
-                return self.hex_editor.ptx_handler
-            return detect_file_type(file_path)
         return detect_file_type(file_path)
 
     def _refresh_knowledge_metrics_status(self, source_sha256: str = "") -> None:
@@ -1818,7 +1542,7 @@ class HexEditorApp:
             return
         self._pending_binary_analysis = None
         binary_visible = self.main_window.dock_is_visible("binary_inspector_dock")
-        metadata_visible = self.main_window.dock_is_visible("ptx_metadata_dock")
+        metadata_visible = self.main_window.dock_is_visible("runtime_overview_dock")
         self._cleanup_snapshot_thread()
         self._cleanup_forensic_thread()
         self._pending_forensic_timer.stop()
@@ -1828,7 +1552,7 @@ class HexEditorApp:
 
             cfg = load_binary_dynamic_config()
             plugin = detect_format_plugin(file_path, cfg=cfg)
-            if plugin not in {"ptx", "pe"}:
+            if plugin != "pe":
                 if binary_visible:
                     self.main_window.binary_inspector_widget.clear()
                 return
@@ -1880,7 +1604,7 @@ class HexEditorApp:
         """Analyze the currently loaded supported file from the inspector."""
         file_path = str(self.hex_editor.file_path or "")
         if not file_path:
-            self.main_window.show_message("Binary Inspector", "Open a PTX or PE file first.")
+            self.main_window.show_message("Binary Inspector", "Open a PE file first.")
             return
         self._start_snapshot_analysis(file_path, Path(file_path).suffix.lower())
 
@@ -1930,10 +1654,10 @@ class HexEditorApp:
         if self.snapshot_controller.is_stale(generation):
             return
 
-        if hasattr(self.main_window, "ptx_metadata_widget"):
+        if hasattr(self.main_window, "runtime_overview_widget"):
             self.main_window.deliver_dock_update(
-                "ptx_metadata_dock",
-                lambda snap=snapshot: self.main_window.ptx_metadata_widget.update_runtime_snapshot(snap),
+                "runtime_overview_dock",
+                lambda snap=snapshot: self.main_window.runtime_overview_widget.update_runtime_snapshot(snap),
             )
         QTimer.singleShot(
             0,
@@ -1998,7 +1722,7 @@ class HexEditorApp:
             "generation": generation,
         }
         binary_visible = self.main_window.dock_is_visible("binary_inspector_dock")
-        metadata_visible = self.main_window.dock_is_visible("ptx_metadata_dock")
+        metadata_visible = self.main_window.dock_is_visible("runtime_overview_dock")
         if not binary_visible and not metadata_visible:
             return
         if delay > 0:
@@ -2057,10 +1781,10 @@ class HexEditorApp:
                     forensic_context=ctx,
                 ),
             )
-        if hasattr(self.main_window, "ptx_metadata_widget"):
+        if hasattr(self.main_window, "runtime_overview_widget"):
             self.main_window.deliver_dock_update(
-                "ptx_metadata_dock",
-                lambda ctx=context: self.main_window.ptx_metadata_widget.update_forensic_context(ctx),
+                "runtime_overview_dock",
+                lambda ctx=context: self.main_window.runtime_overview_widget.update_forensic_context(ctx),
                 coalesce=False,
             )
 
@@ -2208,14 +1932,14 @@ class HexEditorApp:
             self.main_window.binary_inspector_widget.show_static_section("Binary graph")
 
     def _refresh_binary_inspector(self, file_path: str, file_ext: str) -> None:
-        """Load unified BinarySnapshot into Binary Inspector for PTX and PE files."""
+        """Load unified BinarySnapshot into Binary Inspector for PE files."""
         self._start_snapshot_analysis(file_path, file_ext)
 
     def show_binary_snapshot_dialog(self) -> None:
         """Open Binary Snapshot dialog for the current file."""
         file_path = self.hex_editor.file_path
         if not file_path:
-            self.main_window.show_message("Binary Snapshot", "Open a PTX or PE file first.")
+            self.main_window.show_message("Binary Snapshot", "Open a PE file first.")
             return
         try:
             from src.runtime.config import load_binary_dynamic_config
@@ -2224,10 +1948,10 @@ class HexEditorApp:
 
             cfg = load_binary_dynamic_config()
             plugin = detect_format_plugin(file_path, cfg=cfg)
-            if plugin not in {"ptx", "pe"}:
+            if plugin != "pe":
                 self.main_window.show_message(
                     "Binary Snapshot",
-                    "Binary Snapshot is available for PTX and PE files only.",
+                    "Binary Snapshot is available for PE files only.",
                 )
                 return
 
@@ -2240,8 +1964,8 @@ class HexEditorApp:
                 include_representation=True,
                 include_scope_discovery=True,
             )
-            self.main_window.ptx_metadata_widget.update_runtime_snapshot(snapshot)
-            self.main_window.ptx_metadata_widget.update_forensic_context(forensic_context)
+            self.main_window.runtime_overview_widget.update_runtime_snapshot(snapshot)
+            self.main_window.runtime_overview_widget.update_forensic_context(forensic_context)
             self.main_window.binary_inspector_widget.update_snapshot(
                 snapshot,
                 generation=generation,
@@ -2394,65 +2118,6 @@ class HexEditorApp:
             on_failed=on_failed,
             full_file=True,
         )
-
-    def handle_timecodes_found(self, timecodes):
-        """Handle timecodes found by the PTX handler."""
-        logger.info(f"Received {len(timecodes)} timecodes from PTX handler")
-        if self.hex_editor.ptx_handler is not None:
-            self.file_handler = self.hex_editor.ptx_handler
-            if hasattr(self.main_window, "ptx_metadata_widget"):
-                handler = self.file_handler
-                self.main_window.deliver_dock_update(
-                    "ptx_metadata_dock",
-                    lambda ptx=handler: self.main_window.ptx_metadata_widget.update_from_ptx_file(ptx),
-                )
-        elif hasattr(self.main_window, "ptx_metadata_widget"):
-            self.main_window.deliver_dock_update(
-                "ptx_metadata_dock",
-                lambda codes=timecodes: self.main_window.ptx_metadata_widget.update_timecodes(codes),
-            )
-        self._current_timecode_index = -1
-        self.update_file_structure()
-        self.hex_editor.update_display()
-        self.update_status_bar()
-
-    def _sorted_timecode_offsets(self) -> List[int]:
-        if not self.file_handler or not hasattr(self.file_handler, "timecodes"):
-            return []
-        return sorted(int(tc.get("offset") or 0) for tc in self.file_handler.timecodes)
-
-    def goto_next_timecode(self) -> None:
-        offsets = self._sorted_timecode_offsets()
-        if not offsets:
-            return
-        cursor = self.hex_editor.get_cursor_byte_offset() if hasattr(self.hex_editor, "get_cursor_byte_offset") else 0
-        next_offsets = [item for item in offsets if item > cursor]
-        target = next_offsets[0] if next_offsets else offsets[0]
-        self.goto_offset_from_signal(target)
-
-    def goto_prev_timecode(self) -> None:
-        offsets = self._sorted_timecode_offsets()
-        if not offsets:
-            return
-        cursor = self.hex_editor.get_cursor_byte_offset() if hasattr(self.hex_editor, "get_cursor_byte_offset") else 0
-        prev_offsets = [item for item in offsets if item < cursor]
-        target = prev_offsets[-1] if prev_offsets else offsets[-1]
-        self.goto_offset_from_signal(target)
-
-    def goto_timecode_reference(self) -> None:
-        if not self.file_handler or not hasattr(self.file_handler, "timecodes"):
-            return
-        references = [
-            int(tc.get("offset") or 0)
-            for tc in self.file_handler.timecodes
-            if "reference" in str(tc.get("type") or "").lower()
-        ]
-        if references:
-            self.goto_offset_from_signal(references[0])
-            return
-        offsets = self._sorted_timecode_offsets()
-        if offsets:
-            self.goto_offset_from_signal(offsets[0])
 
 def main(open_path=None, lab_bridge_root=None):
     """Main entry point for the application."""
