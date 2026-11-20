@@ -1,6 +1,6 @@
 # External hosts: UVE, TRIAGE, RE, AI Lab, or any MCP client
 
-Hex Editor is a **standalone application**. Nothing in AI Lab, UVE, TRIAGE, or RE is required for it to install, run, or serve tools.
+**Universal hex editor for AI agents** — standalone application. Nothing in AI Lab, UVE, TRIAGE, or RE is required to install, run GUI/CLI, or serve MCP tools.
 
 Those systems may **optionally attach** when you want unified verification or agent workflows. The dependency direction is always:
 

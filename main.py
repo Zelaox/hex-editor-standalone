@@ -32,7 +32,7 @@ setup_logging()
 logger = get_logger('main')
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Hex Editor with PTX analysis")
+    parser = argparse.ArgumentParser(description="Universal hex editor (GUI) — MCP/CLI for AI agents")
     parser.add_argument("--open", dest="open_path", help="Open a file when the desktop editor starts")
     parser.add_argument(
         "--lab-bridge",

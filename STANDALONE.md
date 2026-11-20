@@ -1,48 +1,42 @@
-# Hex Editor — standalone distribution
+# Hex Editor — standalone for agents and humans
 
-This tree is the **standalone** Hex Editor application. It does not require AI Lab, UVE, TRIAGE, RE, or any other host.
+This repository is a **universal hex / binary editor** you can run alone. AI agents reach it through **MCP stdio** or **CLI**; humans use the **PyQt GUI**.
 
-**UVE / TRIAGE / RE may still use Hex Editor** when you want: spawn MCP or CLI from a verification run, point probes at the same tool contracts, and tear the host down without breaking the editor. See [External integration](docs/EXTERNAL_INTEGRATION.md).
+It does **not** require AI Lab, UVE, TRIAGE, or RE. Those systems may **optionally** spawn this checkout as a child process when verifying or orchestrating work. See [External integration](docs/EXTERNAL_INTEGRATION.md).
 
 ## Install
 
-From this directory (Windows PowerShell):
-
 ```powershell
-.\install.ps1 -WithMcp -WithTests
+.\install.ps1 -WithMcp -WithTests   # agents + tests
+.\install.ps1 -WithMcp              # agents
+.\install.ps1                       # GUI/runtime only
 ```
 
-Creates `.venv/`, installs runtime + MCP + dev test dependencies.
-
-Minimal runtime only:
-
-```powershell
-.\install.ps1
-```
-
-## Run
+## Surfaces (pick one or more)
 
 | Surface | Command |
 |---------|---------|
-| GUI | `.\.venv\Scripts\python.exe main.py` |
-| PTX pipeline GUI | `Start-PtxPipeline.bat` |
-| CLI tools | `.\.venv\Scripts\python.exe scripts/hex_tool_cli.py list` |
-| MCP (stdio) | `.\.venv\Scripts\python.exe scripts/hex_mcp_server.py` |
+| **GUI** | `.\.venv\Scripts\python.exe main.py` |
+| **CLI** | `.\.venv\Scripts\python.exe scripts/hex_tool_cli.py list` |
+| **MCP stdio** | `.\.venv\Scripts\python.exe scripts/hex_mcp_server.py` |
+| **Optional desktop bridge** | `main.py --lab-bridge <runtime_dir>` |
 
-Workspace roots are controlled by `config/workspace_roots.json` and optional `HEX_EDITOR_WORKSPACE_CONFIG` (local file, not committed).
+Workspace paths: `config/workspace_roots.json` or `HEX_EDITOR_WORKSPACE_CONFIG`.
 
-## Verification gate (release)
+## Agent contract
+
+- **79 tools** in catalog; schemas validated in `tests/test_standalone_interfaces.py`
+- Fail-closed paths, no host database, no Lab MCP package import
+- Optional format pipelines (e.g. PTX) via config—not required for core binary tools
+
+## Release gate
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_standalone_interfaces.py -q
 ```
 
-Expect **79** registered MCP/CLI tools, stdio round-trip, and owned desktop command delivery with **no** `AI_LAB_ROOT` and **no** Lab MCP package on `PYTHONPATH`.
+## What we do not ship publicly
 
-## What is not bundled
-
-- Private regression bundles (`config/hex_regression_fixtures.json`, `config/ptx_plaintext_calibration.json` entries cleared)
-- AI Lab LLM routing (`config/llm_config.json` empty agents)
-- Runtime artifacts under `data/` and `logs/` (gitignored)
-
-Configure local fixtures explicitly when you need private calibration sessions.
+- Private regression bundles (cleared in `config/hex_regression_fixtures.json`, etc.)
+- Populated `llm_config.json` agents
+- Your `data/` or `logs/` trees (gitignored)

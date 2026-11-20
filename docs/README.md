@@ -1,10 +1,10 @@
 # Hex Editor — Project Documentation
 
-> **Standalone build:** Hex Editor runs without AI Lab. UVE, TRIAGE, RE, Lab, or any MCP client may **optionally** attach via MCP/CLI/desktop inbox — see [EXTERNAL_INTEGRATION.md](EXTERNAL_INTEGRATION.md). Older sections that mention “AI Lab” describe an optional host, not a runtime dependency.
+> **Product framing:** Universal hex editor for **AI agents** (MCP + CLI) and humans (GUI). UVE, TRIAGE, RE, Lab, or any MCP client may **optionally** attach — see [EXTERNAL_INTEGRATION.md](EXTERNAL_INTEGRATION.md). Older “AI Lab” wording means an optional host, not a dependency.
 
 ## Overview
 
-This project is a PyQt5 desktop hex editor with additional tooling for inspecting, extracting, decrypting, analyzing, and rebuilding Pro Tools PTX session files. It also contains experimental session conversion code and several standalone forensic utilities.
+This project is a PyQt5 binary workspace: bounded reads/writes, semantic graphs, diffs, snapshots, forensics plugins, and MCP tools. **PTX and session converters** are optional format modules; the core surface is format-agnostic hex and binary analysis.
 
 ## Learned plaintext byte profiles
 
