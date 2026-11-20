@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional
 
-from src.services.ptx_crypto_config import probe_windows_for_case, resolve_crypto_case
-from src.services.ptx_crypto_analysis import build_default_probe_windows
-from src.services.ptx_scoring_regions import compile_scoring_windows, excluded_regions_for_case
+from src.services.crypto_calibration import probe_windows_for_case, resolve_crypto_case
+from src.services.crypto_transform_material import build_default_probe_windows
+from src.services.crypto_scoring_regions import compile_scoring_windows, excluded_regions_for_case
 
 from .coverage_window_deriver import derive_coverage_windows
 from .evidence_loader import load_investigation_evidence

@@ -165,17 +165,6 @@ def produce_structural_region(
             section_name=section_name,
             pe_plugin_cfg=pe_cfg,
         )
-    if plugin == "ptx":
-        from .ptx_structural import produce_ptx_structural_lines
-
-        ptx_cfg = dict(text_heavy.get("ptx") or {})
-        return produce_ptx_structural_lines(
-            path,
-            data,
-            region_offset=int(region.offset),
-            region_length=int(region.length),
-            ptx_plugin_cfg=ptx_cfg,
-        )
     return produce_unknown_region(path, data, region, routing=routing, merge_policy=merge_policy)
 
 

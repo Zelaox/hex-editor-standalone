@@ -321,9 +321,9 @@ def execute_scope_descriptors(source: bytes, hypotheses: Sequence[Mapping[str, A
 
 
 def _parser_unknown(data: bytes) -> Dict[str, Any]:
-    from src.plugins.ptx.runtime_analysis import build_ptx_snapshot
+    from src.plugins.pe.runtime_analysis import build_pe_snapshot
     from src.runtime.byte_source import ByteSource
-    snapshot = build_ptx_snapshot(ByteSource.from_bytes(data)).to_dict()
+    snapshot = build_pe_snapshot(ByteSource.from_bytes(data)).to_dict()
     return {"unknown_bytes": int((snapshot.get("coverage_summary") or {}).get("bytes_by_class", {}).get("unknown", 0)), "snapshot_id": snapshot["snapshot_id"], "coverage_summary": snapshot.get("coverage_summary") or {}}
 
 

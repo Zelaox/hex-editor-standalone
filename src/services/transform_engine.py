@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 from src.services.behavior_classifier import classify_binary
-from src.services.ptx_crypto_analysis import (
+from src.services.crypto_transform_material import (
     _build_structural_validators,
     _evaluate_known_key_lane,
     _finalize_aes_candidate,
@@ -21,20 +21,20 @@ from src.services.ptx_crypto_analysis import (
     build_default_probe_windows,
     decode_sweep_cursor,
 )
-from src.services.ptx_crypto_config import (
+from src.services.crypto_calibration import (
     crypto_defaults,
     known_keys_for_case,
     probe_windows_for_case,
     reference_sha256_for_case,
     resolve_crypto_case,
 )
-from src.services.ptx_crypto_primitives import (
+from src.services.crypto_primitives import (
     derive_aes_candidate_keys,
     pt12_signature_key,
     sha256_digest,
 )
-from src.services.ptx_promotion_gate import build_already_at_reference_result
-from src.services.ptx_scoring_regions import anchors_for_case, compile_scoring_windows, excluded_regions_for_case
+from src.services.promotion_gate import build_already_at_reference_result
+from src.services.crypto_scoring_regions import anchors_for_case, compile_scoring_windows, excluded_regions_for_case
 from src.services.stage2_policy import select_stage2_survivors, stage2_cap_applied
 from src.services.transform_registry import load_transform_registry, resolve_impl_callable
 from src.services.transform_scheduler import schedule_families
@@ -233,7 +233,7 @@ def analyze_binary_transform_candidates(
     run_xor_sweep = phase_exec is None or bool(phase_exec.get("xor_sweep"))
 
     if include_known and (phase_exec is None or run_xor_sweep):
-        from src.services.ptx_crypto_analysis import ProbeContext
+        from src.services.crypto_transform_material import ProbeContext
 
         legacy_ctx = ProbeContext.build(raw, case=case, defaults=defaults, source_sha=source_sha, body_windows=body_windows)
         _log_probe_progress("known-key lane (cheap -> stage2 survivors)", pipeline=pipeline)
@@ -259,7 +259,7 @@ def analyze_binary_transform_candidates(
             pipeline=pipeline,
         )
         t_stage2 = time.perf_counter()
-        from src.services.ptx_crypto_analysis import ProbeContext
+        from src.services.crypto_transform_material import ProbeContext
 
         legacy_ctx = ProbeContext.build(raw, case=case, defaults=defaults, source_sha=source_sha, body_windows=body_windows)
         finalized_by_index: Dict[int, Dict[str, Any]] = {}
@@ -299,7 +299,7 @@ def analyze_binary_transform_candidates(
             if not cheap_results:
                 continue
             survivors = select_stage2_survivors(cheap_results, pipeline=pipeline, defaults=defaults)
-            from src.services.ptx_crypto_analysis import ProbeContext
+            from src.services.crypto_transform_material import ProbeContext
 
             legacy_ctx = ProbeContext.build(raw, case=case, defaults=defaults, source_sha=source_sha, body_windows=body_windows)
             for index in survivors:

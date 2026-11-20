@@ -9,26 +9,6 @@ def _node_kinds(snapshot: Mapping[str, Any]) -> set[str]:
     return {str(node.get("kind") or "") for node in snapshot.get("nodes") or []}
 
 
-def validate_ptx_snapshot(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
-    signals = dict(snapshot.get("signals") or {})
-    nodes = list(snapshot.get("nodes") or [])
-    issues: List[str] = []
-    if not nodes:
-        issues.append("empty_graph")
-    if signals.get("timeline_consistent") is False:
-        issues.append("timeline_inconsistent")
-    coverage_ratio = float(signals.get("coverage_ratio") or 0.0)
-    if coverage_ratio <= 0.0 and nodes:
-        issues.append("zero_coverage_with_nodes")
-    return {
-        "ok": not issues,
-        "format_plugin": "ptx",
-        "issues": issues,
-        "promotion_blocked": bool(issues),
-        "node_kinds": sorted(_node_kinds(snapshot)),
-    }
-
-
 def validate_pe_snapshot(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
     signals = dict(snapshot.get("signals") or {})
     nodes = list(snapshot.get("nodes") or [])
@@ -53,8 +33,6 @@ def validate_pe_snapshot(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
 
 def validate_binary_snapshot(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
     plugin = str(snapshot.get("format_plugin") or "")
-    if plugin == "ptx":
-        return validate_ptx_snapshot(snapshot)
     if plugin == "pe":
         return validate_pe_snapshot(snapshot)
     return {

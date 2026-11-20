@@ -1,4 +1,4 @@
-"""Load PTX crypto calibration — Hex editor config SSOT first, then lab fixture merge."""
+"""Load transform crypto calibration from Hex editor config."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def _fixture_path() -> Path:
 
 
 @lru_cache(maxsize=1)
-def load_ptx_crypto_calibration() -> Dict[str, Any]:
+def load_crypto_calibration() -> Dict[str, Any]:
     fixture = _fixture_path()
     if not fixture.is_file():
         return {"cases": [], "defaults": merge_crypto_defaults()}
@@ -42,7 +42,7 @@ def resolve_crypto_case(
     resolved = Path(path).expanduser().resolve()
     name = resolved.name.lower()
     digest = str(sha256 or "").lower()
-    for case in load_ptx_crypto_calibration().get("cases") or []:
+    for case in load_crypto_calibration().get("cases") or []:
         if not isinstance(case, dict):
             continue
         rel = str(case.get("path") or "")
@@ -59,7 +59,7 @@ def resolve_crypto_case(
 
 
 def crypto_defaults() -> Dict[str, Any]:
-    defaults = dict(load_ptx_crypto_calibration().get("defaults") or {})
+    defaults = dict(load_crypto_calibration().get("defaults") or {})
     if not defaults:
         defaults = merge_crypto_defaults()
     return defaults
@@ -87,7 +87,7 @@ def case_by_id(case_id: str) -> Optional[Dict[str, Any]]:
     needle = str(case_id or "").strip()
     if not needle:
         return None
-    for case in load_ptx_crypto_calibration().get("cases") or []:
+    for case in load_crypto_calibration().get("cases") or []:
         if isinstance(case, dict) and str(case.get("id") or "") == needle:
             return dict(case)
     return None

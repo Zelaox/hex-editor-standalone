@@ -399,20 +399,7 @@ def capture_debug_baseline(
         preserved = _preserved_debug_snapshot(preserved_path)
         _write(root / "preserved_binary_inference.json", preserved)
 
-    key_hunt = {"skipped": True}
-    if investigation_root and waves.get("run_key_hunt_when_investigation_root"):
-        from src.services.ptx_key_discovery import probe_ptx_decrypt_keys
-
-        probe = probe_ptx_decrypt_keys(str(source_file), exhaustive=False, include_known=True, investigation_root=str(Path(investigation_root).resolve()), materialize_confirmed=False)
-        key_hunt = {
-            "skipped": False,
-            "ok": bool(probe.get("ok")),
-            "keys_found": bool(probe.get("keys_found")),
-            "phase_exhausted": bool(probe.get("phase_exhausted")),
-            "probe_phase_id": probe.get("probe_phase_id"),
-            "investigation_probe_ledger": probe.get("investigation_probe_ledger"),
-        }
-        _write(root / "key_hunt_probe.json", key_hunt)
+    key_hunt = {"skipped": True, "reason": "key_hunt_removed_from_standalone"}
 
     gemma_health = None
     if waves.get("attempt_gemma_health_check") and lab_root:

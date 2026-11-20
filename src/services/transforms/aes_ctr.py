@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping
 
-from src.services.ptx_crypto_primitives import aes128_ctr_decrypt, derive_aes_candidate_keys, derive_iv_from_spec
+from src.services.crypto_primitives import aes128_ctr_decrypt, derive_aes_candidate_keys, derive_iv_from_spec
 from src.services.transforms.base import TransformProbeContext
 from src.services.transforms.common import score_transform_windows
 

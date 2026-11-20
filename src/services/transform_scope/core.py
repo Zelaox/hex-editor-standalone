@@ -283,10 +283,10 @@ def gate_header(context: Mapping[str, Any]) -> Dict[str, Any]:
 
 
 def gate_parser_coverage(context: Mapping[str, Any]) -> Dict[str, Any]:
-    from src.plugins.ptx.runtime_analysis import build_ptx_snapshot
+    from src.plugins.pe.runtime_analysis import build_pe_snapshot
     from src.runtime.byte_source import ByteSource
     try:
-        candidate = build_ptx_snapshot(ByteSource.from_bytes(context["result"]["artifact_bytes"])).to_dict()
+        candidate = build_pe_snapshot(ByteSource.from_bytes(context["result"]["artifact_bytes"])).to_dict()
     except Exception as exc:
         return _gate("parser-coverage", False, {"error_class": type(exc).__name__}, "parser_failed", "request_alternate_scope")
     before = int((context["snapshot"].get("coverage_summary") or {}).get("bytes_by_class", {}).get("unknown", 0))

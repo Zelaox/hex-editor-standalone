@@ -5,7 +5,7 @@ from __future__ import annotations
 import zlib
 from typing import Any, Dict, Mapping, Optional
 
-from src.services.ptx_crypto_primitives import shannon_entropy
+from src.services.crypto_primitives import shannon_entropy
 from src.services.transform_registry import merge_crypto_defaults
 
 

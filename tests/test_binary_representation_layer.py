@@ -95,7 +95,7 @@ def test_monotonic_integer_signal(policy):
 
 
 def test_ptx_full_coverage_delegates_to_sweep(policy):
-    from src.services.ptx_full_coverage import load_full_coverage_policy, scan_region_features
+    from src.services.full_coverage_policy import load_full_coverage_policy, scan_region_features
 
     full_policy = load_full_coverage_policy()
     data = b"\x03\x30\x30\x31\x30\x31"

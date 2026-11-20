@@ -318,25 +318,11 @@ def materialize_record_families(source: bytes, parent: bytes, families: Sequence
     return {"bytes": bytes(output), "descriptor": descriptor, "changed_bytes": changed}
 
 
-def analyze_legacy_ptx(data: bytes, *, bundle: Mapping[str, Any]) -> Dict[str, Any]:
-    del bundle
-    import tempfile
-    from ptx_analyzer import PTXAnalyzer
-    with tempfile.NamedTemporaryFile(suffix=".ptx", delete=False) as handle:
-        handle.write(data); temporary = Path(handle.name)
-    try:
-        analyzer = PTXAnalyzer(str(temporary)); analyzer.analyze_header(); analyzer.find_sections(); analyzer.extract_strings(4); analyzer.analyze_key_offsets()
-        return {"parser_sections": len(analyzer.sections), "timecode_count": len(analyzer.timecodes), "legacy_string_count": len(analyzer.strings)}
-    finally:
-        try: temporary.unlink()
-        except OSError: pass
-
-
 def analyze_runtime_snapshot(data: bytes, *, bundle: Mapping[str, Any]) -> Dict[str, Any]:
     del bundle
-    from src.plugins.ptx.runtime_analysis import build_ptx_snapshot
+    from src.plugins.pe.runtime_analysis import build_pe_snapshot
     from src.runtime.byte_source import ByteSource
-    snapshot = build_ptx_snapshot(ByteSource.from_bytes(data)).to_dict()
+    snapshot = build_pe_snapshot(ByteSource.from_bytes(data)).to_dict()
     coverage = (snapshot.get("coverage_summary") or {}).get("bytes_by_class") or {}
     return {"runtime_nodes": len(snapshot.get("nodes") or []), "runtime_anchors": len(snapshot.get("anchors") or []), "unknown_bytes": int(coverage.get("unknown", 0)), "snapshot_id": snapshot["snapshot_id"]}
 
@@ -429,11 +415,11 @@ def run_local_transform_search(source_path: str | Path, *, parent_path: str | Pa
         validation = _attach_export_promotion(source, candidate, validation, bundle=bundle)
         candidate_id = _cid("local-transform-candidate", {"descriptor_id": materialized["descriptor"]["descriptor_id"], "sha256": hashlib.sha256(candidate).hexdigest()})
         candidate_root = root / "candidates" / candidate_id
-        _write_bytes(candidate_root / "candidate.ptx", candidate)
+        _write_bytes(candidate_root / "candidate.bin", candidate)
         _write(candidate_root / "descriptor.json", materialized["descriptor"])
         _write(candidate_root / "analysis.json", analysis)
         _write(candidate_root / "validation.json", validation)
-        manifest = {"schema_version": 1, "candidate_id": candidate_id, "status": "experimental_local_transform_candidate", "source_sha256": source_identity["sha256"], "parent_sha256": parent_identity["sha256"] if parent_identity else source_identity["sha256"], "output_sha256": hashlib.sha256(candidate).hexdigest(), "changed_bytes": materialized["changed_bytes"], "descriptor_id": materialized["descriptor"]["descriptor_id"], "artifact_path": str(candidate_root / "candidate.ptx"), "verified_decryption": bool(validation["verified_decryption"]), "promotion_eligible": bool(validation["promotion_eligible"])}
+        manifest = {"schema_version": 1, "candidate_id": candidate_id, "status": "experimental_local_transform_candidate", "source_sha256": source_identity["sha256"], "parent_sha256": parent_identity["sha256"] if parent_identity else source_identity["sha256"], "output_sha256": hashlib.sha256(candidate).hexdigest(), "changed_bytes": materialized["changed_bytes"], "descriptor_id": materialized["descriptor"]["descriptor_id"], "artifact_path": str(candidate_root / "candidate.bin"), "verified_decryption": bool(validation["verified_decryption"]), "promotion_eligible": bool(validation["promotion_eligible"])}
         _write(candidate_root / "manifest.json", manifest)
         candidate_record = {**manifest, "analysis": analysis, "validation": validation, "supported_plaintext_bytes": sum(int(item["length"]) for item in materialized["descriptor"]["scopes"]), "record_family_count": len(families), "promotion_eligible": bool(validation["promotion_eligible"]), "verified_decryption": bool(validation["verified_decryption"])}
         _write(root / "turns" / "turn-0002" / "materialization.json", candidate_record)

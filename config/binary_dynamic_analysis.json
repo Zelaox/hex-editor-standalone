@@ -7,7 +7,6 @@
   "max_source_bytes": 268435456,
   "snapshot_cache_entries": 16,
   "pe_suffixes": [".exe", ".dll", ".sys", ".scr"],
-  "ptx_suffixes": [".ptx"],
   "disasm_max_instructions_default": 96,
   "disasm_max_instructions_hard": 512
 }

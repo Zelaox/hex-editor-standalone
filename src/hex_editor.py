@@ -14,7 +14,7 @@ from PyQt5.QtCore import QObject, QFileSystemWatcher, pyqtSignal, QThread, QTime
 from PyQt5.QtWidgets import QPlainTextEdit, QMessageBox, QApplication
 from PyQt5.QtGui import QTextCursor, QTextCharFormat, QColor, QBrush
 
-from src.constants import CHUNK_SIZE, MAX_UNDO_STEPS, PTX_SECTION_HEADER_SIZE, MAX_CACHED_CHUNKS, VISIBLE_CHUNK_COUNT, HEX_TEXT_COLOR, OFFSET_COLOR, ASCII_COLOR, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, BYTE_GROUP_SIZE
+from src.constants import CHUNK_SIZE, MAX_UNDO_STEPS, MAX_CACHED_CHUNKS, VISIBLE_CHUNK_COUNT, HEX_TEXT_COLOR, OFFSET_COLOR, ASCII_COLOR, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, BYTE_GROUP_SIZE
 from src.services.path_utils import normalize_input_path
 from src.utils import bytes_to_hex_view, hex_view_to_bytes_strict, FileCache
 from src.hex_overlay_engine import resume_document_highlighters, suspend_document_highlighters
@@ -81,8 +81,6 @@ class HexEditor(QObject):
         self.show_hex = True
         self.show_ascii = True
         self.bytes_per_line = 16
-        self.is_ptx_file = False
-        self.ptx_handler = None
         self.highlight_formats = {
             "header": self._create_highlight_format(QColor(100, 149, 237, 180)),
             "section_header": self._create_highlight_format(QColor(255, 105, 180, 180)),
@@ -718,8 +716,6 @@ class HexEditor(QObject):
             self.file_path = file_path
             self.file_size = file_size
             self.file_data = b""
-            self.is_ptx_file = False
-            self.ptx_handler = None
             self.forensic_overlay_spans = []
             self.undo_stack = []
             self.redo_stack = []
@@ -814,65 +810,6 @@ class HexEditor(QObject):
             self.logger.error(f"Error applying loaded file: {exc}", exc_info=True)
             self.error_occurred.emit(f"Error loading file: {exc}")
     
-    def _is_ptx_candidate(self, file_path: str) -> bool:
-        return False
-
-    def _finish_ptx_parse(self, parse_generation: int, handler, *, success: bool) -> None:
-        if parse_generation != self._parse_generation:
-            return
-        if success and handler is not None:
-            self.ptx_handler = handler
-            self.timecodes = list(handler.timecodes or [])
-            self.plaintext_runs = []
-            if handler.file_path:
-                try:
-                    from src.services.plaintext_runs import discover_printable_runs_for_path
-
-                    self.plaintext_runs = discover_printable_runs_for_path(str(handler.file_path))
-                except Exception:
-                    self.plaintext_runs = []
-        else:
-            self.timecodes = []
-            self.plaintext_runs = []
-        self.timecodes_found.emit(self.timecodes)
-        self.display_refresh_requested.emit()
-        if success:
-            self.logger.debug(
-                "PTX parsing complete, found %s timecodes",
-                len(self.timecodes),
-            )
-
-    def _parse_ptx_in_background(self, parse_generation: int, ptx_handler=None):
-        """Parse the PTX file in a background thread."""
-        try:
-            self.logger.debug("Starting background parsing of PTX file")
-            if parse_generation != self._parse_generation:
-                return
-            handler = ptx_handler or self.ptx_handler
-            if handler is None or not handler.parse():
-                self.logger.warning("PTX parsing failed")
-                QTimer.singleShot(
-                    0,
-                    lambda gen=parse_generation, h=handler: self._finish_ptx_parse(gen, h, success=False),
-                )
-                return
-            if parse_generation != self._parse_generation:
-                return
-            QTimer.singleShot(
-                0,
-                lambda gen=parse_generation, h=handler: self._finish_ptx_parse(gen, h, success=True),
-            )
-        except RuntimeError:
-            return
-        except Exception as e:
-            if parse_generation != self._parse_generation:
-                return
-            self.logger.error(f"Error parsing PTX file: {e}", exc_info=True)
-            try:
-                self.error_occurred.emit(f"Error parsing PTX file: {e}")
-            except RuntimeError:
-                return
-
     def save_file(self, file_path: Optional[str] = None) -> bool:
         """
         Save the current content to a file.
@@ -957,10 +894,6 @@ class HexEditor(QObject):
         return
 
     def apply_highlights_for_visible_section(self):
-        """Highlights are baked into HTML during update_display()."""
-        return
-
-    def apply_ptx_highlights(self):
         """Highlights are baked into HTML during update_display()."""
         return
 

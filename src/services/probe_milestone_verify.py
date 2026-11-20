@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Mapping, Optional
 
 from src.services.probe_phase_config import phase_for_milestone
-from src.services.ptx_crypto_config import crypto_defaults
+from src.services.crypto_calibration import crypto_defaults
 
 
 class MilestoneVerifyError(ValueError):

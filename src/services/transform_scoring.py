@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
-from src.services.ptx_crypto_primitives import is_identity_transform, printable_ratio, shannon_entropy
+from src.services.crypto_primitives import is_identity_transform, printable_ratio, shannon_entropy
 from src.services.transform_registry import load_markers_config, scoring_profile
 from src.services.plaintext_profiles import score_plaintext_profiles
 

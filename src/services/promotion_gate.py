@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-from src.services.ptx_crypto_primitives import sha256_digest
+from src.services.crypto_primitives import sha256_digest
 
 
 def evaluate_promotion(

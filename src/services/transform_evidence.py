@@ -6,10 +6,10 @@ import binascii
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-from src.services.ptx_crypto_config import load_ptx_crypto_calibration
-from src.services.ptx_crypto_primitives import printable_ratio, sha256_digest
-from src.services.ptx_evidence_policy import evidence_policy
-from src.services.ptx_scoring_regions import anchors_for_case, excluded_regions_for_case
+from src.services.crypto_calibration import load_crypto_calibration
+from src.services.crypto_primitives import printable_ratio, sha256_digest
+from src.services.binary_evidence_policy import evidence_policy
+from src.services.crypto_scoring_regions import anchors_for_case, excluded_regions_for_case
 
 
 def _lab_root() -> Path:
@@ -23,7 +23,7 @@ def _resolve_reference_case(case: Optional[Mapping[str, Any]]) -> Optional[Dict[
     ref_id = str((case.get("decrypt") or {}).get("reference_case_id") or "")
     if not ref_id:
         return None
-    for item in load_ptx_crypto_calibration().get("cases") or []:
+    for item in load_crypto_calibration().get("cases") or []:
         if isinstance(item, dict) and str(item.get("id") or "") == ref_id:
             return dict(item)
     return None

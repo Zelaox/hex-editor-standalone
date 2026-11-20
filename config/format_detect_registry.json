@@ -53,10 +53,6 @@
       "region_class": "executable_code",
       "confidence": 0.9
     },
-    "ptx": {
-      "region_class": "structured_data",
-      "confidence": 0.85
-    },
     "rtf": {
       "region_class": "structured_data",
       "confidence": 0.95

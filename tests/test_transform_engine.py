@@ -68,7 +68,7 @@ def test_behavior_classifier_gzip():
 
 
 def test_xor_lane_recovery_single_byte():
-    from src.services.ptx_crypto_primitives import xor_apply
+    from src.services.crypto_primitives import xor_apply
     from src.services.transforms.xor_repeating import recover_repeating_key
 
     key = bytes([0x94])
@@ -94,7 +94,7 @@ def test_scheduler_requires_registry_metadata():
 
 
 def test_crib_refines_repeating_key():
-    from src.services.ptx_crypto_primitives import xor_apply
+    from src.services.crypto_primitives import xor_apply
     from src.services.transforms.xor_repeating import apply_crib_constraints
 
     key = bytes([0x12, 0x34, 0x56, 0x78])
@@ -112,7 +112,7 @@ def test_crib_refines_repeating_key():
 
 
 def test_derive_iv_from_spec():
-    from src.services.ptx_crypto_primitives import derive_iv_from_spec
+    from src.services.crypto_primitives import derive_iv_from_spec
 
     raw = b"\x03\x30\x30\x31" + bytes(range(60))
     iv_derived = derive_iv_from_spec(raw, "prefix_slice:0:16")
@@ -132,7 +132,7 @@ def test_chain_recipe_rejects_unknown_in_registry():
 
 
 def test_crypto_defaults_merges_lab_fixture():
-    from src.services.ptx_crypto_config import crypto_defaults
+    from src.services.crypto_calibration import crypto_defaults
 
     defaults = crypto_defaults()
     assert int(defaults["probe_pipeline"]["stage2_top_k"]) == 4

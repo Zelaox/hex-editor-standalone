@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence
 
-from src.services.ptx_evidence import format_byte_window
+from src.services.binary_byte_evidence import format_byte_window
 
 
 def build_pe_consistency_checks(

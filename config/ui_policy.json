@@ -3,7 +3,7 @@
   "policy_id": "hex-editor-ui",
   "revision": 1,
   "panels": {
-    "ptx_timecodes": {
+    "runtime_timecodes": {
       "columns": [
         "offset",
         "value",
@@ -12,7 +12,7 @@
       ],
       "enabled": true
     },
-    "ptx_session_metadata": {
+    "runtime_session_metadata": {
       "columns": [
         "description",
         "value",

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-from src.services.ptx_crypto_analysis import materialize_xor_copy
-from src.services.ptx_crypto_primitives import xor_apply
+from src.services.crypto_transform_material import materialize_xor_copy
+from src.services.crypto_primitives import xor_apply
 from src.services.transform_scoring import score_window
 from src.services.transforms.base import TransformProbeContext, read_window
 from src.services.transforms.common import score_transform_windows

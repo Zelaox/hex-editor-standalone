@@ -6,13 +6,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional
 
-from src.services.ptx_crypto_config import (
+from src.services.crypto_calibration import (
     case_by_id,
     probe_pipeline_config,
     reference_sha256_for_case,
 )
-from src.services.ptx_crypto_primitives import sha256_digest
-from src.services.ptx_scoring_regions import anchors_for_case
+from src.services.crypto_primitives import sha256_digest
+from src.services.crypto_scoring_regions import anchors_for_case
 
 
 def lab_root() -> Path:
@@ -44,7 +44,7 @@ class TransformProbeContext:
         source_sha: str,
         scope_offset: int = 0,
     ) -> "TransformProbeContext":
-        from src.services.ptx_crypto_config import probe_pipeline_config
+        from src.services.crypto_calibration import probe_pipeline_config
 
         return cls(
             raw=raw,

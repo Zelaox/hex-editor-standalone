@@ -22,7 +22,6 @@
   "materializer": {"module": "src.services.local_transform.core", "callable": "materialize_record_families"},
   "validator": {"module": "src.services.local_transform.core", "callable": "validate_materialized_candidate"},
   "semantic_analyzers": [
-    {"id": "legacy-ptx-summary", "impl": {"module": "src.services.local_transform.core", "callable": "analyze_legacy_ptx"}},
     {"id": "runtime-snapshot-summary", "impl": {"module": "src.services.local_transform.core", "callable": "analyze_runtime_snapshot"}}
   ]
 }

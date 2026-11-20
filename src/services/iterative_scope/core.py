@@ -158,9 +158,9 @@ def _semantic_spans(data: bytes, runs: Sequence[Mapping[str, Any]], detectors: S
 
 def _runtime_metrics(data: bytes) -> Dict[str, int]:
     try:
-        from src.plugins.ptx.runtime_analysis import build_ptx_snapshot
+        from src.plugins.pe.runtime_analysis import build_pe_snapshot
         from src.runtime.byte_source import ByteSource
-        snapshot = build_ptx_snapshot(ByteSource.from_bytes(data)).to_dict()
+        snapshot = build_pe_snapshot(ByteSource.from_bytes(data)).to_dict()
         coverage = (snapshot.get("coverage_summary") or {}).get("bytes_by_class") or {}
         return {
             "parser_nodes": len(snapshot.get("nodes") or []),
@@ -399,7 +399,7 @@ def run_iterative_scope_search(source_path: str | Path, alternative_path: str | 
             candidate_root = root / "candidates" / candidate_id
             _write(candidate_root / "descriptor.json", descriptor)
             _write(candidate_root / "analysis.json", analysis)
-            _write_bytes(candidate_root / "candidate.ptx", data)
+            _write_bytes(candidate_root / "candidate.bin", data)
             manifest = {**_public(candidate), "source_sha256": source_identity["sha256"], "alternative_sha256": alternative_identity["sha256"], "status": "experimental_scope_candidate", "verified_decryption": False}
             _write(candidate_root / "manifest.json", manifest)
         prior_ids = {item["candidate_id"] for item in frontier}
@@ -432,7 +432,7 @@ def run_iterative_scope_search(source_path: str | Path, alternative_path: str | 
     frontier = pareto_frontier(frontier, bundle=bundle)
     if status == "goal_satisfied" and not _goal(frontier, source_analysis["metrics"], alternative_analysis["metrics"], bundle):
         status = "frontier_stable"
-    final_frontier = [{**_public(item), "artifact_path": str(root / "candidates" / item["candidate_id"] / "candidate.ptx") if item["candidate_id"] not in {"source", "alternative"} else item["candidate_id"]} for item in frontier]
+    final_frontier = [{**_public(item), "artifact_path": str(root / "candidates" / item["candidate_id"] / "candidate.bin") if item["candidate_id"] not in {"source", "alternative"} else item["candidate_id"]} for item in frontier]
     _write(root / "final" / "frontier.json", final_frontier)
     promotion = {"promotion_eligible": False, "verified_decryption": False, "reject_reasons": ["no_export_candidate"]}
     for item in frontier:

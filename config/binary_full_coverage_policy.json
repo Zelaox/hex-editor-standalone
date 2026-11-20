@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "policy_id": "ptx-full-coverage",
+  "revision": 1,
+  "analysis_budget": {"max_source_bytes": 268435456, "max_anchors": 20000, "max_unknown_regions": 20000},
+  "feature_scan": {
+    "window_bytes": 4096,
+    "window_stride": 4096,
+    "sequence_lengths": [3, 4, 6, 8],
+    "sequence_stride": 4,
+    "max_sequence_samples_per_region": 50000,
+    "top_sequences_per_region": 64,
+    "numeric_widths": [2, 4, 8],
+    "byte_order": ["little", "big"],
+    "use_representation_sweep": true
+  },
+  "anchor_discovery": {
+    "minimum_occurrences_for_family": 2,
+    "context_bytes_before": 128,
+    "context_bytes_after": 128,
+    "include_kinds": ["string"]
+  },
+  "coverage": {
+    "known_classes": ["verified", "inferred", "string", "padding", "transformed"],
+    "unknown_class": "unknown"
+  },
+  "gemma_packet": {
+    "max_regions": 32,
+    "max_context_bytes_per_region": 512,
+    "include_source_paths": false,
+    "include_raw_anchor_values": false
+  }
+}

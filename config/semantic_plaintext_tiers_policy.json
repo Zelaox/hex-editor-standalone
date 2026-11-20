@@ -31,13 +31,13 @@
     },
     "structured_pattern_sources": [
       {
-        "config_path": "config/ptx_parse_policy.json",
+        "config_path": "config/semantic_source_patterns.json",
         "field_path": "timecode_extraction.regex_patterns"
       }
     ],
     "semantic_label_pattern_sources": [
       {
-        "config_path": "config/ptx_parse_policy.json",
+        "config_path": "config/semantic_source_patterns.json",
         "field_path": "semantic_label_patterns"
       }
     ],

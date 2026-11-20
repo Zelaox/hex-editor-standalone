@@ -18,7 +18,6 @@ from src.hex_editor import HexEditor
 from src.search import SearchWorker, SearchHighlighter, SearchResult, classify_search_query
 from src.disassembler import DisassemblerWorker
 from src.extractor import BinaryExtractor
-from src.ptx_handler import detect_file_type
 from src.services.path_utils import normalize_input_path
 from src.logging_config import get_logger
 from src.utils import setup_logging, exception_hook
@@ -27,6 +26,11 @@ from src.snapshot_worker import ForensicContextWorker, SnapshotAnalysisWorker
 
 # Get a logger for this module
 logger = get_logger('app')
+
+
+def detect_file_type(_path: str) -> str:
+    return "binary"
+
 
 class HexEditorApp:
     """Main application class for the HexEditor."""

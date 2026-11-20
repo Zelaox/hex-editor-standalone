@@ -12,11 +12,7 @@ from src.runtime.format_router import detect_format_plugin
 def analyze_binary_snapshot(path: str | Path, *, policy: Mapping[str, Any] | None = None) -> Dict[str, Any]:
     cfg = dict(policy or load_binary_dynamic_config())
     plugin = detect_format_plugin(path, cfg=cfg)
-    if plugin == "ptx":
-        from src.plugins.ptx.runtime_analysis import analyze_ptx_path
-
-        result = analyze_ptx_path(path, policy=cfg)
-    elif plugin == "pe":
+    if plugin == "pe":
         from src.plugins.pe.runtime_analysis import analyze_pe_path
 
         result = analyze_pe_path(path, policy=cfg)
@@ -42,7 +38,6 @@ def binary_waterfall_payload(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
             if row:
                 learning_db_hints = {
                     "metrics_source": str(row.get("metrics_source") or "learning_db_sources"),
-                    "timecode_count": row.get("timecode_count"),
                     "plaintext_run_count": row.get("plaintext_run_count"),
                     "unknown_bytes": row.get("unknown_bytes"),
                     "coverage_complete": row.get("coverage_complete"),

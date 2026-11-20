@@ -18,7 +18,7 @@ INVESTIGATION = ROOT / "tests" / "fixtures" / "private" / "investigation"
 def _minimal_snapshot(*, anchors=None, unknown=None):
     return {
         "snapshot_id": "test-snapshot",
-        "format_plugin": "ptx",
+        "format_plugin": "pe",
         "source": {"sha256": "abc", "size": 1024},
         "coverage_summary": {"total_bytes": 1024, "unknown_bytes": 512, "bytes_by_class": {"unknown": 512}},
         "anchors": anchors or [{"anchor_id": "a1", "kind": "string", "span": {"offset": 64, "length": 8}, "occurrence_count": 2, "evidence_level": "verified"}],
@@ -33,7 +33,7 @@ def test_ui_policy_loads():
 
     policy = load_ui_policy()
     assert policy["policy_id"] == "hex-editor-ui"
-    assert "offset" in panel_columns(policy, "ptx_timecodes")
+    assert "offset" in panel_columns(policy, "runtime_timecodes")
     assert theme_color(policy, "timecode.reference").startswith("#")
 
 

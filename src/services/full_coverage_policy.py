@@ -1,4 +1,4 @@
-"""Policy-driven full-byte PTX coverage and discovery helpers."""
+"""Policy-driven full-byte binary coverage and discovery helpers."""
 
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ def _lab_root() -> Path:
 
 
 def load_full_coverage_policy(path: str | Path | None = None) -> Dict[str, Any]:
-    target = Path(path).expanduser().resolve() if path else _lab_root() / "config" / "ptx_full_coverage_policy.json"
+    target = Path(path).expanduser().resolve() if path else _lab_root() / "config" / "binary_full_coverage_policy.json"
     policy = json.loads(target.read_text(encoding="utf-8"))
     required = {"schema_version", "policy_id", "revision", "analysis_budget", "feature_scan", "anchor_discovery", "coverage", "gemma_packet"}
     if int(policy.get("schema_version") or 0) != 1 or required - set(policy):
-        raise ValueError("invalid PTX full coverage policy")
+        raise ValueError("invalid binary full coverage policy")
     return policy
 
 

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
-from src.services.ptx_crypto_config import (
+from src.services.crypto_calibration import (
     case_by_id,
     crypto_defaults,
     known_keys_for_case,
@@ -17,7 +17,7 @@ from src.services.ptx_crypto_config import (
     reference_sha256_for_case,
     resolve_crypto_case,
 )
-from src.services.ptx_crypto_primitives import (
+from src.services.crypto_primitives import (
     aes128_ecb_decrypt,
     aes_sbox_density,
     derive_aes_candidate_keys,
@@ -29,13 +29,13 @@ from src.services.ptx_crypto_primitives import (
     shannon_entropy,
     xor_apply,
 )
-from src.services.ptx_promotion_gate import build_already_at_reference_result, evaluate_promotion
-from src.services.ptx_scoring_regions import (
+from src.services.promotion_gate import build_already_at_reference_result, evaluate_promotion
+from src.services.crypto_scoring_regions import (
     anchors_for_case,
     compile_scoring_windows,
     excluded_regions_for_case,
 )
-from src.services.ptx_transform_evidence import compile_transform_evidence
+from src.services.transform_evidence import compile_transform_evidence
 from src.services.stage2_policy import select_stage2_survivors
 from src.services.transform_scoring import score_window
 
@@ -351,7 +351,7 @@ def _select_stage2_xor_survivors(
     force_full: bool = False,
     defaults: Optional[Mapping[str, Any]] = None,
 ) -> List[int]:
-    from src.services.ptx_crypto_config import crypto_defaults
+    from src.services.crypto_calibration import crypto_defaults
 
     return select_stage2_survivors(
         cheap_candidates,

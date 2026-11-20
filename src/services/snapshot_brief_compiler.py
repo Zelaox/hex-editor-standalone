@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Mapping, Optional
 
 from src.services.artifact_pointer import resolve_workspace_path, verify_artifact_pointer
 from src.services.hex_checkpoint_policy import load_hex_checkpoint_policy
-from src.services.ptx_full_coverage import load_full_coverage_policy
+from src.services.full_coverage_policy import load_full_coverage_policy
 
 
 def _lab_root() -> Path:

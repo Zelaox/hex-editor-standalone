@@ -27,7 +27,7 @@ def test_probe_phases_load_for_milestones():
 
 
 def test_sweep_limit_x10_in_config():
-    from src.services.ptx_crypto_config import crypto_defaults
+    from src.services.crypto_calibration import crypto_defaults
 
     pipeline = crypto_defaults().get("probe_pipeline") or {}
     assert int(pipeline.get("sweep_key_limit") or 0) == 25600

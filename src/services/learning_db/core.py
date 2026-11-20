@@ -615,13 +615,14 @@ def _discover_path_for_sha256(sha256: str, hint_root: Path | None = None) -> str
 
 def _parser_coverage_from_path(path: Path) -> Dict[str, Any]:
     from src.runtime.byte_source import ByteSource
-    from src.plugins.ptx.runtime_analysis import build_ptx_snapshot, load_binary_dynamic_config
+    from src.plugins.pe.runtime_analysis import build_pe_snapshot
+    from src.runtime.config import load_binary_dynamic_config
     from src.runtime.format_router import detect_format_plugin
 
     cfg = load_binary_dynamic_config()
     max_bytes = int(cfg.get("max_source_bytes", 268435456))
     source = ByteSource.from_path(path, max_bytes=max_bytes)
-    snapshot = build_ptx_snapshot(source, policy=cfg)
+    snapshot = build_pe_snapshot(source, policy=cfg)
     payload = snapshot.to_dict()
     summary = dict(payload.get("coverage_summary") or {})
     unknown = summary.get("unknown_bytes")
@@ -634,21 +635,12 @@ def _parser_coverage_from_path(path: Path) -> Dict[str, Any]:
         "size_bytes": len(source.bytes()),
         "unknown_bytes": None if unknown is None else int(unknown),
         "coverage_complete": None if complete is None else bool(complete),
-        "format_plugin": str(payload.get("format_plugin") or "ptx"),
-        "timecode_count": None,
+        "format_plugin": str(payload.get("format_plugin") or detect_format_plugin(path, cfg=cfg)),
         "plaintext_run_count": None,
     }
-    if detect_format_plugin(path, cfg=cfg) == "ptx":
-        from src.services.plaintext_runs import discover_printable_runs
-        from src.ptx_handler import PTXFile
+    from src.services.plaintext_runs import discover_printable_runs
 
-        runs = discover_printable_runs(source.bytes())
-        metrics["plaintext_run_count"] = len(runs)
-        handler = PTXFile(str(path))
-        if handler.parse():
-            metrics["timecode_count"] = len(handler.timecodes or [])
-        if handler.file_cache:
-            handler.file_cache.close()
+    metrics["plaintext_run_count"] = len(discover_printable_runs(source.bytes()))
     return metrics
 
 
@@ -672,10 +664,9 @@ def index_parser_coverage_for_path(
             "source_sha256": metrics["source_sha256"],
             "size_bytes": metrics["size_bytes"],
             "source_path": str(resolved),
-            "format_plugin": format_plugin or metrics.get("format_plugin") or "ptx",
+            "format_plugin": format_plugin or metrics.get("format_plugin") or "unknown",
             "unknown_bytes": metrics["unknown_bytes"],
             "coverage_complete": _coerce_value(metrics["coverage_complete"]),
-            "timecode_count": metrics.get("timecode_count"),
             "plaintext_run_count": metrics.get("plaintext_run_count"),
             "first_indexed_at": existing["first_indexed_at"] if existing else now,
             "last_indexed_at": now,

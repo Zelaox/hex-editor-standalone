@@ -207,7 +207,7 @@ def render_region_routed_pseudocode_for_path(path: str | Path, *, routing: Optio
 
 
 def _artifact_root() -> Path:
-    from src.services.ptx_pipeline_policy import hex_editor_root
+    from src.services.transform_registry import hex_editor_root
 
     cfg_path = hex_editor_root() / "config" / "hex_editor.json"
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))

@@ -88,9 +88,9 @@ def anchors_for_case(case: Optional[Mapping[str, Any]]) -> List[Dict[str, Any]]:
             anchors.append(dict(item))
     anchor_case_id = str(decrypt.get("anchor_source_case_id") or "")
     if anchor_case_id and not anchors:
-        from src.services.ptx_crypto_config import load_ptx_crypto_calibration
+        from src.services.crypto_calibration import load_crypto_calibration
 
-        for sibling in load_ptx_crypto_calibration().get("cases") or []:
+        for sibling in load_crypto_calibration().get("cases") or []:
             if str(sibling.get("id") or "") == anchor_case_id:
                 return anchors_for_case(sibling)
     return anchors

@@ -20,7 +20,7 @@ def resolve_export_promotion(
             "promotion_reason": "",
             "reject_reasons": ["export_promotion_disabled"],
         }
-    from src.services.ptx_promotion_gate import evaluate_promotion
+    from src.services.promotion_gate import evaluate_promotion
 
     crypto_defaults = dict(export_cfg.get("crypto_defaults") or {})
     verdict = evaluate_promotion(

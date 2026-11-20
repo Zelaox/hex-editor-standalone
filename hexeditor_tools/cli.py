@@ -69,7 +69,6 @@ def _enabled_tool_names(hex_config: Mapping[str, Any]) -> frozenset[str]:
     names.add("hex_editor_desktop_status")
     names.add("hex_editor_open_desktop")
     names.add("export_binary_analysis")
-    names.add("extract_ptx_artifacts")
     return frozenset(names)
 
 

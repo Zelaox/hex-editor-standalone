@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-from src.services.ptx_crypto_config import crypto_defaults, probe_pipeline_config, probe_windows_for_case
+from src.services.crypto_calibration import crypto_defaults, probe_pipeline_config, probe_windows_for_case
 from src.services.transform_registry import merge_crypto_defaults
 
 
@@ -168,7 +168,7 @@ def resolve_active_probe_execution(
     """Single authority for probe tool params — milestone runner and next_action."""
     base = dict(defaults or crypto_defaults())
     if case is None and target_path:
-        from src.services.ptx_crypto_config import resolve_crypto_case
+        from src.services.crypto_calibration import resolve_crypto_case
 
         case = resolve_crypto_case(target_path)
 
@@ -205,7 +205,7 @@ def milestone_probe_params(
 ) -> Dict[str, Any]:
     base = dict(defaults or crypto_defaults())
     if case is None and target_path:
-        from src.services.ptx_crypto_config import resolve_crypto_case
+        from src.services.crypto_calibration import resolve_crypto_case
 
         case = resolve_crypto_case(target_path)
     phase = phase_for_milestone(milestone_id, base)
