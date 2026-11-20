@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project is a PyQt5 binary workspace: bounded reads/writes, semantic graphs, diffs, snapshots, and MCP tools. **PTX and session converters** are optional format modules; the core surface is format-agnostic hex and binary analysis.
+This project is a PyQt5 binary workspace: bounded reads/writes, semantic graphs, diffs, snapshots, and MCP tools. The public standalone build is **format-agnostic** hex/binary analysis (PE and registered plugins).
 
 ## Learned plaintext byte profiles
 

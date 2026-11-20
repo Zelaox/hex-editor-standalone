@@ -828,13 +828,7 @@ class HexEditor(QObject):
             self.error_occurred.emit(f"Error loading file: {exc}")
     
     def _is_ptx_candidate(self, file_path: str) -> bool:
-        from src.runtime.config import load_binary_dynamic_config
-        from src.runtime.format_router import detect_format_plugin
-
-        try:
-            return detect_format_plugin(file_path, cfg=load_binary_dynamic_config()) == "ptx"
-        except Exception:
-            return False
+        return False
 
     def _finish_ptx_parse(self, parse_generation: int, handler, *, success: bool) -> None:
         if parse_generation != self._parse_generation:
