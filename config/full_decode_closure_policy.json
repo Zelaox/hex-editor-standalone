@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "policy_id": "coverage-complete-full-decode-closure",
+  "revision": 2,
+  "artifact_root": "data/artifacts/hex_editor/full_decode_runs",
+  "coverage": {
+    "maximum_segments": 1048576,
+    "merge_adjacent_equal_classes": true
+  },
+  "materialization": {
+    "maximum_changed_bytes": 1048576,
+    "maximum_candidate_count": 512,
+    "require_record_family_proof": true
+  },
+  "lineage_lane": {
+    "minimum_changed_bytes": 64,
+    "minimum_lane_support_ratio": 0.9,
+    "minimum_independent_runs": 2,
+    "holdout_run_count": 1,
+    "position_partition_count": 4,
+    "maximum_scopes": 65536,
+    "require_printable_non_regression": true,
+    "enable_secondary_lanes": true,
+    "secondary_minimum_changed_bytes": 64,
+    "secondary_maximum_lane_count": 128,
+    "residual_minimum_changed_bytes": 16,
+    "residual_maximum_lane_count": 64
+  },
+  "plaintext": {
+    "minimum_run_bytes": 4,
+    "maximum_run_bytes": 1048576,
+    "maximum_records": 65536,
+    "allowed_controls": [9, 10, 13]
+  },
+  "ascii": {
+    "grammar_id": "canonical-byte-lines-v1",
+    "bytes_per_line": 32,
+    "maximum_line_bytes": 4096,
+    "newline": "LF"
+  },
+  "validation": {
+    "require_source_preserved": true,
+    "require_parent_preserved": true,
+    "require_size_preserved": true,
+    "require_scope_confinement": true,
+    "require_inverse_replay": true,
+    "require_coverage_complete": true,
+    "require_ascii_roundtrip": true,
+    "require_plaintext_offset_replay": true
+  },
+  "reference_evaluation": {
+    "enabled": false,
+    "composition_prefer_reference_improvement": true,
+    "composition_ignore_source_resolution_when_reference_present": true,
+    "require_reference_non_regression": false
+  },
+  "objectives": [
+    {"id": "verified_decoded_bytes", "direction": "maximize"},
+    {"id": "verified_plaintext_bytes", "direction": "maximize"},
+    {"id": "unresolved_bytes", "direction": "minimize"},
+    {"id": "changed_bytes", "direction": "minimize"}
+  ],
+  "closure": {
+    "maximum_turns": 8,
+    "initial_provider_ids": ["record-family-proof"],
+    "defer_remaining_providers_to_measurements": true
+  },
+  "model_boundary": {
+    "grammar_path": "config/grammars/full_decode_advisory.gbnf",
+    "closure_grammar_path": "config/grammars/full_decode_closure_advisory.gbnf",
+    "maximum_attempts": 3,
+    "maximum_tokens": 128,
+    "temperature": 0.0,
+    "allowed_actions": ["rank_existing_candidate", "request_registered_measurement"],
+    "forbidden_fields": ["offset", "start", "end", "key_hex", "parameter", "mutation_bytes", "promotion_allowed", "verified_decryption"],
+    "action_contracts": {
+      "rank_existing_candidate": {"required_fields": ["candidate_id", "reason"], "allowed_fields": ["candidate_id", "reason"], "reference_field": "candidate_id", "packet_collection": "candidates", "packet_id_field": "candidate_id"},
+      "request_registered_measurement": {"required_fields": ["measurement_ids", "reason"], "allowed_fields": ["measurement_ids", "reason"], "reference_field": "measurement_ids", "packet_collection": "measurements", "packet_id_field": "measurement_id"}
+    }
+  }
+}

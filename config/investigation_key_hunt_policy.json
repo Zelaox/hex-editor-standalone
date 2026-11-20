@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "policy_id": "investigation-key-hunt",
+  "revision": 1,
+  "window_source_modes": ["case_static", "investigation_derived"],
+  "default_window_source": "investigation_derived",
+  "artifact_layout": {
+    "probe_ledger": "probe_ledger/events.jsonl",
+    "best_rejected": "probe_ledger/best_rejected.json",
+    "derived_windows": "probe_ledger/derived_windows.json",
+    "checkpoint": "checkpoints/probe_state.json"
+  },
+  "budgets": {
+    "max_probe_seconds": 120,
+    "default_key_batch": 16,
+    "max_unknown_regions": 8,
+    "max_ledger_events": 4096,
+    "max_sweep_keys_per_run": 256
+  },
+  "window_derivation": {
+    "case_evidence_roles": ["transform_sample", "anchor_sample"],
+    "exclude_unknown_roles": ["preserve"],
+    "max_printable_ratio_for_cipher_sample": 0.35,
+    "min_entropy_for_unknown_region": 3.0,
+    "min_window_length": 64,
+    "default_window_length": 4096,
+    "prefer_case_evidence_first": true
+  },
+  "promotion_gate_recording": {
+    "record_best_rejected": true,
+    "record_derived_windows": true
+  }
+}

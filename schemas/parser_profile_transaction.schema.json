@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ParserProfileTransaction",
+  "type": "object",
+  "required": ["transaction_id", "base_registry_digest", "candidate_id", "validation_id", "reviewed", "published"],
+  "properties": {"reviewed": {"type": "boolean"}, "published": {"type": "boolean"}},
+  "additionalProperties": true
+}

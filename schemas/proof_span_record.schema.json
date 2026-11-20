@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proof_span_id",
+    "lineage_key",
+    "source_sha256",
+    "parent_sha256",
+    "candidate_sha256",
+    "span",
+    "coverage_class",
+    "producer",
+    "truth_state",
+    "gate_refs",
+    "evidence_refs",
+    "supersedes",
+    "counterexample_refs",
+    "authority"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "proof_span_id": {"type": "string"},
+    "lineage_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parent_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_sha256": {"type": ["string", "null"]},
+    "span": {
+      "type": "object",
+      "required": ["offset", "length"],
+      "properties": {
+        "offset": {"type": "integer", "minimum": 0},
+        "length": {"type": "integer", "minimum": 0}
+      }
+    },
+    "coverage_class": {
+      "type": "string",
+      "enum": ["verified_plaintext", "verified_decoded_binary", "preserved_binary", "unresolved"]
+    },
+    "producer": {"type": "object"},
+    "truth_state": {
+      "type": "string",
+      "enum": ["observed", "proof_owned", "verified_plaintext", "falsified", "superseded"]
+    },
+    "gate_refs": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "supersedes": {"type": "array", "items": {"type": "string"}},
+    "counterexample_refs": {"type": "array", "items": {"type": "string"}},
+    "authority": {"type": "object"},
+    "proven_bytes_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

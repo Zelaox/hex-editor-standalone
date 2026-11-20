@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "default_profile_id": "ptx-generic-discovery",
+  "profiles": [
+    {
+      "profile_id": "ptx-generic-discovery",
+      "format_plugin": "ptx",
+      "revision": 1,
+      "applies_when": {
+        "layout_facts": [],
+        "required_evidence": []
+      },
+      "provenance": {
+        "source": "generic_discovery",
+        "confidence": "experimental"
+      }
+    }
+  ]
+}

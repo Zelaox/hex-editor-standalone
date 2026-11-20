@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "policy_id": "evidence-driven-alternate-scope",
+  "revision": 1,
+  "artifact_layout": {
+    "admission": "evidence/admission.json",
+    "observations": "evidence/observations.json",
+    "prior_feedback": "evidence/prior_feedback.json",
+    "roles": "windows/roles.json",
+    "compatibility": "windows/compatibility.json",
+    "independent_sets": "windows/independent_sets.json",
+    "probe_plan": "boundaries/probe_plan.json",
+    "measurements": "boundaries/measurements.json",
+    "change_points": "boundaries/change_points.json",
+    "hypotheses": "scopes/hypotheses.json",
+    "descriptors": "scopes/compiled_descriptors.json",
+    "results": "scopes/results.json",
+    "representation_metrics": "metrics/representation.json",
+    "parser_metrics": "metrics/parser.json",
+    "preserve_metrics": "metrics/preserve.json",
+    "gate_breakdowns": "gates/breakdowns.json",
+    "gate_summary": "gates/summary.json",
+    "feedback": "feedback/requests.json",
+    "checkpoint": "checkpoints/latest.json",
+    "progress": "logs/progress.json",
+    "rolling_log": "logs/rolling.log",
+    "run": "run.json"
+  },
+  "budgets": {
+    "maximum_probe_windows": 12,
+    "minimum_probe_bytes": 32,
+    "maximum_probe_bytes": 512,
+    "probe_span_bytes": 256,
+    "probe_step_bytes": 128,
+    "maximum_boundary_refinements": 12,
+    "minimum_scope_hypotheses": 3,
+    "maximum_scope_hypotheses": 10,
+    "maximum_descriptor_executions": 10,
+    "maximum_parser_evaluations": 4,
+    "maximum_transformed_bytes": 65536,
+    "maximum_log_events": 4096,
+    "maximum_log_segment_bytes": 131072,
+    "maximum_log_segments": 8,
+    "checkpoint_every_events": 8,
+    "maximum_model_hypotheses": 10,
+    "maximum_model_attempts": 3
+  },
+  "coverage": {
+    "preserve_classes": ["verified"],
+    "candidate_classes": ["unknown"],
+    "header_classes": ["verified", "known"]
+  },
+  "boundary": {
+    "change_score_delta": 0.05,
+    "uncertainty_bytes": 128
+  },
+  "validation_profiles": {
+    "bounded_alternate_scope": {
+      "required_gate_ids": [
+        "non-identity",
+        "preserve-integrity",
+        "representation-improvement",
+        "parser-non-regression",
+        "boundary-localization",
+        "cross-window-reproduction",
+        "structural-compatibility",
+        "header-compatibility"
+      ],
+      "minimum_representation_gain": 0.01,
+      "minimum_independent_windows": 2,
+      "maximum_parser_unknown_regression": 0,
+      "maximum_preserve_mutations": 0,
+      "require_all_gates_pass_for_promotion": true
+    }
+  },
+  "default_validation_profile_id": "bounded_alternate_scope",
+  "terminal_states": ["promotion_eligible", "rejected", "exhausted", "budget_exhausted", "blocked_by_policy", "failed_integrity"],
+  "model_boundary": {
+    "grammar_path": "config/alternate_scope_actions.gbnf",
+    "allowed_actions": ["rank_existing_hypotheses", "request_registered_measurement", "summarize_gate_conflicts"],
+    "forbidden_fields": ["candidate_hex", "key_hex", "offset", "start", "end", "promotion_allowed", "promotion_eligible"],
+    "action_contracts": {
+      "rank_existing_hypotheses": {"required_fields": ["hypothesis_ids", "observed_non_passed_gate_ids", "reason"], "allowed_fields": ["hypothesis_ids", "observed_non_passed_gate_ids", "reason"], "reference_field": "hypothesis_ids", "packet_collection": "hypotheses", "packet_id_field": "hypothesis_id", "gate_status_field": "observed_non_passed_gate_ids"},
+      "request_registered_measurement": {"required_fields": ["measurement_ids", "reason"], "allowed_fields": ["measurement_ids", "reason"], "reference_field": "measurement_ids", "packet_collection": "measurements", "packet_id_field": "measurement_id"},
+      "summarize_gate_conflicts": {"required_fields": ["reason"], "allowed_fields": ["reason"]}
+    }
+  },
+  "logging": {
+    "levels": ["trace", "debug", "info", "warning", "error", "critical"],
+    "redacted_payload_fields": ["raw_bytes", "plaintext", "full_prompt", "full_response", "key_hex"],
+    "flush_after_event": true
+  }
+}

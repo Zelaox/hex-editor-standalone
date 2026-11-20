@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["schema_version","event_id","run_id","sequence","timestamp_utc","severity","event_type","component_id","payload","policy_digest","registry_digest"]}

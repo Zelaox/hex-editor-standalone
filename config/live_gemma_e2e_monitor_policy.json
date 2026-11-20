@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "policy_id": "live-gemma-e2e-monitor",
+  "revision": 1,
+  "health_interval_seconds": 60,
+  "full_e2e_every_health_checks": 5,
+  "model_max_tokens": 512,
+  "region_read_bytes": 256,
+  "gemma_temperature": 0.1,
+  "gemma_brief_sections": [
+    "schema_version",
+    "operation",
+    "length",
+    "truncated",
+    "interpreter_signals",
+    "features"
+  ],
+  "runtime_output_root": "data/artifacts/hex_editor/live_gemma_e2e"
+}

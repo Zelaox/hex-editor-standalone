@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "policy_id": "scope-aware-transform-preview",
+  "revision": 4,
+  "modes": [
+    {"id": "raw", "label": "RAW"},
+    {"id": "transform_preview", "label": "TRANSFORM PREVIEW"},
+    {"id": "materialized", "label": "MATERIALIZED"},
+    {"id": "semantic", "label": "SEMANTIC"}
+  ],
+  "default_mode": "raw",
+  "verified_candidate_rail": "full_decode",
+  "semantic_graph_rail": "unresolved_inference",
+  "scan_limit": 256,
+  "text_encodings": ["utf-8", "ascii"],
+  "binary_placeholder": "<binary offset={offset_hex} length={length} class={classification}>",
+  "unresolved_placeholder": "<unresolved offset={offset_hex} length={length}>",
+  "conflict_placeholder": "<conflict offset={offset_hex} length={length}>",
+  "span_label_format": "[{label}] {text}",
+  "truth_labels": {
+    "raw_plaintext": "RAW · SOURCE",
+    "preview_plaintext": "PREVIEW · VERIFIED",
+    "preview_binary": "PREVIEW · BINARY",
+    "materialized_plaintext": "MATERIALIZED · VERIFIED CANDIDATE",
+    "materialized_binary": "MATERIALIZED · BINARY",
+    "semantic_field": "SEMANTIC · VERIFIED FIELD",
+    "preserved_binary": "PRESERVED · BINARY",
+    "unresolved": "UNRESOLVED",
+    "conflict": "CONFLICT · MULTIPLE REGIMES"
+  },
+  "require_verified_artifacts": true,
+  "require_identity_match": true,
+  "scope_sources": ["full_decode_proof_spans"],
+  "maximum_chain_depth": 8,
+  "conflict_resolution": "explicit",
+  "cache": {
+    "enabled": true,
+    "max_entries": 256
+  },
+  "background_worker_threshold_bytes": 8192,
+  "full_file_export": {
+    "page_bytes": 65536,
+    "max_total_bytes": 1048576
+  }
+}

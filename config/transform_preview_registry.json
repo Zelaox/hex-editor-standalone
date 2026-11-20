@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "registry_id": "transform-preview-hooks",
+  "revision": 1,
+  "families": [
+    {
+      "family_id": "xor_sweep",
+      "preview_safe": true,
+      "module": "src.services.transforms.xor_sweep",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "xor_repeating_infer",
+      "preview_safe": true,
+      "module": "src.services.transforms.xor_repeating",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "sub_byte",
+      "preview_safe": true,
+      "module": "src.services.transforms.sub_byte",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "add_byte",
+      "preview_safe": true,
+      "module": "src.services.transforms.add_byte",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "not_",
+      "preview_safe": true,
+      "module": "src.services.transforms.not_",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "nibble_swap",
+      "preview_safe": true,
+      "module": "src.services.transforms.nibble_swap",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "rol",
+      "preview_safe": true,
+      "module": "src.services.transforms.rol",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "ror",
+      "preview_safe": true,
+      "module": "src.services.transforms.ror",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "delta_decode",
+      "preview_safe": true,
+      "module": "src.services.transforms.delta_decode",
+      "hook": "materialize",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "record-family-proof",
+      "preview_safe": true,
+      "module": null,
+      "hook": "materialize_scope",
+      "length_relation": "one_to_one"
+    },
+    {
+      "family_id": "materialization",
+      "preview_safe": true,
+      "module": null,
+      "hook": "materialize_scope",
+      "length_relation": "one_to_one"
+    }
+  ]
+}

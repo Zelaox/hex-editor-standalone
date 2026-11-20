@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ParserLearningRegistry",
+  "type": "object",
+  "required": ["schema_version", "registry_id", "revision", "normalizers", "inference_stages", "candidate_compiler", "validation_checks"]
+}

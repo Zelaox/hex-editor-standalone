@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "policy_id": "verified-parser-learning",
+  "revision": 1,
+  "artifact_layout": {
+    "root": "parser_learning",
+    "observations": "observations/index.json",
+    "clusters": "clusters/index.json",
+    "candidates": "candidates/index.json",
+    "validations": "validations/index.json",
+    "ledger": "promotion_ledger/events.json",
+    "staged_profiles": "staged_profiles"
+  },
+  "budgets": {
+    "max_workspaces": 128,
+    "max_regions_per_workspace": 4096,
+    "max_observations": 131072,
+    "max_decoder_values_per_region": 4096,
+    "max_cluster_members": 16384,
+    "max_candidates": 16384,
+    "max_gemma_candidates": 16,
+    "max_gemma_counterexamples": 128
+  },
+  "aggregation": {
+    "eligible_statuses": ["supported", "falsified", "inconclusive"],
+    "support_status": "supported",
+    "counterexample_status": "falsified",
+    "minimum_cluster_support": 2
+  },
+  "relationships": {
+    "minimum_success_count": 2,
+    "maximum_ambiguous_count": 0,
+    "maximum_failed_count": 0
+  },
+  "candidate_states": ["experimental", "mechanically_supported", "independent_validation_pending", "validation_passed", "promotion_eligible", "reviewed", "promoted", "rejected", "superseded"],
+  "initial_candidate_state": "experimental",
+  "promotion_profiles": {
+    "learned_general": {
+      "minimum_independent_region_count": 2,
+      "minimum_independent_source_count": 2,
+      "maximum_counterexample_count": 0,
+      "require_deterministic_replay": true,
+      "require_negative_fixture_result": true,
+      "require_no_coverage_regression": true,
+      "require_no_graph_regression": true,
+      "require_review": true
+    },
+    "single_source_strict": {
+      "minimum_independent_region_count": 4,
+      "minimum_independent_source_count": 1,
+      "maximum_counterexample_count": 0,
+      "require_deterministic_replay": true,
+      "require_negative_fixture_result": true,
+      "require_no_coverage_regression": true,
+      "require_no_graph_regression": true,
+      "require_review": true
+    }
+  },
+  "default_promotion_profile_id": "learned_general",
+  "single_source_profile_ids": ["single_source_strict"],
+  "validation": {
+    "mechanical_artifact": "validations/mechanical/index.json",
+    "negative_fixtures": [
+      {
+        "fixture_id": "uniform-zero-bytes",
+        "source_label": "negative-fixture-uniform-zero",
+        "region_id": "negative-region-zero",
+        "payload_encoding": "hex",
+        "payload": "00000000",
+        "span_length": 4,
+        "forbid_eligible_candidates": true
+      }
+    ],
+    "regression": {
+      "require_baseline_for_coverage": true,
+      "require_baseline_for_graph": true,
+      "maximum_coverage_drop": 0,
+      "maximum_graph_node_drop": 0
+    }
+  },
+  "gemma_packet": {
+    "capability_id": "bounded_binary_hypothesis",
+    "max_model_tokens": 512,
+    "max_actions": 1,
+    "temperature": 0.1,
+    "grammar_path": "config/parser_learning_actions.gbnf",
+    "candidate_fields": ["candidate_id", "rule_kind", "state", "support_count", "counterexample_count", "independent_region_count", "independent_source_count", "eligibility"],
+    "allowed_actions": ["prioritize_candidate", "request_independent_validation", "request_registered_evidence"],
+    "forbidden_authority_fields": ["offset", "width", "type", "record_length", "semantic_name", "promotion_allowed"]
+  }
+}

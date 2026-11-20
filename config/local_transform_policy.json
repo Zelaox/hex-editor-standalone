@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "policy_id": "evidence-driven-local-transform-regimes",
+  "revision": 4,
+  "artifact_root": "data/artifacts/hex_editor/local_transform_runs",
+  "scan": {
+    "window_bytes": 192,
+    "step_bytes": 64,
+    "maximum_scan_bytes": 1048576,
+    "transform_parameter_min": 0,
+    "transform_parameter_max": 255,
+    "top_parameters_per_window": 3,
+    "minimum_printable_gain": 0.3,
+    "minimum_printable_ratio": 0.12,
+    "minimum_structural_ratio": 0.55,
+    "minimum_zero_ratio": 0.1,
+    "zero_score_weight": 1.0,
+    "minimum_text_run_bytes": 12,
+    "maximum_preview_bytes": 256
+  },
+  "parent_diff": {
+    "minimum_span_bytes": 4,
+    "minimum_support_ratio": 0.95,
+    "maximum_spans": 4096
+  },
+  "record_family": {
+    "minimum_independent_occurrences": 2,
+    "maximum_occurrences_per_family": 64,
+    "minimum_occurrence_distance_bytes": 8,
+    "group_fields": ["family_id", "parameter_hex"],
+    "allow_singleton_parent_diff": true,
+    "singleton_parent_diff_minimum_support_ratio": 0.95
+  },
+  "materialization": {
+    "maximum_families": 16,
+    "maximum_scopes": 256,
+    "maximum_changed_bytes": 65536,
+    "scope_mode": "decoded_text_spans"
+  },
+  "validation": {
+    "require_non_identity": true,
+    "require_source_preserved": true,
+    "require_timecode_non_regression": true,
+    "require_parser_section_non_regression": true,
+    "require_independent_occurrences": true
+  },
+  "export": {
+    "required_gate_ids": ["non_identity", "source_preserved", "independent_occurrences"]
+  },
+  "objectives": [
+    {"id": "supported_plaintext_bytes", "direction": "maximize"},
+    {"id": "record_family_count", "direction": "maximize"},
+    {"id": "timecode_count", "direction": "maximize"},
+    {"id": "parser_sections", "direction": "maximize"},
+    {"id": "changed_bytes", "direction": "minimize"}
+  ],
+  "logging": {
+    "redacted_fields": ["raw_bytes", "full_prompt", "full_response", "key_hex"],
+    "flush_after_event": true
+  },
+  "model_boundary": {
+    "grammar_path": "config/grammars/local_transform_advisory.gbnf",
+    "maximum_attempts": 3,
+    "maximum_tokens": 96,
+    "temperature": 0.0
+  },
+  "export_promotion": {
+    "enabled": true,
+    "transform_start": 0,
+    "reference_sha256": "",
+    "crypto_defaults": {
+      "min_cross_window_agreement": 2,
+      "min_structural_improvements": 1,
+      "min_entropy_drop": 0.35,
+      "sha256_match_promotes": true,
+      "promotion_policy": {
+        "sha_match_requires_evidence_pass": true
+      }
+    }
+  }
+}

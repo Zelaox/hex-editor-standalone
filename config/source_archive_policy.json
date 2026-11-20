@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "policy_id": "source-archive",
+  "revision": 1,
+  "archive_root": "data/archive/hex_editor/sources",
+  "manifest_filename": "archive_manifest.json",
+  "registry_path": "data/archive/hex_editor/sources/registry.json",
+  "sha256_chunk_bytes": 1048576,
+  "required_manifest_fields": [
+    "schema_version",
+    "archive_id",
+    "original_path",
+    "archived_path",
+    "sha256",
+    "size",
+    "archived_at_utc",
+    "reason"
+  ],
+  "reason_codes": [
+    "superseded_by_newer_source",
+    "stale_fixture",
+    "user_requested_archive"
+  ]
+}

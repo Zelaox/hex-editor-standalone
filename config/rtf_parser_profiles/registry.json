@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "format_plugin": "rtf",
+  "revision": 1,
+  "structural_module": "src.plugins.rtf.structural_pseudocode",
+  "structural_callable": "produce_structural_lines",
+  "known_group_destinations": [
+    "fonttbl",
+    "colortbl",
+    "stylesheet",
+    "info",
+    "pict"
+  ],
+  "header_control_words": [
+    "rtf",
+    "ansi",
+    "ansicpg",
+    "deff",
+    "deflang"
+  ]
+}

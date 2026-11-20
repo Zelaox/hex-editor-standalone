@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PERuntimeExecutionSnapshot",
+  "type": "object",
+  "required": ["schema_version", "runtime_execution_id", "static_snapshot_id", "nodes", "signals"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "runtime_execution_id": {"type": "string"},
+    "runtime_snapshot_id": {"type": "string"},
+    "static_snapshot_id": {"type": "string"},
+    "backend_id": {"type": "string"},
+    "policy_mode": {"type": "string"},
+    "nodes": {"type": "array"},
+    "edges": {"type": "array"},
+    "events": {"type": "array"},
+    "signals": {"type": "object"}
+  },
+  "additionalProperties": true
+}

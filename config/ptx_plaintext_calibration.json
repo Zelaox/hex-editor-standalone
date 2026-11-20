@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "pytest_only": true,
+  "comment": "Local private fixtures are not distributed. Configure explicit local fixtures when needed.",
+  "bundles": []
+}

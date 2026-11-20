@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "registry_id": "transform-scope-registry",
+  "revision": 1,
+  "window_derivers": [
+    {"id": "case-hint-neighborhood", "impl": {"module": "src.services.transform_scope.core", "callable": "derive_hint_windows"}},
+    {"id": "unknown-region-boundaries", "impl": {"module": "src.services.transform_scope.core", "callable": "derive_unknown_windows"}}
+  ],
+  "preserve_derivers": [
+    {"id": "verified-known-coverage", "impl": {"module": "src.services.transform_scope.core", "callable": "derive_preserve_windows"}}
+  ],
+  "boundary_derivers": [
+    {"id": "window-and-coverage-boundaries", "impl": {"module": "src.services.transform_scope.core", "callable": "derive_boundaries"}}
+  ],
+  "scope_compiler": {"impl": {"module": "src.services.transform_scope.core", "callable": "compile_scope_descriptors"}},
+  "executor": {"id": "xor-bounded", "impl": {"module": "src.services.transform_scope.core", "callable": "execute_descriptors"}},
+  "gates": [
+    {"id": "non-identity", "impl": {"module": "src.services.transform_scope.core", "callable": "gate_non_identity"}},
+    {"id": "cross-window", "impl": {"module": "src.services.transform_scope.core", "callable": "gate_cross_window"}},
+    {"id": "preserve-regions", "impl": {"module": "src.services.transform_scope.core", "callable": "gate_preserve"}},
+    {"id": "header-compatible", "impl": {"module": "src.services.transform_scope.core", "callable": "gate_header"}},
+    {"id": "parser-coverage", "impl": {"module": "src.services.transform_scope.core", "callable": "gate_parser_coverage"}}
+  ]
+}

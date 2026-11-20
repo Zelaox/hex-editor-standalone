@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-learning-db",
+  "revision": 3,
+  "storage": {
+    "engine": "sqlite",
+    "filename": "learning.sqlite",
+    "path_source": {
+      "config_file": "config/hex_editor.json",
+      "config_root": "lab",
+      "path_key": "learning_db_root"
+    },
+    "journal_mode": "wal",
+    "synchronous": "normal"
+  },
+  "tables": {
+    "meta": {
+      "primary_key": ["key"],
+      "columns": [
+        {"name": "key", "type": "TEXT", "not_null": true},
+        {"name": "value", "type": "TEXT", "not_null": true}
+      ]
+    },
+    "forensic_runs": {
+      "primary_key": ["run_id"],
+      "columns": [
+        {"name": "run_id", "type": "TEXT", "not_null": true},
+        {"name": "case_id", "type": "TEXT", "not_null": true},
+        {"name": "capture_id", "type": "TEXT", "not_null": true},
+        {"name": "analysis_identity_digest", "type": "TEXT", "not_null": true},
+        {"name": "normalized_result_digest", "type": "TEXT", "not_null": true},
+        {"name": "status", "type": "TEXT", "not_null": true},
+        {"name": "artifact_path", "type": "TEXT", "not_null": true},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["case_id", "capture_id"], ["analysis_identity_digest"]]
+    },
+    "forensic_acquisitions": {
+      "primary_key": ["association_id"],
+      "columns": [
+        {"name": "association_id", "type": "TEXT", "not_null": true},
+        {"name": "case_id", "type": "TEXT", "not_null": true},
+        {"name": "capture_id", "type": "TEXT", "not_null": true},
+        {"name": "source_sha256", "type": "TEXT", "not_null": true},
+        {"name": "relative_path", "type": "TEXT", "not_null": true},
+        {"name": "acquired_at", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["case_id", "capture_id"], ["source_sha256"]]
+    },
+    "sources": {
+      "primary_key": ["source_sha256"],
+      "columns": [
+        {"name": "source_sha256", "type": "TEXT", "not_null": true},
+        {"name": "size_bytes", "type": "INTEGER"},
+        {"name": "source_path", "type": "TEXT"},
+        {"name": "format_plugin", "type": "TEXT"},
+        {"name":         "unknown_bytes", "type": "INTEGER"},
+        {"name": "coverage_complete", "type": "INTEGER"},
+        {"name": "timecode_count", "type": "INTEGER"},
+        {"name": "plaintext_run_count", "type": "INTEGER"},
+        {"name": "first_indexed_at", "type": "TEXT", "not_null": true},
+        {"name": "last_indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["format_plugin"], ["last_indexed_at"], ["unknown_bytes"]]
+    },
+    "runs": {
+      "primary_key": ["run_id"],
+      "columns": [
+        {"name": "run_id", "type": "TEXT", "not_null": true},
+        {"name": "rail_id", "type": "TEXT", "not_null": true},
+        {"name": "status", "type": "TEXT"},
+        {"name": "source_sha256", "type": "TEXT"},
+        {"name": "parent_sha256", "type": "TEXT"},
+        {"name": "candidate_sha256", "type": "TEXT"},
+        {"name": "policy_digest", "type": "TEXT"},
+        {"name": "registry_digest", "type": "TEXT"},
+        {"name": "run_root", "type": "TEXT", "not_null": true},
+        {"name": "run_path", "type": "TEXT", "not_null": true},
+        {"name": "selected_candidate_id", "type": "TEXT"},
+        {"name": "verified_decryption", "type": "INTEGER"},
+        {"name": "promotion_eligible", "type": "INTEGER"},
+        {"name": "unresolved_bytes", "type": "INTEGER"},
+        {"name": "upstream_run_id", "type": "TEXT"},
+        {"name": "owned_preserved_bytes", "type": "INTEGER"},
+        {"name": "unowned_preserved_bytes", "type": "INTEGER"},
+        {"name": "structural_metadata_bytes", "type": "INTEGER"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["rail_id", "status"], ["source_sha256"], ["indexed_at"]]
+    },
+    "candidates": {
+      "primary_key": ["candidate_id"],
+      "columns": [
+        {"name": "candidate_id", "type": "TEXT", "not_null": true},
+        {"name": "rail_id", "type": "TEXT", "not_null": true},
+        {"name": "run_id", "type": "TEXT", "not_null": true},
+        {"name": "source_sha256", "type": "TEXT"},
+        {"name": "parent_sha256", "type": "TEXT"},
+        {"name": "output_sha256", "type": "TEXT"},
+        {"name": "changed_bytes", "type": "INTEGER"},
+        {"name": "state", "type": "TEXT"},
+        {"name": "rule_kind", "type": "TEXT"},
+        {"name": "verified_decryption", "type": "INTEGER"},
+        {"name": "promotion_eligible", "type": "INTEGER"},
+        {"name": "artifact_path", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["run_id"], ["source_sha256"], ["output_sha256"], ["rule_kind", "state"]]
+    },
+    "findings": {
+      "primary_key": ["finding_id"],
+      "columns": [
+        {"name": "finding_id", "type": "TEXT", "not_null": true},
+        {"name": "kind", "type": "TEXT", "not_null": true},
+        {"name": "state", "type": "TEXT", "not_null": true},
+        {"name": "source_sha256", "type": "TEXT", "not_null": true},
+        {"name": "span_offset", "type": "INTEGER"},
+        {"name": "span_length", "type": "INTEGER"},
+        {"name": "producer_run_id", "type": "TEXT"},
+        {"name": "summary", "type": "TEXT"},
+        {"name": "artifact_path", "type": "TEXT", "not_null": true},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["source_sha256", "kind"], ["state"], ["producer_run_id"]]
+    },
+    "parser_observations": {
+      "primary_key": ["observation_id"],
+      "columns": [
+        {"name": "observation_id", "type": "TEXT", "not_null": true},
+        {"name": "source_digest", "type": "TEXT", "not_null": true},
+        {"name": "region_id", "type": "TEXT"},
+        {"name": "decoder_id", "type": "TEXT"},
+        {"name": "status", "type": "TEXT"},
+        {"name": "format_plugin", "type": "TEXT"},
+        {"name": "parser_learning_run_root", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["source_digest"], ["format_plugin", "status"]]
+    },
+    "learning_events": {
+      "primary_key": ["event_id"],
+      "columns": [
+        {"name": "event_id", "type": "TEXT", "not_null": true},
+        {"name": "event_kind", "type": "TEXT", "not_null": true},
+        {"name": "entity_id", "type": "TEXT"},
+        {"name": "rail_id", "type": "TEXT"},
+        {"name": "payload_json", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["event_kind"], ["entity_id"], ["indexed_at"]]
+    },
+    "proof_spans": {
+      "primary_key": ["proof_span_id"],
+      "columns": [
+        {"name": "proof_span_id", "type": "TEXT", "not_null": true},
+        {"name": "lineage_key", "type": "TEXT", "not_null": true},
+        {"name": "source_sha256", "type": "TEXT", "not_null": true},
+        {"name": "parent_sha256", "type": "TEXT"},
+        {"name": "candidate_sha256", "type": "TEXT"},
+        {"name": "span_offset", "type": "INTEGER", "not_null": true},
+        {"name": "span_length", "type": "INTEGER", "not_null": true},
+        {"name": "coverage_class", "type": "TEXT", "not_null": true},
+        {"name": "truth_state", "type": "TEXT", "not_null": true},
+        {"name": "producer_run_id", "type": "TEXT"},
+        {"name": "rail_id", "type": "TEXT"},
+        {"name": "artifact_path", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["lineage_key"], ["source_sha256"], ["truth_state"]]
+    },
+    "cross_run_deltas": {
+      "primary_key": ["delta_id"],
+      "columns": [
+        {"name": "delta_id", "type": "TEXT", "not_null": true},
+        {"name": "delta_kind", "type": "TEXT", "not_null": true},
+        {"name": "lineage_key", "type": "TEXT", "not_null": true},
+        {"name": "from_run_id", "type": "TEXT"},
+        {"name": "to_run_id", "type": "TEXT"},
+        {"name": "lost_proof_owned_span_count", "type": "INTEGER", "not_null": true},
+        {"name": "artifact_path", "type": "TEXT", "not_null": true},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["lineage_key"], ["delta_kind"], ["indexed_at"]]
+    },
+    "preservation_events": {
+      "primary_key": ["event_id"],
+      "columns": [
+        {"name": "event_id", "type": "TEXT", "not_null": true},
+        {"name": "lineage_key", "type": "TEXT", "not_null": true},
+        {"name": "run_id", "type": "TEXT", "not_null": true},
+        {"name": "rail_id", "type": "TEXT", "not_null": true},
+        {"name": "protected_span_count", "type": "INTEGER", "not_null": true},
+        {"name": "preservation_blocked", "type": "INTEGER", "not_null": true},
+        {"name": "payload_json", "type": "TEXT"},
+        {"name": "indexed_at", "type": "TEXT", "not_null": true}
+      ],
+      "indexes": [["lineage_key"], ["run_id"], ["indexed_at"]]
+    }
+  },
+  "sync": {
+    "enabled": true,
+    "on_run_complete": true,
+    "fail_on_index_error": false,
+    "backfill_scan_limit": 256,
+    "lineage_policy_path": "config/candidate_lineage_policy.json",
+    "finding_ledger_policy_path": "config/record_family_policy.json",
+    "parser_learning_policy_path": "config/parser_learning_policy.json",
+    "proof_ledger_policy_path": "config/proof_ledger_policy.json"
+  },
+  "identity_lookup": {
+    "runs_sha_columns": ["source_sha256", "parent_sha256", "candidate_sha256"],
+    "candidate_output_column": "output_sha256"
+  },
+  "queries": {
+    "default_limit": 64,
+    "max_limit": 1024
+  }
+}

@@ -1,0 +1,10 @@
+document = header, "\n", { data_line }, footer, "\n" ;
+header = "FULL-DECODE-ASCII/1 size=", decimal, " sha256=", hex64, " width=", decimal ;
+data_line = "@", hex16, ":", { " ", hex2 }, "\n" ;
+footer = "END sha256=", hex64 ;
+decimal = digit, { digit } ;
+hex2 = hex, hex ;
+hex16 = hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex, hex ;
+hex64 = hex16, hex16, hex16, hex16 ;
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+hex = digit | "a" | "b" | "c" | "d" | "e" | "f" ;

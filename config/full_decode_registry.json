@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "registry_id": "full-decode-registry",
+  "revision": 4,
+  "registered_measurements": [
+    {
+      "measurement_id": "run-record-family-proof",
+      "provider_id": "record-family-proof",
+      "description": "Execute record-family holdout proof search and attach provider frontier"
+    },
+    {
+      "measurement_id": "run-local-transform-proof",
+      "provider_id": "local-transform-proof",
+      "description": "Execute local transform regime search and attach provider frontier"
+    },
+    {
+      "measurement_id": "run-lineage-lane-proof",
+      "provider_id": "lineage-lane-proof",
+      "description": "Infer dominant source-to-parent transform lanes and verify them across independent runs"
+    }
+  ],
+  "proof_providers": [
+    {"id": "record-family-proof", "impl": {"module": "src.services.full_decode.core", "callable": "run_record_family_provider"}},
+    {"id": "local-transform-proof", "impl": {"module": "src.services.full_decode.core", "callable": "run_local_transform_provider"}},
+    {"id": "lineage-lane-proof", "impl": {"module": "src.services.full_decode.core", "callable": "run_lineage_lane_provider"}}
+  ],
+  "coverage_compiler": {"module": "src.services.full_decode.core", "callable": "compile_complete_coverage"},
+  "plaintext_extractor": {"module": "src.services.full_decode.core", "callable": "extract_plaintext_corpus"},
+  "ascii_codec": {
+    "encoder": {"module": "src.services.full_decode.ascii_codec", "callable": "encode_lossless_ascii"},
+    "decoder": {"module": "src.services.full_decode.ascii_codec", "callable": "decode_lossless_ascii"}
+  },
+  "gate_runner": {"module": "src.services.full_decode.core", "callable": "run_whole_file_gates"}
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "registry_revision": "ptx-transform-registry-v1",
+  "capability": "bounded_binary_hypothesis",
+  "budgets": {
+    "max_source_bytes": 268435456,
+    "max_candidates": 256,
+    "max_seconds": 60,
+    "max_preview_bytes": 256,
+    "max_attempts_in_packet": 32
+  },
+  "transform_registry": {
+    "xor_single_byte": {"key_length_min": 1, "key_length_max": 1, "requires_key_hex": true, "executor": {"module": "src.services.key_hunt_executors", "function": "apply_xor_descriptor"}},
+    "xor_repeating": {"key_length_min": 1, "key_length_max": 64, "requires_key_hex": true, "executor": {"module": "src.services.key_hunt_executors", "function": "apply_xor_descriptor"}}
+  },
+  "parser_policy": {
+    "minimum_string_length": 4,
+    "maximum_string_length": 512,
+    "max_records": 10000
+  },
+  "promotion_gate": {
+    "minimum_coverage_gain": 0.01,
+    "minimum_printable_gain": 0.0
+    ,"minimum_cross_window_agreement": 2
+  },
+  "seed_hypotheses": []
+}

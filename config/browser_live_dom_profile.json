@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "snapchat-loaded-dom-v1",
+  "revision": 1,
+  "origins": ["https://www.snapchat.com", "https://web.snapchat.com"],
+  "conversation_path_pattern": "^/web/([^/]+)$",
+  "selectors": {
+    "groups": "ul.rbTsq",
+    "rows": ":scope > li",
+    "text_parts": ":scope > div.KB4Aq > div.p8r1z > span.ogn1z",
+    "sender": ":scope > header .GUB_w > div > span",
+    "timestamp": ":scope > header time[datetime]"
+  },
+  "max_input_bytes": 4194304,
+  "max_groups": 2000,
+  "max_rows": 10000,
+  "max_parts_per_row": 32,
+  "max_text_chars": 100000,
+  "server_timeout_seconds": 900,
+  "request_timeout_seconds": 10
+}

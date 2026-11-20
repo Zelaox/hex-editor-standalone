@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "policy_id": "investigation-debug",
+  "revision": 3,
+  "artifact_root": "data/artifacts/hex_editor/investigation_debug_runs",
+  "live_investigation_policy_path": "config/live_investigation_policy.json",
+  "waves": {
+    "run_live_investigation": true,
+    "run_unresolved_inference": true,
+    "run_preserved_binary_inference": true,
+    "run_live_preserved_investigation": true,
+    "run_candidate_lineage": true,
+    "run_key_hunt_when_investigation_root": true,
+    "attempt_gemma_health_check": false
+  }
+}

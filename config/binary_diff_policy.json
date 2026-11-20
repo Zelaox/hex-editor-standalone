@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "policy_id": "binary-structural-compatibility",
+  "revision": 1,
+  "defaults": {
+    "required_equal_fields": ["format_plugin", "registry_revision", "registry_digest"],
+    "coverage_class_field": "class",
+    "minimum_coverage_sequence_similarity": 0.8,
+    "minimum_node_kind_sequence_similarity": 0.8,
+    "coverage_weight": 0.6,
+    "node_kind_weight": 0.4
+  },
+  "plugins": {
+    "ptx": {
+      "required_equal_fields": ["signals.profile_id"],
+      "optional_equal_fields": ["signals.format_variant", "signals.format_version"]
+    },
+    "pe": {
+      "required_equal_fields": ["signals.profile_id", "signals.machine", "signals.optional_header_magic"]
+    }
+  }
+}

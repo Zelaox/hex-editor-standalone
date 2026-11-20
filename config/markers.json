@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "markers": [
+    "Pro Tools",
+    "TRAK",
+    "CLIP",
+    "MEDI",
+    "SESS",
+    "Session",
+    "Audio",
+    "00:00:00:01",
+    "0:00.100"
+  ]
+}

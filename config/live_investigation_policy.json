@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "policy_id": "live-investigation-closure",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/live_investigation_runs",
+  "full_decode_policy_path": "config/full_decode_closure_policy.json",
+  "full_decode_registry_path": "config/full_decode_registry.json",
+  "closure": {
+    "maximum_turns": 8,
+    "require_gemma_for_terminal_rank": false
+  },
+  "gemma_live_output_root": "data/artifacts/hex_editor/live_investigation_gemma_live"
+}

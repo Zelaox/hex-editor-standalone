@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": 3,
+  "max_pages": 32,
+  "max_candidates": 10000,
+  "max_text_chars": 16000,
+  "max_nodes": 100000,
+  "fuzz_harnesses": ["v8_value", "indexeddb_key"],
+  "v8_versions": [13, 14, 15, 16],
+  "blink_versions": [17, 18, 19, 20, 21],
+  "protected_storage": "windows_dpapi_current_user",
+  "indexer_id": "private_message_recovery",
+  "viewer_title": "Private recovered text — observations and candidates",
+  "open_action": "Private recovered text...",
+  "open_failed": "Private recovery could not be verified or opened for this Windows user.",
+  "profiles": [
+    {
+      "id": "structured-message-candidate-v1", "revision": 1, "adapter": "structured_object",
+      "text_fields": ["text", "body", "messageText"],
+      "identity_fields": ["messageId", "message_id", "messageID"],
+      "thread_fields": ["threadId", "thread_id", "conversationId", "conversation_id"],
+      "sender_fields": ["senderId", "sender_id", "authorId"],
+      "timestamp_fields": ["timestampMs", "timestamp", "serverTimestamp"],
+      "encrypted_fields": ["_encryptedContent"],
+      "known_fields": ["hashedPlaintextHash", "e2eeIdentityKey.shared"]
+    },
+    {
+      "id": "saved-snapchat-dom-candidates-v1", "revision": 1, "adapter": "saved_dom_export",
+      "required_root": {"schema_version": 1, "export_kind": "snapchat_live"},
+      "origins": ["https://www.snapchat.com", "https://web.snapchat.com"],
+      "origin_key": "origin", "threads_key": "threads", "rows_key": "messages",
+      "text_key": "text", "thread_key": "conversation_id", "label_key": "display_name", "source_key": "source"
+    },
+    {
+      "id": "saved-snapchat-dom-candidates-v2", "revision": 1, "adapter": "saved_dom_export",
+      "required_root": {"schema_version": 2, "export_kind": "snapchat_live"},
+      "origins": ["https://www.snapchat.com", "https://web.snapchat.com"],
+      "origin_key": "origin", "threads_key": "threads", "rows_key": "messages",
+      "text_key": "text", "thread_key": "conversation_id", "label_key": "display_name", "source_key": "source"
+    }
+  ]
+}

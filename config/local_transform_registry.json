@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "registry_id": "local-transform-registry",
+  "revision": 3,
+  "transform_families": [
+    {
+      "id": "xor-single-byte",
+      "discover": {"module": "src.services.local_transform.core", "callable": "discover_xor_windows"},
+      "apply": {"module": "src.services.local_transform.core", "callable": "apply_xor"},
+      "compose": {"module": "src.services.local_transform.core", "callable": "compose_xor"},
+      "invert": {"module": "src.services.local_transform.core", "callable": "invert_xor"}
+    },
+    {
+      "id": "parent-diff-xor",
+      "discover": {"module": "src.services.local_transform.core", "callable": "discover_parent_diff_xor"},
+      "apply": {"module": "src.services.local_transform.core", "callable": "apply_xor"},
+      "compose": {"module": "src.services.local_transform.core", "callable": "compose_xor"},
+      "invert": {"module": "src.services.local_transform.core", "callable": "invert_xor"}
+    }
+  ],
+  "aggregator": {"module": "src.services.local_transform.core", "callable": "aggregate_record_families"},
+  "materializer": {"module": "src.services.local_transform.core", "callable": "materialize_record_families"},
+  "validator": {"module": "src.services.local_transform.core", "callable": "validate_materialized_candidate"},
+  "semantic_analyzers": [
+    {"id": "legacy-ptx-summary", "impl": {"module": "src.services.local_transform.core", "callable": "analyze_legacy_ptx"}},
+    {"id": "runtime-snapshot-summary", "impl": {"module": "src.services.local_transform.core", "callable": "analyze_runtime_snapshot"}}
+  ]
+}

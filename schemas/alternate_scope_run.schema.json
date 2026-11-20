@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "source", "policy_digest", "registry_digest", "terminal_state", "promotion_eligible", "source_preserved", "artifacts", "artifact_digests", "run_root"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string"},
+    "source": {"type": "object"},
+    "policy_digest": {"type": "string"},
+    "registry_digest": {"type": "string"},
+    "terminal_state": {"type": "string"},
+    "promotion_eligible": {"type": "boolean"},
+    "source_preserved": {"type": "boolean"},
+    "artifacts": {"type": "object", "additionalProperties": {"type": "string"}},
+    "artifact_digests": {"type": "object", "additionalProperties": {"type": "string"}},
+    "run_root": {"type": "string"}
+  }
+}

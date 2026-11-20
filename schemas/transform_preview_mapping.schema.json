@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["kind", "source_offset", "source_length", "output_offset", "output_length"],
+  "properties": {
+    "kind": {"enum": ["one_to_one", "block", "raw", "unmapped"]},
+    "source_offset": {"type": "integer", "minimum": 0},
+    "source_length": {"type": "integer", "minimum": 0},
+    "output_offset": {"type": "integer", "minimum": 0},
+    "output_length": {"type": "integer", "minimum": 0},
+    "step_id": {"type": "string"},
+    "presentation_class": {"type": "string"},
+    "exact": {"type": "boolean"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "renderer", "discovery", "fallback"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "renderer": {
+      "type": "object",
+      "required": ["dialect", "maximum_nodes", "maximum_attributes_per_node", "maximum_value_characters", "maximum_raw_bytes_per_span", "maximum_text_bytes_per_span", "maximum_fallback_bytes", "fallback_chunk_bytes", "byte_initializer_line_bytes", "include_evidence_references", "include_raw_attributes", "renderable_range_node_types", "range_node_type_priority", "coverage_class_renderers", "text_encodings", "text_decode_errors", "admitted_truth_states"],
+      "properties": {
+        "dialect": {"const": "c_like_evidence"},
+        "maximum_nodes": {"type": "integer", "minimum": 0},
+        "maximum_attributes_per_node": {"type": "integer", "minimum": 1},
+        "maximum_value_characters": {"type": "integer", "minimum": 0},
+        "maximum_raw_bytes_per_span": {"type": "integer", "minimum": 0},
+        "maximum_text_bytes_per_span": {"type": "integer", "minimum": 0},
+        "maximum_fallback_bytes": {"type": "integer", "minimum": 0},
+        "fallback_chunk_bytes": {"type": "integer", "minimum": 1},
+        "byte_initializer_line_bytes": {"type": "integer", "minimum": 1},
+        "include_evidence_references": {"type": "boolean"},
+        "include_raw_attributes": {"type": "boolean"},
+        "renderable_range_node_types": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "range_node_type_priority": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "coverage_class_renderers": {"type": "object", "minProperties": 1, "additionalProperties": {"enum": ["text", "bytes"]}},
+        "text_encodings": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "text_decode_errors": {"enum": ["strict", "replace"]},
+        "admitted_truth_states": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["rail_id", "scan_limit", "require_verified_run", "require_source_identity_match"],
+      "properties": {
+        "rail_id": {"type": "string", "minLength": 1},
+        "scan_limit": {"type": "integer", "minimum": 1},
+        "require_verified_run": {"const": true},
+        "require_source_identity_match": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "fallback": {
+      "type": "object",
+      "required": ["render_unresolved_file"],
+      "properties": {"render_unresolved_file": {"type": "boolean"}},
+      "additionalProperties": false
+    },
+    "plaintext_clusters": {
+      "type": "object",
+      "required": ["minimum_occurrences", "maximum_clusters", "maximum_occurrences_per_cluster", "include_verified_printable_bytes_clusters", "render_dialect"],
+      "properties": {
+        "minimum_occurrences": {"type": "integer", "minimum": 2},
+        "maximum_clusters": {"type": "integer", "minimum": 1},
+        "maximum_occurrences_per_cluster": {"type": "integer", "minimum": 1},
+        "include_verified_printable_bytes_clusters": {"type": "boolean"},
+        "include_printable_representation_clusters": {"type": "boolean"},
+        "render_dialect": {"const": "c_struct"}
+      },
+      "additionalProperties": false
+    },
+    "full_decode_discovery": {
+      "type": "object",
+      "required": ["scan_limit_policy_key"],
+      "properties": {"scan_limit_policy_key": {"type": "string", "minLength": 1}},
+      "additionalProperties": false
+    },
+    "plaintext_tiers": {
+      "type": "object",
+      "required": ["policy_path"],
+      "properties": {"policy_path": {"type": "string", "minLength": 1}},
+      "additionalProperties": false
+    },
+    "structural_findings": {
+      "type": "object",
+      "required": ["enabled", "source_rail", "discovery", "record_prefix_template_id"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "source_rail": {"type": "string", "minLength": 1},
+        "discovery": {"enum": ["learning_db", "lineage"]},
+        "record_prefix_template_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

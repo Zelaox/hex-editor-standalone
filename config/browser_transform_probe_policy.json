@@ -1,0 +1,12 @@
+{
+ "schema_version":1,"revision":1,
+ "executor_id":"hex-editor-existing-xor-descriptor",
+ "min_target_bytes":32,"max_target_bytes":262144,"max_targets_per_file":64,"max_trials_per_file":20000,
+ "max_chain_depth":2,"max_candidates_per_file":16,"max_pages_per_file":32,
+ "single_byte_min":0,"single_byte_max":255,
+ "repeating_period_min":2,"repeating_period_max":8,"minimum_crib_cycles":2,
+ "minimum_structure_nodes":8,"max_probe_prefix_bytes":64,
+ "encodings":["base64","hex","gzip","zlib"],
+ "aes_status":"not_run_no_supplied_key_and_protocol",
+ "text_promotion":"never_from_printability"
+}

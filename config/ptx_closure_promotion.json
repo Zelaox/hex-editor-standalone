@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "export_promotion": {
+    "enabled": true,
+    "transform_start": 0,
+    "reference_sha256": "",
+    "crypto_defaults": {
+      "min_cross_window_agreement": 2,
+      "min_structural_improvements": 1,
+      "min_entropy_drop": 0.35,
+      "sha256_match_promotes": true,
+      "promotion_policy": {
+        "sha_match_requires_evidence_pass": true
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "proof_id", "family_id", "state", "training_occurrence_ids", "holdout_occurrence_ids", "boundary", "validation", "promotion_authority"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "proof_id": {"type": "string"},
+    "family_id": {"type": "string"},
+    "state": {"enum": ["holdout_passed", "falsified", "insufficient_independence"]},
+    "training_occurrence_ids": {"type": "array", "items": {"type": "string"}},
+    "holdout_occurrence_ids": {"type": "array", "items": {"type": "string"}},
+    "boundary": {"type": "object"},
+    "validation": {"type": "object"},
+    "promotion_authority": {"const": false}
+  }
+}

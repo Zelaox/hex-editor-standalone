@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "policy_id": "binary-representation-formats",
+  "revision": 1,
+  "policy_ref": "representation_policy.json",
+  "formats": [
+    {"id": "hex", "layer": "representation", "lossless": true, "parameters_ref": "formats.hex"},
+    {"id": "binary", "layer": "representation", "lossless": true, "parameters_ref": "formats.binary"},
+    {"id": "decimal", "layer": "representation", "lossless": true, "parameters_ref": "formats.decimal"},
+    {"id": "base64", "layer": "representation", "lossless": true, "parameters_ref": null}
+  ]
+}

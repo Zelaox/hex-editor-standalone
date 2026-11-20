@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "policy_id": "semantic-pseudocode-view",
+  "revision": 2,
+  "renderer": {
+    "dialect": "c_like_evidence",
+    "maximum_nodes": 0,
+    "maximum_attributes_per_node": 64,
+    "maximum_value_characters": 0,
+    "maximum_raw_bytes_per_span": 0,
+    "maximum_text_bytes_per_span": 0,
+    "maximum_fallback_bytes": 0,
+    "fallback_chunk_bytes": 16,
+    "byte_initializer_line_bytes": 16,
+    "include_evidence_references": true,
+    "include_raw_attributes": true,
+    "renderable_range_node_types": ["ByteSpan", "CoverageSegment"],
+    "range_node_type_priority": ["CoverageSegment", "ByteSpan"],
+    "coverage_class_renderers": {
+      "verified_plaintext": "text",
+      "verified_decoded_binary": "bytes",
+      "preserved_binary": "bytes",
+      "unresolved": "bytes"
+    },
+    "text_encodings": ["utf-8", "ascii"],
+    "text_decode_errors": "strict",
+    "admitted_truth_states": [
+      "observed",
+      "hypothesized",
+      "tested",
+      "verified",
+      "inconclusive"
+    ]
+  },
+  "discovery": {
+    "rail_id": "unresolved_inference",
+    "scan_limit": 256,
+    "require_verified_run": true,
+    "require_source_identity_match": true
+  },
+  "fallback": {
+    "render_unresolved_file": true
+  },
+  "plaintext_clusters": {
+    "minimum_occurrences": 2,
+    "maximum_clusters": 128,
+    "maximum_occurrences_per_cluster": 16,
+    "include_verified_printable_bytes_clusters": false,
+    "render_dialect": "c_struct"
+  },
+  "full_decode_discovery": {
+    "scan_limit_policy_key": "scope_run_scan_limit"
+  },
+  "plaintext_tiers": {
+    "policy_path": "config/semantic_plaintext_tiers_policy.json"
+  },
+  "structural_findings": {
+    "enabled": true,
+    "source_rail": "preserved_binary_inference",
+    "discovery": "learning_db",
+    "record_prefix_template_id": "record_prefix_length_of"
+  }
+}

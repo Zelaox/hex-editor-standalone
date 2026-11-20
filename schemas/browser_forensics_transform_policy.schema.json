@@ -1,0 +1,12 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+ "required":["schema_version","revision","executor_id","min_target_bytes","max_target_bytes","max_targets_per_file","max_trials_per_file","max_chain_depth","max_candidates_per_file","max_pages_per_file","single_byte_min","single_byte_max","repeating_period_min","repeating_period_max","minimum_crib_cycles","minimum_structure_nodes","max_probe_prefix_bytes","encodings","aes_status","text_promotion"],
+ "properties":{
+  "schema_version":{"const":1},"revision":{"type":"integer","minimum":1},"executor_id":{"const":"hex-editor-existing-xor-descriptor"},
+  "min_target_bytes":{"type":"integer","minimum":1},"max_target_bytes":{"type":"integer","minimum":1},"max_targets_per_file":{"type":"integer","minimum":1},"max_trials_per_file":{"type":"integer","minimum":1},"max_chain_depth":{"type":"integer","minimum":1,"maximum":4},"max_candidates_per_file":{"type":"integer","minimum":1},"max_pages_per_file":{"type":"integer","minimum":1},
+  "single_byte_min":{"type":"integer","minimum":0,"maximum":255},"single_byte_max":{"type":"integer","minimum":0,"maximum":255},
+  "repeating_period_min":{"type":"integer","minimum":2,"maximum":32},"repeating_period_max":{"type":"integer","minimum":2,"maximum":32},"minimum_crib_cycles":{"type":"integer","minimum":2},"minimum_structure_nodes":{"type":"integer","minimum":1},"max_probe_prefix_bytes":{"type":"integer","minimum":16},
+  "encodings":{"type":"array","uniqueItems":true,"items":{"enum":["base64","hex","gzip","zlib"]}},
+  "aes_status":{"const":"not_run_no_supplied_key_and_protocol"},"text_promotion":{"const":"never_from_printability"}
+ }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "policy_id": "binary-representation",
+  "revision": 1,
+  "formats": {
+    "hex": {"group_size": 1, "separator": " "},
+    "binary": {"bit_width": 8, "separator": " "},
+    "decimal": {"separator": " "}
+  },
+  "budgets": {
+    "default_tool_region_bytes": 256,
+    "max_region_bytes": 4096,
+    "max_decoder_candidates": 64,
+    "max_preview_chars": 512,
+    "max_interpreter_signals": 16,
+    "max_integer_values_per_candidate": 8,
+    "max_float_values_per_candidate": 8,
+    "max_bcd_values_per_candidate": 16,
+    "max_delta_entries": 32
+  },
+  "integer_sweep": {
+    "widths": [1, 2, 4, 8],
+    "byte_orders": ["little", "big"],
+    "signed_variants": [false, true]
+  },
+  "float_sweep": {
+    "widths": [4, 8],
+    "byte_orders": ["little", "big"]
+  },
+  "bcd_sweep": {
+    "include_invalid": false
+  },
+  "bitfield_sweep": {
+    "fields": [
+      {"name": "low_nibble", "byte_index": 0, "bit_offset": 0, "width_bits": 4},
+      {"name": "high_nibble", "byte_index": 0, "bit_offset": 4, "width_bits": 4}
+    ]
+  },
+  "text_decoders": {
+    "errors_mode": "replace",
+    "encodings": ["ascii", "utf-8", "latin-1", "utf-16-le", "utf-16-be"]
+  },
+  "interpreter": {
+    "enabled_pattern_ids": [
+      "utf16le_zero_run",
+      "monotonic_integer_sequence",
+      "repeated_stride",
+      "mostly_printable",
+      "float_plausible_range"
+    ]
+  },
+  "feature_scan": {
+    "use_representation_sweep": true
+  },
+  "gemma_packet": {
+    "include_representation_brief": true,
+    "include_raw_hex": true,
+    "include_binary_decimal": false,
+    "include_decoder_candidates": true,
+    "include_interpreter_signals": true
+  },
+  "plausibility": {
+    "float_finite_required": true,
+    "float_abs_max": 1e12,
+    "float_abs_min": 1e-12,
+    "printable_ratio_threshold": 0.7,
+    "monotonic_min_length": 4
+  },
+  "stride_sweep": {
+    "lengths": [2, 4, 8, 16]
+  },
+  "unix_timestamp_range": {
+    "min": 946684800,
+    "max": 4102444800
+  },
+  "timestamp_interpreter": {"width": 4, "byte_order": "little", "signed": false, "score": 0.6},
+  "sweep_mode": "on_brief_compile",
+  "workspace_sweep_on_export": false,
+  "export_defaults": {
+    "include_representation_sweep": false
+  }
+}

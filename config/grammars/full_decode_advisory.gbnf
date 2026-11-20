@@ -1,0 +1,7 @@
+root ::= ws "{" ws "\"selected_candidate_number\"" ws ":" ws integer ws "," ws "\"reason\"" ws ":" ws string ws "}" ws
+integer ::= __CANDIDATE_NUMBERS__
+string ::= "\"" chars "\""
+chars ::= char char*
+char ::= [^"\\\x00-\x1f] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+ws ::= [ \t\n\r]*

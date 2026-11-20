@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "registry_id": "alternate-scope-registry",
+  "revision": 4,
+  "feedback_priorities": ["request_alternate_scope", "request_independent_windows", "request_header_validation"],
+  "window_role_classifier": {"id": "coverage-and-observation-roles", "impl": {"module": "src.services.alternate_scope.core", "callable": "classify_window_roles"}},
+  "boundary_planner": {"id": "symmetric-evidence-neighborhood", "impl": {"module": "src.services.alternate_scope.core", "callable": "build_boundary_probe_plan"}},
+  "measurement_engine": {"id": "registered-representation-delta", "impl": {"module": "src.services.alternate_scope.core", "callable": "measure_boundary_probes"}},
+  "change_point_inference": {"id": "adjacent-score-change", "impl": {"module": "src.services.alternate_scope.core", "callable": "infer_change_points"}},
+  "scope_strategies": [
+    {"id": "independent-compatible-union", "impl": {"module": "src.services.alternate_scope.core", "callable": "generate_independent_union_scopes"}},
+    {"id": "ranked-single-spans", "impl": {"module": "src.services.alternate_scope.core", "callable": "generate_ranked_single_scopes"}}
+  ],
+  "executor": {"id": "bounded-xor-descriptor", "impl": {"module": "src.services.alternate_scope.core", "callable": "execute_scope_descriptors"}},
+  "gates": [
+    {"id": "non-identity", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_non_identity"}},
+    {"id": "preserve-integrity", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_preserve_integrity"}},
+    {"id": "representation-improvement", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_representation_improvement"}},
+    {"id": "parser-non-regression", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_parser_non_regression"}},
+    {"id": "boundary-localization", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_boundary_localization"}},
+    {"id": "cross-window-reproduction", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_cross_window_reproduction"}},
+    {"id": "structural-compatibility", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_structural_compatibility"}},
+    {"id": "header-compatibility", "impl": {"module": "src.services.alternate_scope.core", "callable": "gate_header_compatibility"}}
+  ]
+}

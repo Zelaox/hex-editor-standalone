@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-region-routing",
+  "revision": 1,
+  "format_detect_registry_path": "config/format_detect_registry.json",
+  "merge_policy_path": "config/pseudocode_merge_policy.json",
+  "decompiler_policy_path": "config/decompiler_pseudocode_policy.json",
+  "prefix_read_bytes": 4096,
+  "pe_sections_fail": "fail_closed",
+  "plugin_region_strategies": {
+    "pe": "pe_sections",
+    "ptx": "whole_file_structural",
+    "rtf": "whole_file_structural",
+    "html": "whole_file_structural",
+    "unknown": "whole_file_unknown"
+  },
+  "unknown_producer": {
+    "strategy": "semantic_fallback",
+    "semantic_policy_path": "config/semantic_pseudocode_policy.json"
+  },
+  "text_heavy_plugins": {
+    "html": {
+      "structural_module": "semantic_fallback",
+      "note": "DOM parser rail is future; clusters and plaintext tiers preserve pre-region-routed HTML behavior."
+    },
+    "pe": {
+      "structural_module": "pe_analyze",
+      "semantic_policy_path": "config/semantic_pseudocode_policy.json",
+      "render_budgets": {
+        "max_sections": 16,
+        "max_import_dlls": 12
+      }
+    },
+    "ptx": {
+      "structural_module": "ptx_analyze",
+      "append_semantic_plaintext_clusters": true,
+      "semantic_policy_path": "config/semantic_pseudocode_policy.json",
+      "render_budgets": {
+        "max_sections": 8,
+        "max_timecodes": 12,
+        "max_metadata_keys": 16,
+        "max_session_strings": 8
+      }
+    }
+  },
+  "region_classes": {
+    "executable_code": {
+      "producer_id": "decompiler",
+      "priority": 30
+    },
+    "structured_data": {
+      "producer_id": "structural",
+      "priority": 20
+    },
+    "unknown_data": {
+      "producer_id": "unknown",
+      "priority": 10
+    }
+  }
+}

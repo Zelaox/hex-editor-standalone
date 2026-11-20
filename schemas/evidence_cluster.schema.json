@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvidenceCluster",
+  "type": "object",
+  "required": ["cluster_id", "inference_rule_id", "observation_refs", "independent_region_count", "independent_source_count", "support_count", "counterexample_count", "inconclusive_count", "eligibility"],
+  "properties": {
+    "cluster_id": {"type": "string", "minLength": 1},
+    "observation_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "independent_region_count": {"type": "integer", "minimum": 0},
+    "independent_source_count": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": true
+}

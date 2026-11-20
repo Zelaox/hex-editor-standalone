@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "coalescence"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "policy_id": { "type": "string" },
+    "revision": { "type": "integer" },
+    "coalescence": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "min_emit_span_bytes",
+        "max_raw_regions_after_classify",
+        "max_producer_switches_per_document",
+        "max_regions_in_pseudocode_view"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

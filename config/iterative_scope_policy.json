@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "policy_id": "iterative-semantic-scope-search",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/iterative_scope_runs",
+  "budgets": {
+    "maximum_turns": 8,
+    "maximum_candidates_per_turn": 24,
+    "maximum_total_candidates": 128,
+    "maximum_changed_bytes": 1048576,
+    "stable_frontier_turns": 2
+  },
+  "text_analysis": {
+    "minimum_run_bytes": 4,
+    "accepted_byte_ranges": [[32, 126]],
+    "accepted_control_bytes": [9, 10, 13]
+  },
+  "semantic_detectors": [
+    {
+      "id": "colon-delimited-time",
+      "family": "timecode",
+      "pattern": "(?:[ 0-9]{1,3}:){2,3}[0-9]{1,3}(?:\\.[0-9]{1,3})?",
+      "flags": ["ASCII"]
+    },
+    {
+      "id": "colon-duration-time",
+      "family": "timecode",
+      "pattern": "[ 0-9]{1,3}:[0-9]{1,3}\\.[0-9]{1,3}",
+      "flags": ["ASCII"]
+    }
+  ],
+  "scope_context": {
+    "multipliers": [0, 1, 2, 4],
+    "minimum_context_bytes": 4,
+    "maximum_context_bytes": 4096,
+    "merge_adjacent_gap_bytes": 0
+  },
+  "objectives": [
+    {"id": "timecode_count", "direction": "maximize", "required_non_regression": true},
+    {"id": "gained_semantic_count", "direction": "maximize", "required_non_regression": false},
+    {"id": "text_bytes", "direction": "maximize", "required_non_regression": false},
+    {"id": "text_run_count", "direction": "maximize", "required_non_regression": false},
+    {"id": "parser_nodes", "direction": "maximize", "required_non_regression": false},
+    {"id": "parser_anchors", "direction": "maximize", "required_non_regression": false},
+    {"id": "unknown_bytes", "direction": "minimize", "required_non_regression": false},
+    {"id": "changed_bytes", "direction": "minimize", "required_non_regression": false}
+  ],
+  "stop_policy": {
+    "require_timecode_recovery": true,
+    "require_plaintext_gain": true,
+    "require_parser_non_regression": false
+  },
+  "model_boundary": {
+    "grammar_path": "config/iterative_scope_actions.gbnf",
+    "maximum_attempts": 3,
+    "allowed_actions": ["rank_frontier_candidate"],
+    "forbidden_fields": ["offset", "start", "end", "key_hex", "candidate_hex", "promotion_eligible", "verified_decryption"]
+  },
+  "logging": {
+    "redacted_fields": ["raw_bytes", "plaintext", "key_hex", "full_prompt", "full_response"],
+    "flush_after_event": true
+  },
+  "export_promotion": {
+    "enabled": true,
+    "transform_start": 0,
+    "reference_sha256": "",
+    "crypto_defaults": {
+      "min_cross_window_agreement": 2,
+      "min_structural_improvements": 1,
+      "min_entropy_drop": 0.35,
+      "sha256_match_promotes": true,
+      "promotion_policy": {
+        "sha_match_requires_evidence_pass": true
+      }
+    }
+  }
+}

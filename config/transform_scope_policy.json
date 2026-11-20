@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "policy_id": "evidence-derived-transform-scope",
+  "revision": 1,
+  "artifact_layout": {
+    "observations": "evidence/observations.json",
+    "windows": "windows/index.json",
+    "preserve": "preserve/index.json",
+    "boundaries": "boundaries/hypotheses.json",
+    "scopes": "scopes/hypotheses.json",
+    "descriptors": "descriptors/compiled.json",
+    "window_results": "windows/results.json",
+    "gate_breakdowns": "gates/breakdowns.json",
+    "feedback": "feedback/requests.json",
+    "checkpoint": "checkpoints/latest.json",
+    "events": "logs/events.jsonl",
+    "rolling_log": "logs/rolling.log",
+    "run": "run.json"
+  },
+  "budgets": {
+    "maximum_windows": 24,
+    "maximum_window_bytes": 4096,
+    "minimum_window_bytes": 64,
+    "hint_neighborhood_bytes": 4096,
+    "maximum_boundaries": 64,
+    "maximum_descriptors": 64,
+    "maximum_transformed_bytes": 262144,
+    "maximum_log_events": 8192,
+    "checkpoint_every_events": 16
+  },
+  "window_roles": {
+    "transform": ["case_hint", "unknown_region"],
+    "preserve": ["verified_known_coverage"],
+    "control": ["verified_known_coverage"]
+  },
+  "scope": {
+    "allow_non_contiguous": true,
+    "allow_open_ended": false,
+    "merge_adjacent_equivalent": true
+  },
+  "validation_profiles": {
+    "bounded_investigation": {
+      "required_gate_ids": ["non-identity", "cross-window", "preserve-regions", "header-compatible", "parser-coverage"],
+      "minimum_independent_improved_windows": 2,
+      "minimum_printable_gain": 0.05,
+      "maximum_preserve_mutations": 0,
+      "minimum_coverage_gain": 0,
+      "require_all_gates_pass_for_promotion": true,
+      "complete_breakdown": true
+    }
+  },
+  "default_validation_profile_id": "bounded_investigation",
+  "terminal_states": ["promoted", "rejected", "exhausted", "budget_exhausted", "blocked_by_policy", "failed_integrity"],
+  "logging": {
+    "levels": ["trace", "debug", "info", "warning", "error", "critical"],
+    "default_level": "info",
+    "flush_after_event": true,
+    "redacted_payload_fields": ["raw_bytes", "plaintext", "full_prompt", "full_response"]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "snapshot_sha256",
+    "coverage_summary",
+    "inspect_cursor"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "snapshot_id": {"type": "string"},
+    "snapshot_sha256": {"type": "string"},
+    "coverage_summary": {"type": "object"},
+    "top_unknown_regions": {"type": "array"},
+    "anchor_samples": {"type": "array"},
+    "record_family_samples": {"type": "array"},
+    "diagnostics": {"type": "array"},
+    "experiment_head": {"type": "array"},
+    "inspect_cursor": {"type": "object"}
+  },
+  "additionalProperties": true
+}

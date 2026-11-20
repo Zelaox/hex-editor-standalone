@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "registry_id": "record-family-proof-registry",
+  "revision": 1,
+  "seed_detectors": [
+    {"id": "repeated-printable-runs", "impl": {"module": "src.services.record_family.core", "callable": "detect_repeated_printable_seeds"}}
+  ],
+  "boundary_strategies": [
+    {"id": "masked-invariant-context", "impl": {"module": "src.services.record_family.core", "callable": "infer_masked_invariant_boundaries"}},
+    {"id": "shared-context", "impl": {"module": "src.services.record_family.core", "callable": "infer_shared_context_boundaries"}},
+    {"id": "zero-terminator", "impl": {"module": "src.services.record_family.core", "callable": "measure_zero_terminator"}},
+    {"id": "alignment-padding", "impl": {"module": "src.services.record_family.core", "callable": "measure_alignment_padding"}}
+  ],
+  "materializer": {"module": "src.services.record_family.core", "callable": "materialize_family_set"},
+  "semantic_analyzers": [
+    {"id": "generic-byte-summary", "impl": {"module": "src.services.record_family.core", "callable": "analyze_generic_bytes"}}
+  ],
+  "coverage_handoff": {"module": "src.services.record_family.core", "callable": "build_coverage_handoff"},
+  "parser_learning_handoff": {"module": "src.services.record_family.core", "callable": "build_parser_learning_handoff"}
+}

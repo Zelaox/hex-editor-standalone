@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "tiers", "classification", "presentation", "cluster_preview"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "tiers": {
+      "type": "object",
+      "required": ["semantic_plaintext", "verified_printable_bytes", "repeated_semantic_cluster", "repeated_printable_cluster"],
+      "properties": {
+        "semantic_plaintext": {"$ref": "#/$defs/tier"},
+        "verified_printable_bytes": {"$ref": "#/$defs/tier"},
+        "repeated_semantic_cluster": {"$ref": "#/$defs/tier"},
+        "repeated_printable_cluster": {"$ref": "#/$defs/tier"}
+      },
+      "additionalProperties": false
+    },
+    "classification": {
+      "type": "object",
+      "required": ["minimum_length", "disallowed_char_pattern", "gates", "structured_pattern_sources", "semantic_label_pattern_sources", "require_gates_for_semantic_labels"],
+      "properties": {
+        "minimum_length": {"type": "integer", "minimum": 1},
+        "disallowed_char_pattern": {"type": "string", "minLength": 1},
+        "gates": {
+          "type": "object",
+          "required": ["maximum_dominant_char_ratio", "minimum_unique_char_ratio", "minimum_alphabetic_or_digit_ratio", "maximum_non_alphanumeric_ratio"],
+          "properties": {
+            "maximum_dominant_char_ratio": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "minimum_unique_char_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+            "minimum_alphabetic_or_digit_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+            "maximum_non_alphanumeric_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+          },
+          "additionalProperties": false
+        },
+        "structured_pattern_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["config_path", "field_path"],
+            "properties": {
+              "config_path": {"type": "string", "minLength": 1},
+              "field_path": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "semantic_label_pattern_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["config_path", "field_path"],
+            "properties": {
+              "config_path": {"type": "string", "minLength": 1},
+              "field_path": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        },
+        "require_gates_for_semantic_labels": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "presentation": {
+      "type": "object",
+      "required": ["verified_printable_bytes_comment"],
+      "properties": {
+        "verified_printable_bytes_comment": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "cluster_preview": {
+      "type": "object",
+      "required": ["include_preview_tier"],
+      "properties": {
+        "include_preview_tier": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "required": ["presentation_label", "truth_state"],
+      "properties": {
+        "presentation_label": {"type": "string", "minLength": 1},
+        "truth_state": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

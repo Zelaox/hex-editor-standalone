@@ -1,0 +1,6 @@
+root ::= ws "[" ws action ws "]" ws
+action ::= "{" ws "\"action\"" ws ":" ws string ws "," ws "\"candidate_id\"" ws ":" ws string ws "}"
+string ::= "\"" chars "\""
+chars ::= char*
+char ::= [^"\\\x00-\x1F] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F])
+ws ::= [ \t\n\r]*

@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "max_chain_depth": 3,
+  "families": [
+    {
+      "id": "xor_sweep",
+      "enabled": true,
+      "priority": 10,
+      "scheduler": {"category": "crypto", "direct_schedule": false},
+      "preserve_prefix": true,
+      "impl": {
+        "module": "src.services.transforms.xor_sweep",
+        "cheap": "cheap_probe",
+        "stage2": "stage2_evidence",
+        "materialize": "materialize",
+        "finalize": "src.services.transform_engine.finalize_xor_registry_candidate"
+      },
+      "keyspace": {"kind": "linear_sweep", "max_length": 2},
+      "scoring_profile_ref": "xor",
+      "cheap_gate": {
+        "min_score_ref": "probe_pipeline.cheap_min_score",
+        "stage2_threshold_ref": "found_score_threshold"
+      }
+    },
+    {
+      "id": "xor_repeating_infer",
+      "enabled": true,
+      "priority": 11,
+      "scheduler": {"category": "crypto", "direct_schedule": true, "requires_option": "include_infer_xor"},
+      "preserve_prefix": true,
+      "impl": {
+        "module": "src.services.transforms.xor_repeating",
+        "cheap": "cheap_probe",
+        "stage2": "stage2_evidence",
+        "materialize": "materialize",
+        "finalize": "src.services.transform_engine.finalize_xor_registry_candidate"
+      },
+      "keyspace": {"kind": "per_lane_recovery"},
+      "parameter_space": {
+        "period_inference_ref": "xor_period_inference",
+        "key_length_top_k_ref": "key_length_top_k"
+      },
+      "scoring_profile_ref": "xor",
+      "cheap_gate": {
+        "min_score_ref": "probe_pipeline.cheap_min_score",
+        "stage2_threshold_ref": "found_score_threshold"
+      }
+    },
+    {
+      "id": "aes128_ecb",
+      "enabled": true,
+      "priority": 20,
+      "scheduler": {"category": "crypto", "direct_schedule": false},
+      "preserve_prefix": true,
+      "impl": {
+        "module": "src.services.transforms.aes_ecb",
+        "cheap": "cheap_probe",
+        "stage2": "stage2_evidence",
+        "materialize": "materialize",
+        "pass_family": true,
+        "finalize": "src.services.transform_engine.finalize_aes_registry_candidate"
+      },
+      "keyspace": {"kind": "derived_keys"},
+      "scoring_profile_ref": "aes",
+      "finalize_parameters": {"key_bytes": 16},
+      "cheap_gate": {
+        "min_score_ref": "probe_pipeline.aes_stage2_min_score",
+        "stage2_threshold_ref": "found_score_threshold"
+      }
+    },
+    {
+      "id": "aes128_cbc",
+      "enabled": true,
+      "priority": 21,
+      "scheduler": {"category": "crypto", "direct_schedule": true, "requires_option": "include_extended_crypto"},
+      "preserve_prefix": true,
+      "impl": {
+        "module": "src.services.transforms.aes_cbc",
+        "cheap": "cheap_probe",
+        "stage2": "stage2_evidence",
+        "materialize": "materialize",
+        "pass_family": true,
+        "finalize": "src.services.transform_engine.finalize_aes_registry_candidate"
+      },
+      "keyspace": {"kind": "derived_keys"},
+      "iv_derivations": [
+        {"id": "prefix_slice", "spec": "prefix_slice:0:16"},
+        {"id": "sha256_seed", "spec": "sha256_prefix:64:16"}
+      ],
+      "scoring_profile_ref": "aes",
+      "finalize_parameters": {"key_bytes": 16},
+      "cheap_gate": {
+        "min_score_ref": "probe_pipeline.aes_stage2_min_score",
+        "stage2_threshold_ref": "found_score_threshold"
+      }
+    },
+    {
+      "id": "aes128_ctr",
+      "enabled": true,
+      "priority": 22,
+      "scheduler": {"category": "crypto", "direct_schedule": true, "requires_option": "include_extended_crypto"},
+      "preserve_prefix": true,
+      "impl": {
+        "module": "src.services.transforms.aes_ctr",
+        "cheap": "cheap_probe",
+        "stage2": "stage2_evidence",
+        "materialize": "materialize",
+        "pass_family": true,
+        "finalize": "src.services.transform_engine.finalize_aes_registry_candidate"
+      },
+      "keyspace": {"kind": "derived_keys"},
+      "iv_derivations": [
+        {"id": "prefix_nonce", "spec": "prefix_slice:0:16", "counter_start": 0}
+      ],
+      "scoring_profile_ref": "aes",
+      "finalize_parameters": {"key_bytes": 16},
+      "cheap_gate": {
+        "min_score_ref": "probe_pipeline.aes_stage2_min_score",
+        "stage2_threshold_ref": "found_score_threshold"
+      }
+    },
+    {
+      "id": "add_byte",
+      "enabled": true,
+      "priority": 90,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.add_byte", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "single_byte_param"},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "sub_byte",
+      "enabled": true,
+      "priority": 91,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.sub_byte", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "single_byte_param"},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "rol",
+      "enabled": true,
+      "priority": 92,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.rol", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "rotate_bits", "max_bits": 7},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "ror",
+      "enabled": true,
+      "priority": 93,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.ror", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "rotate_bits", "max_bits": 7},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "not",
+      "enabled": true,
+      "priority": 94,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.not_", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "identity_param"},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "nibble_swap",
+      "enabled": true,
+      "priority": 95,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.nibble_swap", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "identity_param"},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "delta_decode",
+      "enabled": true,
+      "priority": 96,
+      "scheduler": {"category": "byte", "direct_schedule": true, "requires_option": "include_byte_transforms"},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.delta_decode", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize", "finalize": "src.services.transform_engine.finalize_passthrough_registry_candidate"},
+      "keyspace": {"kind": "identity_param"},
+      "scoring_profile_ref": "byte_arith"
+    },
+    {
+      "id": "chain_recipe",
+      "enabled": true,
+      "priority": 97,
+      "scheduler": {"category": "byte", "direct_schedule": false},
+      "preserve_prefix": true,
+      "impl": {"module": "src.services.transforms.chain_recipe", "cheap": "cheap_probe", "stage2": "stage2_evidence", "materialize": "materialize"},
+      "keyspace": {"kind": "chain_recipe"},
+      "scoring_profile_ref": "byte_arith"
+    }
+  ],
+  "chain_recipes": [
+    {
+      "id": "xor_rol_add",
+      "enabled": true,
+      "steps": ["xor_sweep", "rol", "add_byte"],
+      "max_chain_depth": 3
+    },
+    {
+      "id": "xor_sub_nibble",
+      "enabled": true,
+      "steps": ["xor_sweep", "sub_byte", "nibble_swap"],
+      "max_chain_depth": 3
+    },
+    {
+      "id": "delta_xor_rol",
+      "enabled": false,
+      "steps": ["delta_decode", "xor_sweep", "rol"],
+      "max_chain_depth": 3
+    }
+  ],
+  "classifier": {
+    "module": "src.services.behavior_classifier",
+    "pre_filter": "classify_binary"
+  }
+}

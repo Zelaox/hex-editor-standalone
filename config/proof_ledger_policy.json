@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "policy_id": "proof-ledger-preservation",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/proof_ledger",
+  "lineage_key_fields": ["source_sha256", "parent_sha256", "policy_digest", "registry_digest"],
+  "protection": {
+    "protected_coverage_classes": ["verified_plaintext", "verified_decoded_binary"],
+    "protected_truth_states": ["proof_owned", "verified_plaintext"],
+    "required_producer_gate_ids": [],
+    "require_proof_reference": true
+  },
+  "delta_triggers": [
+    {"trigger_id": "parent_to_child", "kind": "parent_to_child"},
+    {"trigger_id": "run_to_run", "kind": "run_to_run"},
+    {"trigger_id": "candidate_to_candidate", "kind": "candidate_to_candidate"}
+  ],
+  "acceptance_axes": [
+    {"axis_id": "supported_plaintext_bytes", "direction": "maximize", "source": "coverage.summary.verified_plaintext", "required_non_regression": true, "hard_gate": false},
+    {"axis_id": "unresolved_bytes", "direction": "minimize", "source": "manifest.unresolved_bytes", "required_non_regression": false, "hard_gate": false},
+    {"axis_id": "changed_bytes", "direction": "minimize", "source": "manifest.changed_bytes", "required_non_regression": false, "hard_gate": false},
+    {"axis_id": "reference_diff_bytes", "direction": "minimize", "source": "manifest.reference_metrics.reference_diff_bytes", "required_non_regression": true, "hard_gate": false},
+    {"axis_id": "proof_owned_span_count", "direction": "maximize", "source": "ledger.protected_span_count", "required_non_regression": true, "hard_gate": true}
+  ],
+  "preservation_gates": {
+    "proof_owned_non_regression": {"enabled": true, "required_for_composition": true},
+    "supported_plaintext_non_regression": {"enabled": true, "required_for_composition": true},
+    "ledger_supersession_valid": {"enabled": true, "required_for_composition": false}
+  },
+  "composition": {
+    "reject_lost_protected_spans": true,
+    "parent_fallback_reason": "preservation_blocked_merge",
+    "attempt_compatible_union": true,
+    "prefer_preservation_over_reference": true
+  },
+  "advisory_packet": {
+    "max_span_entries": 32,
+    "include_plaintext_preview": false
+  },
+  "audit": {
+    "scan_limit": 256,
+    "lineage_policy_path": "config/candidate_lineage_policy.json"
+  }
+}

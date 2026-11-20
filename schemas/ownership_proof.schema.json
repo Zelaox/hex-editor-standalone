@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["proof_id", "span_id", "classification", "state", "detector_id", "evidence_refs", "independence_groups", "gate_statuses", "promotion_authority"],
+  "properties": {
+    "proof_id": {"type": "string"}, "span_id": {"type": "string"},
+    "classification": {"enum": ["verified_plaintext", "verified_decoded_binary", "preserved_binary", "unresolved"]},
+    "state": {"enum": ["accepted", "rejected", "inconclusive"]},
+    "detector_id": {"type": "string"}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "independence_groups": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "gate_statuses": {"type": "object", "additionalProperties": {"enum": ["passed", "failed", "inconclusive"]}},
+    "promotion_authority": {"const": "mechanical_only"}
+  },
+  "additionalProperties": false
+}

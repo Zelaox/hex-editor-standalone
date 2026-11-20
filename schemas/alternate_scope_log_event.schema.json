@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "run_id", "sequence", "timestamp_utc", "severity", "event_type", "component_id", "payload", "policy_digest", "registry_digest", "previous_event_digest"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "sequence": {"type": "integer", "minimum": 0},
+    "timestamp_utc": {"type": "string"},
+    "severity": {"type": "string"},
+    "event_type": {"type": "string"},
+    "component_id": {"type": "string"},
+    "payload": {"type": "object"},
+    "policy_digest": {"type": "string"},
+    "registry_digest": {"type": "string"},
+    "previous_event_digest": {"type": "string"}
+  }
+}

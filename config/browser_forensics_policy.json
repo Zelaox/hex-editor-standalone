@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "revision": 2,
+  "format_registry": "config/format_detect_registry.json",
+  "budgets": {"max_file_bytes": 67108864, "max_total_bytes": 268435456, "max_files": 512, "max_records": 10000, "max_fields": 256, "max_depth": 16, "max_expanded_bytes": 67108864, "max_output_bytes": 67108864, "cpu_seconds": 30, "wall_seconds": 60, "memory_bytes": 536870912, "max_processes": 1},
+  "worker": {"backend": "bubblewrap", "wsl_distribution": "Ubuntu-22.04", "linux_python": "/usr/bin/python3", "executable": "bwrap", "runtime_roots": ["/usr", "/lib", "/lib64"], "uid": 65534, "gid": 65534, "deny_syscalls": ["fork", "vfork", "clone", "clone3", "execve", "execveat", "socket", "connect", "sendto", "sendmsg", "mount", "umount2", "ptrace", "process_vm_readv", "process_vm_writev", "bpf", "keyctl", "unshare", "setns"]},
+  "normalization": {"version": 1, "encoding": "utf-8", "sort_keys": true},
+  "indexer_id": "browser_forensic_run",
+  "companions": {"leveldb_sstable": ["CURRENT", "MANIFEST-*"], "leveldb_log": ["CURRENT", "MANIFEST-*"]},
+  "profiles": [
+    {"id": "messaging-markers-v1", "revision": 2, "rules": [
+      {"field": "_encryptedContent", "finding_type": "ciphertext_record", "status": "candidate", "encodings": ["utf-8", "utf-16le"], "locations": ["key", "value"]},
+      {"field": "hashedPlaintextHash", "finding_type": "identifier", "status": "observed", "encodings": ["utf-8", "utf-16le"], "locations": ["key", "value"]},
+      {"field": "e2eeIdentityKey.shared", "finding_type": "key_reference", "status": "candidate", "encodings": ["utf-8", "utf-16le"], "locations": ["key", "value"]}
+    ]}
+  ],
+  "fuzz": {"seed": 713, "iterations": 300, "max_input_bytes": 16384, "minimize_steps": 64, "harnesses": ["sqlite", "sqlite_wal", "leveldb_sstable", "leveldb_log", "leveldb_manifest", "protobuf", "json", "snappy", "mapping"]}
+}

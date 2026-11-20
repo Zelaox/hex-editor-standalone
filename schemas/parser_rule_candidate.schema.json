@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ParserRuleCandidate",
+  "type": "object",
+  "required": ["candidate_id", "format_plugin", "base_profile_id", "rule_kind", "declaration", "evidence_refs", "validation_profile_id", "state", "promotion_allowed"],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "rule_kind": {"enum": ["record_family", "field_layout", "relationship"]},
+    "promotion_allowed": {"const": false}
+  },
+  "additionalProperties": true
+}

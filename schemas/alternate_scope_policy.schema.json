@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_id", "revision", "artifact_layout", "budgets", "coverage", "boundary", "validation_profiles", "default_validation_profile_id", "terminal_states", "model_boundary", "logging"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "artifact_layout": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "minLength": 1}},
+    "budgets": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+    "coverage": {"type": "object", "required": ["preserve_classes", "candidate_classes", "header_classes"], "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+    "boundary": {"type": "object", "required": ["change_score_delta", "uncertainty_bytes"], "properties": {"change_score_delta": {"type": "number", "minimum": 0}, "uncertainty_bytes": {"type": "integer", "minimum": 1}}, "additionalProperties": false},
+    "validation_profiles": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object"}},
+    "default_validation_profile_id": {"type": "string", "minLength": 1},
+    "terminal_states": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "model_boundary": {"type": "object"},
+    "logging": {"type": "object"}
+  }
+}

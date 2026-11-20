@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "pseudocode_to_hex", "hex_to_pseudocode"],
+  "properties": {
+    "forensic_navigation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dock_title", "open_action", "headers", "verification_failed", "theme_token", "records_tab", "report_tab"],
+      "properties": {"dock_title": {"type": "string"}, "open_action": {"type": "string"},
+        "headers": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "string"}},
+        "verification_failed": {"type": "string"}, "theme_token": {"type": "string"}, "records_tab": {"type": "string"}, "report_tab": {"type": "string"}}
+    },
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "policy_id": { "type": "string" },
+    "revision": { "type": "integer" },
+    "generation_guard": {
+      "type": "object",
+      "required": ["require_matching_source_path", "require_loaded_source_map", "require_matching_digest", "require_matching_source_sha256"],
+      "properties": {
+        "require_matching_source_path": { "type": "boolean" },
+        "require_loaded_source_map": { "type": "boolean" },
+        "require_matching_digest": { "type": "boolean" },
+        "require_matching_source_sha256": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "pseudocode_to_hex": { "type": "object" },
+    "hex_to_pseudocode": { "type": "object" },
+    "debounce_ms": { "type": "object" },
+    "hex_highlight_theme_token": { "type": "string" },
+    "status_messages": {
+      "type": "object",
+      "required": ["analysis_running", "no_file", "no_pseudocode", "source_map_unavailable", "source_path_missing", "source_path_mismatch", "resolution_error", "no_offset", "outside_file", "goto_failed", "success", "success_virtual_address"],
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "fallback_line_parsers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "pattern", "file_offset_group", "coordinate_space"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "pattern": { "type": "string", "minLength": 1 },
+          "file_offset_group": { "type": "integer", "minimum": 1 },
+          "length_group": { "type": "integer", "minimum": 1 },
+          "coordinate_space": { "enum": ["file_offset", "virtual_address"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "semantic_block_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "start_pattern", "identity_group", "end_pattern", "end_match_ordinal", "anchor_pattern", "file_offset_group", "coordinate_space"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "start_pattern": { "type": "string", "minLength": 1 },
+          "identity_group": { "type": "integer", "minimum": 1 },
+          "end_pattern": { "type": "string", "minLength": 1 },
+          "end_match_ordinal": { "type": "integer", "minimum": 1 },
+          "anchor_pattern": { "type": "string", "minLength": 1 },
+          "file_offset_group": { "type": "integer", "minimum": 1 },
+          "length_group": { "type": "integer", "minimum": 1 },
+          "coordinate_space": { "enum": ["file_offset", "virtual_address"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "pe_address_resolution": { "type": "object" }
+  },
+  "additionalProperties": true
+}

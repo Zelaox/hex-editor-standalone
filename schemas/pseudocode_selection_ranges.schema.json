@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["ranges", "anchor_file_offset"],
+  "properties": {
+    "ranges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file_offset", "length"],
+        "properties": {
+          "file_offset": { "type": "integer", "minimum": 0 },
+          "length": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "anchor_file_offset": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

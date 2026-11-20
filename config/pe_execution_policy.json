@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "policy_id": "pe-execution-policy",
+  "revision": 1,
+  "execution_policy": {
+    "mode": "sandbox",
+    "backend_id": "stub_runner",
+    "allow_network": false,
+    "allow_child_processes": false,
+    "max_runtime_seconds": 30,
+    "capture_modules": true,
+    "capture_file_io": false,
+    "capture_registry": false,
+    "capture_memory_maps": false,
+    "capture_threads": false,
+    "capture_network": false
+  },
+  "mode_presets": {
+    "trusted": {
+      "description": "Own builds / controlled test EXE — light isolation",
+      "allow_network": false,
+      "allow_child_processes": false,
+      "backend_id": "local_isolated_runner"
+    },
+    "restricted": {
+      "description": "Unknown but intentional test binaries — tight limits",
+      "allow_network": false,
+      "allow_child_processes": false,
+      "max_runtime_seconds": 15,
+      "backend_id": "stub_runner"
+    },
+    "sandbox": {
+      "description": "Potentially risky samples — sandbox backend only",
+      "allow_network": false,
+      "allow_child_processes": false,
+      "max_runtime_seconds": 10,
+      "backend_id": "stub_runner"
+    }
+  }
+}

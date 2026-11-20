@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "status", "source", "parent", "policy_digest", "registry_digest", "implementation_digest", "run_root", "selected_candidate_id", "artifacts"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["completed", "partial_unresolved", "evidence_exhausted", "budget_exhausted", "coverage_incomplete", "integrity_failed", "ascii_roundtrip_failed", "failed"]},
+    "source": {"$ref": "#/$defs/input"},
+    "parent": {"$ref": "#/$defs/input"},
+    "policy_digest": {"$ref": "#/$defs/digest"},
+    "registry_digest": {"$ref": "#/$defs/digest"},
+    "implementation_digest": {"$ref": "#/$defs/digest"},
+    "run_root": {"type": "string"},
+    "selected_candidate_id": {"type": ["string", "null"]},
+    "artifacts": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "input": {"type": "object", "additionalProperties": false, "required": ["path", "size", "sha256"], "properties": {"path": {"type": "string"}, "size": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/digest"}}}
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BinarySnapshot",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "format_plugin",
+    "source",
+    "registry_revision",
+    "registry_digest",
+    "nodes",
+    "edges",
+    "coverage",
+    "diagnostics",
+    "signals"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string"},
+    "format_plugin": {"enum": ["ptx", "pe"]},
+    "source": {
+      "type": "object",
+      "required": ["sha256", "size"],
+      "properties": {
+        "sha256": {"type": "string"},
+        "size": {"type": "integer", "minimum": 0},
+        "path": {"type": "string"}
+      }
+    },
+    "registry_revision": {"type": "string"},
+    "registry_digest": {"type": "string"},
+    "nodes": {"type": "array"},
+    "edges": {"type": "array"},
+    "coverage": {"type": "array"},
+    "diagnostics": {"type": "array"},
+    "signals": {"type": "object"},
+    "anchors": {"type": "array"},
+    "unknown_regions": {"type": "array"},
+    "record_families": {"type": "array"},
+    "coverage_summary": {"type": "object"},
+    "analysis_passes": {"type": "array"},
+    "experiments": {"type": "array"},
+    "runtime_execution_id": {"type": "string"}
+  },
+  "additionalProperties": true
+}

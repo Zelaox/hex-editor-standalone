@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RecordFamilyCandidate",
+  "allOf": [{"$ref": "evidence_cluster.schema.json"}],
+  "properties": {"rule_kind": {"const": "record_family"}}
+}

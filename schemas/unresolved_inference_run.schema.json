@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "run_id", "status", "upstream_run_id", "source", "parent", "candidate", "policy_digest", "registry_digest", "implementation_digest", "run_root", "artifacts"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["completed", "partial_unresolved", "evidence_exhausted", "insufficient_independence", "candidate_conflict", "budget_exhausted", "invalid_upstream", "failed_validation"]},
+    "upstream_run_id": {"type": "string", "minLength": 1},
+    "source": {"$ref": "#/$defs/identity"},
+    "parent": {"$ref": "#/$defs/identity"},
+    "candidate": {"$ref": "#/$defs/identity"},
+    "policy_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "registry_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "implementation_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run_root": {"type": "string", "minLength": 1},
+    "artifacts": {"type": "object", "minProperties": 10, "additionalProperties": {"type": "string", "minLength": 1}}
+  },
+  "additionalProperties": false,
+  "$defs": {"identity": {"type": "object", "required": ["path", "size", "sha256"], "properties": {"path": {"type": "string"}, "size": {"type": "integer", "minimum": 0}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}, "additionalProperties": false}}
+}

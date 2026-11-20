@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "registry_id": "iterative-scope-registry",
+  "revision": 2,
+  "analyzers": [
+    {"id": "mechanical-text-and-runtime", "impl": {"module": "src.services.iterative_scope.core", "callable": "analyze_candidate"}}
+  ],
+  "scope_strategies": [
+    {"id": "retain-lost-semantic-spans", "impl": {"module": "src.services.iterative_scope.core", "callable": "derive_retain_descriptors"}},
+    {"id": "adopt-gained-semantic-spans", "impl": {"module": "src.services.iterative_scope.core", "callable": "derive_adopt_descriptors"}}
+  ],
+  "materializer": {"id": "range-source-compositor", "impl": {"module": "src.services.iterative_scope.core", "callable": "materialize_descriptor"}},
+  "frontier": {"id": "objective-pareto", "impl": {"module": "src.services.iterative_scope.core", "callable": "pareto_frontier"}}
+}

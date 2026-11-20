@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "registry_id": "parser-learning-registry",
+  "revision": 1,
+  "normalizers": [
+    {
+      "artifact_kind": "representation_falsification_result",
+      "impl": {"module": "src.services.parser_learning.core", "callable": "normalize_representation_artifacts"},
+      "decoder_value_sources": [
+        {"decoder_id": "integer_fixed", "collection": "values", "identity_fields": ["offset", "width", "byte_order", "signed"], "value_field": "value"}
+      ]
+    }
+  ],
+  "inference_stages": [
+    {
+      "stage_id": "record-family",
+      "impl": {"module": "src.services.parser_learning.core", "callable": "infer_record_families"},
+      "identity_paths": ["measurement.neighbor_anchor_ids", "measurement.region_length", "measurement.hypothesis.rule_id", "measurement.hypothesis.identity"]
+    },
+    {
+      "stage_id": "field-layout",
+      "impl": {"module": "src.services.parser_learning.core", "callable": "infer_field_layouts"},
+      "identity_paths": ["measurement.decoder.decoder_id", "measurement.decoder.relative_offset", "measurement.decoder.width", "measurement.decoder.byte_order", "measurement.decoder.signed"]
+    },
+    {
+      "stage_id": "relationship",
+      "impl": {"module": "src.services.parser_learning.core", "callable": "infer_relationships"},
+      "resolvers": [
+        {
+          "resolver_id": "exact-region-offset",
+          "impl": {"module": "src.services.parser_learning.core", "callable": "resolve_exact_region_offsets"},
+          "source_value_path": "measurement.decoder.value",
+          "target_value_path": "source_span.offset",
+          "scope_path": "source_digest",
+          "relation_kind": "references_region_offset"
+        }
+      ]
+    }
+  ],
+  "candidate_compiler": {
+    "impl": {"module": "src.services.parser_learning.core", "callable": "compile_parser_candidates"},
+    "allowed_rule_kinds": ["record_family", "field_layout", "relationship"]
+  },
+  "validation_checks": [
+    {
+      "result_name": "deterministic_replay",
+      "impl": {"module": "src.services.parser_learning.validation_runner", "callable": "check_deterministic_replay"}
+    },
+    {
+      "result_name": "negative_fixture_result",
+      "impl": {"module": "src.services.parser_learning.validation_runner", "callable": "check_negative_fixture_result"}
+    },
+    {
+      "result_name": "no_coverage_regression",
+      "impl": {"module": "src.services.parser_learning.validation_runner", "callable": "check_no_coverage_regression"}
+    },
+    {
+      "result_name": "no_graph_regression",
+      "impl": {"module": "src.services.parser_learning.validation_runner", "callable": "check_no_graph_regression"}
+    }
+  ]
+}

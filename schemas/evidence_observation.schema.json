@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvidenceObservation",
+  "type": "object",
+  "required": ["observation_id", "snapshot_id", "source_digest", "region_id", "source_span", "independence_group_id", "producer", "measurement", "status", "policy_digest", "registry_digest"],
+  "properties": {
+    "observation_id": {"type": "string", "minLength": 1},
+    "source_digest": {"type": "string", "minLength": 1},
+    "region_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["supported", "falsified", "inconclusive"]},
+    "measurement": {"type": "object"}
+  },
+  "additionalProperties": true
+}

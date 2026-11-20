@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["candidate_id", "artifact_path", "changed_bytes", "verified_ownership_bytes", "unresolved_bytes", "gate_statuses", "promotion_eligible", "verified_decryption"],
+  "properties": {"candidate_id": {"type": "string"}, "artifact_path": {"type": "string"}, "changed_bytes": {"type": "integer", "minimum": 0}, "verified_ownership_bytes": {"type": "integer", "minimum": 0}, "unresolved_bytes": {"type": "integer", "minimum": 0}, "gate_statuses": {"type": "object"}, "promotion_eligible": {"const": false}, "verified_decryption": {"const": false}},
+  "additionalProperties": false
+}

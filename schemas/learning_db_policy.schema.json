@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LearningDbPolicy",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "storage", "tables", "sync", "queries"]
+}

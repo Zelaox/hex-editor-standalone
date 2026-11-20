@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "file_size", "segments", "summary", "coverage_complete"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "file_size": {"type": "integer", "minimum": 1},
+    "segments": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["segment_id", "offset", "length", "class", "proof_refs"], "properties": {"segment_id": {"type": "string"}, "offset": {"type": "integer", "minimum": 0}, "length": {"type": "integer", "minimum": 1}, "class": {"enum": ["verified_plaintext", "verified_decoded_binary", "preserved_binary", "unresolved"]}, "proof_refs": {"type": "array", "items": {"type": "string"}}}}},
+    "summary": {"type": "object"},
+    "coverage_complete": {"type": "boolean"}
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "registry_id": "proof-ledger-registry",
+  "revision": 1,
+  "rail_adapters": [
+    {
+      "rail_id": "full_decode",
+      "normalizer": {"module": "src.services.proof_ledger.adapters", "callable": "normalize_full_decode_run"},
+      "axis_extractors": {"module": "src.services.proof_ledger.adapters", "callable": "extract_full_decode_axes"}
+    },
+    {
+      "rail_id": "local_transform",
+      "normalizer": {"module": "src.services.proof_ledger.adapters", "callable": "normalize_local_transform_run"},
+      "axis_extractors": {"module": "src.services.proof_ledger.adapters", "callable": "extract_local_transform_axes"}
+    },
+    {
+      "rail_id": "record_family",
+      "normalizer": {"module": "src.services.proof_ledger.adapters", "callable": "normalize_record_family_run"},
+      "axis_extractors": {"module": "src.services.proof_ledger.adapters", "callable": "extract_record_family_axes"}
+    }
+  ],
+  "composition_evaluator": {"module": "src.services.proof_ledger.composition", "callable": "evaluate_compositions"},
+  "delta_compiler": {"module": "src.services.proof_ledger.delta_compiler", "callable": "compile_cross_run_delta"},
+  "delta_packet_builder": {"module": "src.services.proof_ledger.delta_packet", "callable": "build_delta_context_packet"},
+  "frontier_accumulator": {"module": "src.services.proof_ledger.frontier", "callable": "accumulate_lineage_frontier"}
+}

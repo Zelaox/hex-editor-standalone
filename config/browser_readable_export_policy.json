@@ -1,0 +1,16 @@
+{
+  "schema_version": 1, "revision": 1,
+  "max_runs": 32, "max_rows": 30000, "max_output_bytes": 134217728,
+  "history_statuses": ["live_dom_text_observation"],
+  "candidate_statuses": ["structured_message_candidate", "saved_dom_text_candidate", "unbound_blob_text_candidate"],
+  "media": {
+    "max_hits_per_file": 1000, "max_items": 2000, "max_media_bytes": 67108864,
+    "max_dimension": 16384, "max_segments": 100000,
+    "formats": [
+      {"id": "png", "signature_hex": "89504e470d0a1a0a", "offset": 0, "extension": ".png", "mime": "image/png", "validator": "png"},
+      {"id": "jpeg", "signature_hex": "ffd8ff", "offset": 0, "extension": ".jpg", "mime": "image/jpeg", "validator": "jpeg"},
+      {"id": "webp", "signature_hex": "52494646", "offset": 0, "extension": ".webp", "mime": "image/webp", "validator": "webp"},
+      {"id": "mp4", "signature_hex": "66747970", "offset": 4, "extension": ".mp4", "mime": "video/mp4", "validator": "mp4"}
+    ]
+  }
+}

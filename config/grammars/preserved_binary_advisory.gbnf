@@ -1,0 +1,8 @@
+root ::= ws "{" ws cluster_action ws "}" ws | ws "{" ws hypothesis_action ws "}" ws
+cluster_action ::= "\"action\"" ws ":" ws "\"prioritize_existing_cluster\"" ws "," ws "\"target_id\"" ws ":" ws string ws "," ws "\"reason\"" ws ":" ws string
+hypothesis_action ::= "\"action\"" ws ":" ws "\"rank_existing_hypothesis\"" ws "," ws "\"target_id\"" ws ":" ws string ws "," ws "\"reason\"" ws ":" ws string
+string ::= "\"" chars "\""
+chars ::= char char*
+char ::= [^"\\\x00-\x1f] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+ws ::= [ \t\n\r]*

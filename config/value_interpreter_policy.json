@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "policy_id": "binary-value-interpreter",
+  "revision": 1,
+  "policy_ref": "representation_policy.json",
+  "patterns": [
+    {
+      "id": "utf16le_zero_run",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_utf16_zero_run"},
+      "evidence_template": "even indices printable ASCII, odd indices 0x00",
+      "threshold_ref": "plausibility.printable_ratio_threshold"
+    },
+    {
+      "id": "monotonic_integer_sequence",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_monotonic_integer_sequence"},
+      "candidate_kind": "integer",
+      "evidence_template": "monotonic {width}-byte {byte_order} integers stride {stride}",
+      "min_length_ref": "plausibility.monotonic_min_length"
+    },
+    {
+      "id": "repeated_stride",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_repeated_stride"},
+      "evidence_template": "repeating byte pattern every {stride} bytes",
+      "stride_lengths_ref": "stride_sweep.lengths"
+    },
+    {
+      "id": "mostly_printable",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_mostly_printable"},
+      "evidence_template": "printable ratio {ratio} above threshold {threshold}",
+      "threshold_ref": "plausibility.printable_ratio_threshold"
+    },
+    {
+      "id": "float_plausible_range",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_float_plausible_range"},
+      "candidate_kind": "float",
+      "evidence_template": "finite float{width} {byte_order} in plausible range",
+      "abs_max_ref": "plausibility.float_abs_max",
+      "abs_min_ref": "plausibility.float_abs_min",
+      "finite_required_ref": "plausibility.float_finite_required"
+    },
+    {
+      "id": "timestamp_unix_le",
+      "enabled": true,
+      "impl": {"module": "src.services.value_interpreter", "evaluate": "evaluate_integer_range"},
+      "candidate_kind": "integer",
+      "candidate_match": {"width_ref": "timestamp_interpreter.width", "byte_order_ref": "timestamp_interpreter.byte_order", "signed_ref": "timestamp_interpreter.signed"},
+      "score_ref": "timestamp_interpreter.score",
+      "evidence_template": "u32 LE value {value} in unix timestamp range",
+      "range_min_ref": "unix_timestamp_range.min",
+      "range_max_ref": "unix_timestamp_range.max"
+    }
+  ]
+}

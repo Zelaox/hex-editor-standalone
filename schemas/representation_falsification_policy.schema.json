@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "budgets", "hypothesis_sources", "thresholds", "terminal_statuses", "promotion_authority"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 1},
+    "budgets": {"type": "object"},
+    "hypothesis_sources": {"type": "array", "items": {"type": "object"}},
+    "thresholds": {"type": "object"},
+    "terminal_statuses": {"type": "array", "items": {"enum": ["supported", "falsified", "inconclusive"]}},
+    "promotion_authority": {"const": "mechanical_validation_required"}
+  },
+  "additionalProperties": false
+}

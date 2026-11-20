@@ -1,0 +1,43 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object", "additionalProperties": false,
+ "required": ["status", "files", "findings", "analysis_identity"],
+ "properties": {
+  "status": {"enum": ["completed", "partial", "unsupported", "budget_exhausted", "input_changed", "failed", "isolation_unavailable"]},
+  "error_code": {"type": "string"}, "snapshot_state": {"enum": ["consistent", "best_effort", "unknown"]},
+  "verified_message_count": {"const": 0},
+  "logical_record_count": {"type": "integer", "minimum": 0}, "record_version_count": {"type": "integer", "minimum": 0},
+  "analysis_identity": {"type": "object", "required": ["schema_version", "case_id", "capture_id", "inputs", "policy_digest", "registry_digest", "build", "normalization"]},
+  "coverage": {"type": "object", "additionalProperties": false, "required": ["listed_files", "parsed_files", "partial_files", "unsupported_files", "scope"], "properties": {
+    "listed_files": {"type": "integer", "minimum": 0}, "parsed_files": {"type": "integer", "minimum": 0}, "partial_files": {"type": "integer", "minimum": 0}, "unsupported_files": {"type": "integer", "minimum": 0}, "scope": {"const": "manifest_only"}
+  }},
+  "files": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "size", "detection", "status", "records", "transforms"], "properties": {
+    "path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "size": {"type": "integer", "minimum": 0}, "status": {"enum": ["completed", "partial", "unsupported", "budget_exhausted"]}, "error_code": {"type": "string"},
+    "missing_companion_patterns": {"type": "array", "items": {"type": "string"}},
+    "continuation": {"type": "object", "additionalProperties": false, "required": ["record_cursor"], "properties": {"record_cursor": {"type": "integer", "minimum": 0}}},
+    "detection": {"type": "object", "additionalProperties": false, "required": ["format_id", "candidates"], "properties": {"format_id": {"type": "string"}, "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "parser", "region_class", "confidence"], "properties": {"id": {"type": "string"}, "parser": {"type": "string"}, "region_class": {"type": "string"}, "confidence": {"type": "number", "minimum": 0, "maximum": 1}}}}}},
+    "records": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["locator", "fields"], "properties": {
+      "locator": {"type": "object", "additionalProperties": {"type": ["integer", "null"]}}, "key_digest": {"type": "string"}, "sequence": {"type": "integer", "minimum": 0}, "deleted": {"type": "boolean"}, "validation_status": {"const": "protobuf_candidate"},
+      "logical_record_id": {"type": "string"}, "version_id": {"type": "string"},
+      "fields": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["ordinal", "type", "source_spans", "mapping_precision", "field_id"], "properties": {
+        "ordinal": {"type": "integer", "minimum": 0}, "type": {"type": "string"}, "byte_length": {"type": "integer", "minimum": 0}, "field_number": {"type": "integer", "minimum": 1}, "tag": {"type": "integer"}, "serial_type": {"type": "integer"},
+        "field_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "finding_ids": {"type": "array", "items": {"type": "string"}}, "mapping_precision": {"enum": ["exact", "block-level", "unmapped"]},
+        "source_spans": {"type": "array", "items": {"$ref": "#/$defs/span"}}
+      }}}
+    }}},
+    "transforms": {"type": "array", "items": {"$ref": "#/$defs/transform"}}
+  }}},
+  "findings": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["finding_id", "source_path", "source_sha256", "source_spans", "mapping_precision", "finding_type", "validation_status", "evidence_class", "locator", "field_ordinal", "store_id", "transform_chain"], "properties": {
+    "finding_id": {"type": "string"}, "source_path": {"type": "string"}, "source_sha256": {"type": "string"}, "store_id": {"type": "string"}, "origin": {"type": ["string", "null"]}, "rule_field": {"type": "string"},
+    "locator": {"type": "object", "additionalProperties": {"type": ["integer", "null"]}}, "field_ordinal": {"type": "integer"}, "mapping_precision": {"enum": ["exact", "block-level", "unmapped"]},
+    "finding_type": {"enum": ["marker_occurrence", "identifier", "key_reference", "wrapped_key_blob", "session_metadata", "ciphertext_record"]}, "candidate_type": {"type": "string"}, "validation_status": {"enum": ["observed", "candidate", "carved"]}, "evidence_class": {"const": "observed"}, "count": {"type": "integer", "minimum": 1},
+    "source_spans": {"type": "array", "items": {"$ref": "#/$defs/span"}}, "transform_chain": {"type": "array", "items": {"$ref": "#/$defs/transform"}}
+  }}}
+ },
+ "$defs": {
+  "span": {"type": "object", "additionalProperties": false, "required": ["offset", "length", "source_path", "source_sha256"], "properties": {"offset": {"type": "integer", "minimum": 0}, "length": {"type": "integer", "minimum": 0}, "source_path": {"type": "string"}, "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+  "transform": {"type": "object", "additionalProperties": false, "required": ["kind", "output_sha256", "output_size", "mapping_precision"], "properties": {
+    "kind": {"enum": ["identity", "snappy", "sqlite_wal_overlay"]}, "output_sha256": {"type": "string"}, "output_size": {"type": "integer", "minimum": 0}, "mapping_precision": {"enum": ["exact", "block-level"]}, "wal_source_sha256": {"type": "string"},
+    "input_spans": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["offset", "length"], "properties": {"offset": {"type": "integer", "minimum": 0}, "length": {"type": "integer", "minimum": 0}}}}
+  }}
+ }
+}

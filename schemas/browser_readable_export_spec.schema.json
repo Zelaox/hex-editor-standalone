@@ -1,0 +1,8 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+ "required":["schema_version","case_id","runs","include_candidates"],"properties":{
+  "schema_version":{"const":1},"case_id":{"type":"string","minLength":1},"include_candidates":{"type":"boolean"},
+  "runs":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["run_path","case_id"],"properties":{"run_path":{"type":"string","minLength":1},"case_id":{"type":"string","minLength":1}}}},
+  "media_spec_path":{"type":"string","minLength":1}
+ }
+}

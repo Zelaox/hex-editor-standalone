@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PTX Runtime Session Snapshot",
+  "type": "object",
+  "required": ["schema_version", "snapshot_id", "source", "nodes", "edges", "coverage", "diagnostics", "signals"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string"},
+    "source": {"type": "object", "required": ["sha256", "size"]},
+    "nodes": {"type": "array"},
+    "edges": {"type": "array"},
+    "coverage": {"type": "array"},
+    "diagnostics": {"type": "array"},
+    "signals": {"type": "object"}
+  },
+  "additionalProperties": false
+}

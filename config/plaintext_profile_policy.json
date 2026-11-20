@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "policy_id": "plaintext-byte-profile-library",
+  "revision": 2,
+  "library_path": "data/runtime/hex_editor/plaintext_profiles/library.json",
+  "allowed_suffixes": ["*"],
+  "reference_discovery": {
+    "recursive": true,
+    "excluded_directory_names": [".git", ".pytest_cache", "__pycache__", "data", "logs"],
+    "profile_grouping": "suffix",
+    "empty_suffix_id": "no-suffix"
+  },
+  "limits": {
+    "max_profiles": 64,
+    "max_files_per_profile": 512,
+    "max_bytes_per_file": 4194304,
+    "max_total_reference_bytes": 268435456,
+    "max_candidate_bytes": 1048576,
+    "top_token_hashes": 2048,
+    "top_sequence_hashes": 4096,
+    "minimum_token_length": 2,
+    "maximum_token_length": 64,
+    "sequence_lengths": [3, 4, 6, 8],
+    "sequence_stride": 1
+  },
+  "token_pattern": "[A-Za-z_][A-Za-z0-9_]{1,63}",
+  "byte_classes": {
+    "printable_ascii": {"ranges": [[32, 126]], "bytes": [9, 10, 13]},
+    "null": {"bytes": [0]},
+    "line_break": {"bytes": [10, 13]},
+    "whitespace": {"bytes": [9, 10, 13, 32]},
+    "structural_delimiter": {"bytes": [34, 39, 40, 41, 44, 58, 59, 91, 93, 123, 125]}
+  },
+  "score_weights": {
+    "byte_histogram_cosine": 0.45,
+    "byte_class_similarity": 0.3,
+    "token_hash_similarity": 0.1,
+    "sequence_hash_similarity": 0.1,
+    "utf8_similarity": 0.1
+  },
+  "minimum_similarity": 0.55,
+  "max_results": 5,
+  "gemma_packet": {
+    "include_component_scores": true,
+    "include_reference_paths": false,
+    "include_token_hashes": false,
+    "include_sequence_hashes": false
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-ui",
+  "revision": 1,
+  "panels": {
+    "ptx_timecodes": {
+      "columns": [
+        "offset",
+        "value",
+        "type",
+        "goto"
+      ],
+      "enabled": true
+    },
+    "ptx_session_metadata": {
+      "columns": [
+        "description",
+        "value",
+        "goto"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_coverage": {
+      "columns": [
+        "metric",
+        "value"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_anchors": {
+      "columns": [
+        "anchor_id",
+        "kind",
+        "offset",
+        "length",
+        "occurrence_count",
+        "evidence_level"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_unknown": {
+      "columns": [
+        "region_id",
+        "offset",
+        "length",
+        "classification",
+        "entropy",
+        "neighbor_anchors"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_record_families": {
+      "columns": [
+        "family_id",
+        "kind",
+        "support",
+        "evidence_level",
+        "anchor_ids"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_representation": {
+      "columns": [
+        "region_id",
+        "brief_digest",
+        "falsification_status",
+        "rule_id",
+        "promotion_allowed"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_full_decode": {
+      "columns": [
+        "class",
+        "offset",
+        "length",
+        "proof",
+        "segment"
+      ],
+      "enabled": true
+    },
+    "binary_inspector_ownership": {
+      "columns": [
+        "span",
+        "classification",
+        "state",
+        "proof",
+        "detector"
+      ],
+      "enabled": true
+    },
+    "investigation_probe_ledger": {
+      "columns": [
+        "ts",
+        "probe_phase_id",
+        "key_cursor",
+        "best_key_hex",
+        "best_score",
+        "keys_found"
+      ],
+      "enabled": true
+    },
+    "investigation_best_rejected": {
+      "columns": [
+        "key_hex",
+        "algorithm",
+        "cheap_score",
+        "promotion_denied",
+        "reject_reasons"
+      ],
+      "enabled": true
+    },
+    "pseudocode_fallback": {
+      "banner": "Semantic structure unavailable; showing semantic plaintext, printable representations, plaintext clusters, and unresolved bytes."
+    },
+    "investigation_derived_windows": {
+      "columns": [
+        "name",
+        "offset",
+        "length",
+        "role",
+        "evidence_refs"
+      ],
+      "enabled": true
+    },
+    "transform_scope_evidence": {
+      "summary_fields": [
+        "changed_bytes",
+        "total_bytes",
+        "changed_ratio",
+        "first_changed_offset",
+        "last_changed_offset",
+        "transform_relation",
+        "range_count"
+      ],
+      "range_columns": [
+        "range",
+        "length",
+        "transform",
+        "role"
+      ],
+      "enabled": true
+    }
+  },
+  "theme_tokens": {
+    "timecode.reference": "#FFD700",
+    "timecode.standard": "#90EE90",
+    "plaintext.run": "#B0C4DE",
+    "pseudocode.navigation": "#00ACC1",
+    "anchor.verified": "#4FC3F7",
+    "anchor.candidate": "#FFB74D",
+    "binary_waterfall.unknown": "#EF5350",
+    "binary_waterfall.known": "#66BB6A",
+    "binary_waterfall.preserve": "#AB47BC",
+    "binary_waterfall.candidate_body": "#FF9800",
+    "binary_waterfall.validation": "#26A69A",
+    "binary_waterfall.boundary": "#B0BEC5",
+    "binary_waterfall.record_family_training": "#7E57C2",
+    "binary_waterfall.record_family_holdout": "#FF7043",
+    "binary_waterfall.verified_plaintext": "#66BB6A",
+    "binary_waterfall.verified_decoded_binary": "#26A69A",
+    "binary_waterfall.preserved_binary": "#AB47BC",
+    "binary_waterfall.unresolved": "#EF5350",
+    "binary_graph.verified": "#26A69A",
+    "binary_graph.inconclusive": "#FFB74D",
+    "binary_graph.hypothesized": "#7E57C2",
+    "binary_graph.falsified": "#EF5350",
+    "transform_preview.scope": "#00BCD4",
+    "transform_preview.raw_gap": "#AB47BC",
+    "transform_preview.conflict": "#EF5350",
+    "probe_window": "#00BCD4",
+    "inspector_nav.strip": "#2d2d2d",
+    "inspector_nav.button": "#404040",
+    "inspector_nav.button_text": "#f0f0f0",
+    "inspector_nav.button_border": "#707070",
+    "inspector_nav.active": "#2a82da",
+    "inspector_nav.active_text": "#ffffff"
+  },
+  "hex_overlays": {
+    "show_timecodes": false,
+    "show_plaintext_runs": false,
+    "show_anchors": false,
+    "show_probe_windows": false,
+    "show_alternate_scope_ranges": false,
+    "show_scope_boundaries": false,
+    "show_record_family_training": false,
+    "show_record_family_holdout": false,
+    "show_transform_preview_scopes": false,
+    "overlay_priority": [
+      "transform_preview_conflict",
+      "transform_preview_scope",
+      "transform_preview_raw",
+      "preserve",
+      "candidate_body",
+      "validation",
+      "record_family_holdout",
+      "record_family_training",
+      "probe_window",
+      "anchor",
+      "timecode",
+      "plaintext"
+    ]
+  },
+  "feature_flags": {
+    "hex_forensic_overlays": false,
+    "show_investigation_panel": true,
+    "show_transform_diff_tab": true,
+    "show_representation_tab": true,
+    "auto_disassemble_on_load": false,
+    "auto_disassemble_on_dock_show": false,
+    "region_routed_pseudocode": true,
+    "pseudocode_byte_navigation": true,
+    "pseudocode_hex_sync_selection": true,
+    "pseudocode_must_use_region_router": true
+  },
+  "load_budgets": {
+    "max_forensic_overlay_spans": 128,
+    "max_inspector_table_rows": 1000,
+    "max_highlight_ops_per_visible_section": 4096,
+    "defer_forensic_context_ms": 50,
+    "scope_run_scan_limit": 256,
+    "scroll_debounce_ms": 16,
+    "scroll_highlight_defer_ms": 120,
+    "text_inspector_debounce_ms": 250,
+    "hex_view_mode": "auto",
+    "hex_viewport_file_bytes": 5242880,
+    "hex_viewport_document_lines": 128,
+    "hex_viewport_overscan_lines": 12,
+    "hex_overlay_apply_mode": "incremental",
+    "hex_overlay_viewport_margin_lines": 64
+  },
+  "display_format": {
+    "float_zero_epsilon": 1e-09
+  },
+  "desktop_persistence": {
+    "settings_organization": "HexEditor",
+    "settings_application": "HexEditorStandalone",
+    "layout_autosave_debounce_ms": 500,
+    "main_window_object_name": "hex_editor_main_window",
+    "main_toolbar_object_name": "main_toolbar"
+  },
+  "dock_defaults": {
+    "disassembly_dock": false,
+    "pseudocode_dock": false,
+    "text_inspector_dock": true,
+    "symbols_dock": false,
+    "bookmarks_dock": false,
+    "search_results_dock": false,
+    "file_structure_dock": true,
+    "ptx_metadata_dock": false,
+    "binary_inspector_dock": false
+  },
+  "dock_layout_hints": {
+    "binary_inspector_dock": {
+      "static_section_nav": {
+        "nav_mode": "tab_widget",
+        "orientation": "horizontal"
+      }
+    }
+  }
+}

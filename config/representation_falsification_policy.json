@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "policy_id": "representation-mechanical-falsification",
+  "revision": 1,
+  "budgets": {
+    "max_hypotheses_per_region": 128,
+    "max_evidence_refs_per_hypothesis": 16
+  },
+  "hypothesis_sources": [
+    {
+      "rule_id": "decoder-candidate-validity",
+      "collection_path": "decoder_candidates",
+      "identity_fields": ["decoder_id", "kind", "layout", "encoding"],
+      "support_conditions": [{"field": "valid", "operator": "equals", "value": true}],
+      "falsify_conditions": [{"field": "valid", "operator": "equals", "value": false}]
+    },
+    {
+      "rule_id": "interpreter-signal-threshold",
+      "collection_path": "interpreter_signals",
+      "identity_fields": ["id"],
+      "support_conditions": [{"field": "score", "operator": "greater_or_equal", "value_ref": "thresholds.minimum_interpreter_score"}],
+      "falsify_conditions": []
+    }
+  ],
+  "thresholds": {
+    "minimum_interpreter_score": 0.5
+  },
+  "terminal_statuses": ["supported", "falsified", "inconclusive"],
+  "promotion_authority": "mechanical_validation_required"
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-checkpoint",
+  "revision": 1,
+  "max_brief_bytes": 32768,
+  "max_work_run_bytes": 262144,
+  "max_tool_response_field_bytes": 65536,
+  "post_export_milestones_enabled": true,
+  "externalize_fields": [
+    "session_carry.last_analysis",
+    "session_carry.decrypt_key_hunt.probe_candidates",
+    "session_carry.decrypt_key_hunt.candidate_rows",
+    "last_analysis",
+    "hex_canvas_projection.steps"
+  ],
+  "reject_inline_fields": [
+    "snapshot",
+    "nodes",
+    "edges",
+    "coverage",
+    "unknown_regions"
+  ],
+  "handoff_fields": [
+    "artifact_pointer",
+    "brief_digest",
+    "inspect_cursor"
+  ],
+  "shrink_order_extension": [
+    "investigation_breakdown_detail",
+    "snapshot_brief",
+    "artifact_pointer"
+  ],
+  "tool_response_caps": {
+    "binary_snapshot_parse": "summary_only",
+    "binary_unpack_workspace": "pointer_only",
+    "ptx_full_coverage_analyze": "summary_only"
+  },
+  "brief_budgets": {
+    "max_anchor_samples": 8,
+    "max_record_family_samples": 8,
+    "max_experiment_head": 4,
+    "max_diagnostics": 12
+  },
+  "snapshot_tool_loop": {
+    "max_tool_loop_iterations": 6,
+    "trigger_markers": [
+      "full coverage",
+      "full-coverage",
+      "unknown region",
+      "unknown regions",
+      "inspektera unknown",
+      "dig deeper",
+      "dig into snapshot",
+      "snapshot brief",
+      "snapshot tool",
+      "hex tools",
+      "region inspect",
+      "binary-unpack",
+      "unpack workspace",
+      "workspace export"
+    ],
+    "continue_markers": [
+      "continue",
+      "resume",
+      "fortsätt",
+      "checkpoint",
+      "next region",
+      "nästa"
+    ],
+    "tool_directive": "You MUST call hex MCP tools (ptx_unknown_region_inspect, binary_read_range, binary_search) using workspace_path and region_id from the brief — not synthesis-only narration."
+  }
+}

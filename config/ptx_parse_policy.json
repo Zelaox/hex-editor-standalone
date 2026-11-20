@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "policy_id": "ptx-parse",
+  "revision": 1,
+  "content_sniff": {
+    "session_markers": [
+      "Pro Tools",
+      "Release",
+      "Pro Tools Session File",
+      "Windows"
+    ],
+    "timecode_anchor_patterns": [
+      "00:00:00:01",
+      "00:00:01:00",
+      "0:00.100"
+    ]
+  },
+  "timecode_extraction": {
+    "regex_patterns": [
+      "\\d\\d:\\d\\d:\\d\\d:\\d\\d",
+      "\\d\\d:\\d\\d:\\d\\d",
+      "\\d\\d:\\d\\d"
+    ],
+    "reference_offsets": [
+      540760,
+      540816,
+      541068,
+      541360,
+      541472,
+      541864,
+      542104,
+      542444,
+      542620,
+      542784,
+      542992,
+      543320,
+      543696,
+      543864,
+      544080,
+      544324,
+      544544,
+      544776
+    ],
+    "reference_point_by_offset": true
+  },
+  "semantic_label_patterns": [
+    "^d_[A-Za-z][A-Za-z0-9_ ]+$",
+    "^[A-Z][A-Za-z0-9' -]+(?: [A-Z][A-Za-z0-9' -]+)+$",
+    "^[A-Za-z][a-z]+(?: [A-Za-z][a-z0-9' -]+)+$"
+  ]
+}

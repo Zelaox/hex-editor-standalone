@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["schema_version","policy_id","revision","artifact_layout","budgets","window_roles","scope","validation_profiles","default_validation_profile_id","terminal_states","logging"]}

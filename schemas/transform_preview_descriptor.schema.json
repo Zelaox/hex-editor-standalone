@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "descriptor_id", "source_sha256", "offset", "length", "steps", "truth_state"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "descriptor_id": {"type": "string"},
+    "source_sha256": {"type": "string"},
+    "parent_sha256": {"type": "string"},
+    "offset": {"type": "integer", "minimum": 0},
+    "length": {"type": "integer", "minimum": 0},
+    "scope_id": {"type": "string"},
+    "proof_id": {"type": "string"},
+    "provider_id": {"type": "string"},
+    "steps": {"type": "array", "items": {"type": "object"}},
+    "truth_state": {"type": "string"},
+    "mapping_kind": {"enum": ["one_to_one", "block"]},
+    "conflict_group": {"type": "string"}
+  },
+  "additionalProperties": true
+}

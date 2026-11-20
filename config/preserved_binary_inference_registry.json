@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "registry_id": "preserved-binary-inference-registry",
+  "revision": 1,
+  "detectors": {
+    "identity": [
+      {
+        "id": "parent-baseline-identity",
+        "module": "src.services.preserved_binary_inference.core",
+        "callable": "verify_parent_baseline_identity"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "coverage-neighbor-boundaries",
+        "module": "src.services.unresolved_inference.core",
+        "callable": "infer_boundaries"
+      }
+    ],
+    "representations": [
+      {
+        "id": "fixed-width-integers",
+        "module": "src.services.unresolved_inference.core",
+        "callable": "infer_representations"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "adjacent-length-count",
+        "module": "src.services.unresolved_inference.core",
+        "callable": "infer_dependencies"
+      }
+    ]
+  },
+  "graph_compiler": {
+    "module": "src.services.unresolved_inference.core",
+    "callable": "compile_binary_semantic_graph"
+  },
+  "ownership_compiler": {
+    "module": "src.services.preserved_binary_inference.core",
+    "callable": "compile_preserved_ownership_proofs"
+  },
+  "gate_runner": {
+    "module": "src.services.preserved_binary_inference.core",
+    "callable": "run_preserved_gates"
+  }
+}

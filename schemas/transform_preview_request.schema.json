@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["source_path", "offset", "length", "mode"],
+  "properties": {
+    "source_path": {"type": "string", "minLength": 1},
+    "offset": {"type": "integer", "minimum": 0},
+    "length": {"type": "integer", "minimum": 0},
+    "mode": {"type": "string", "minLength": 1},
+    "policy_id": {"type": "string"},
+    "full_file": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

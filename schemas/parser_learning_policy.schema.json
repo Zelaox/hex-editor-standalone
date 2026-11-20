@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ParserLearningPolicy",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "artifact_layout", "budgets", "aggregation", "relationships", "candidate_states", "promotion_profiles", "default_promotion_profile_id", "validation", "gemma_packet"]
+}

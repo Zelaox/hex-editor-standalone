@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "operation", "brief_digest", "policy", "hypotheses", "summary", "mechanical_authority", "model_role"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "operation": {"const": "binary_representation_falsify"},
+    "brief_digest": {"type": "string"},
+    "policy": {"type": "object"},
+    "hypotheses": {"type": "array"},
+    "summary": {"type": "object"},
+    "mechanical_authority": {"const": true},
+    "model_role": {"const": "advisory_only"}
+  },
+  "additionalProperties": true
+}

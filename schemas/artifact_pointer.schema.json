@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_root_rel",
+    "operation_id",
+    "manifest_sha256",
+    "snapshot_id",
+    "snapshot_sha256",
+    "format_plugin",
+    "source_sha256",
+    "workspace_schema_version"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "artifact_root_rel": {"type": "string"},
+    "operation_id": {"type": "string"},
+    "manifest_sha256": {"type": "string"},
+    "snapshot_id": {"type": "string"},
+    "snapshot_sha256": {"type": "string"},
+    "format_plugin": {"type": "string"},
+    "source_sha256": {"type": "string"},
+    "workspace_schema_version": {"type": "integer"},
+    "node_count": {"type": "integer"},
+    "unknown_region_count": {"type": "integer"},
+    "coverage_complete": {"type": "boolean"}
+  },
+  "additionalProperties": true
+}

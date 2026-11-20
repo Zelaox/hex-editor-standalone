@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "revision", "source_map", "learning_db_augmentation"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "policy_id": { "type": "string" },
+    "revision": { "type": "integer" },
+    "source_map": { "type": "object" },
+    "learning_db_augmentation": { "type": "object" },
+    "graph_adapter": { "type": "object" }
+  },
+  "additionalProperties": true
+}

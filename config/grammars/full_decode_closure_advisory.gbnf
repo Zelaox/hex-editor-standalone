@@ -1,0 +1,11 @@
+root ::= ws "{" ws rank_action ws "}" ws | ws "{" ws measurement_action ws "}" ws
+rank_action ::= "\"action\"" ws ":" ws "\"rank_existing_candidate\"" ws "," ws "\"selected_candidate_number\"" ws ":" ws integer ws "," ws "\"reason\"" ws ":" ws string
+measurement_action ::= "\"action\"" ws ":" ws "\"request_registered_measurement\"" ws "," ws "\"measurement_numbers\"" ws ":" ws measurement_list ws "," ws "\"reason\"" ws ":" ws string
+measurement_list ::= "[" ws measurement_number ws (ws "," ws measurement_number)* ws "]"
+measurement_number ::= integer
+integer ::= __CANDIDATE_NUMBERS__
+string ::= "\"" chars "\""
+chars ::= char char*
+char ::= [^"\\\x00-\x1f] | "\\" (["\\/bfnrt] | "u" hex hex hex hex)
+hex ::= [0-9a-fA-F]
+ws ::= [ \t\n\r]*

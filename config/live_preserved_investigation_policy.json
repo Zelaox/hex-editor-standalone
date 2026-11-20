@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "policy_id": "live-preserved-investigation",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/live_preserved_investigation_runs",
+  "preserved_inference_policy_path": "config/preserved_binary_inference_policy.json",
+  "preserved_inference_registry_path": "config/preserved_binary_inference_registry.json",
+  "closure": {
+    "maximum_turns": 8,
+    "require_gemma_for_terminal_rank": false
+  },
+  "gemma_live_output_root": "data/artifacts/hex_editor/live_preserved_investigation_gemma_live"
+}

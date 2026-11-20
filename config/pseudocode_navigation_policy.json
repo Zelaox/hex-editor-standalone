@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-pseudocode-navigation",
+  "revision": 4,
+  "forensic_navigation": {
+    "records_tab": "Records and fields",
+    "report_tab": "Evidence report",
+    "dock_title": "Forensic records and evidence",
+    "open_action": "Open saved forensic run...",
+    "headers": ["Record / field", "Type", "Mapping / status"],
+    "verification_failed": "Evidence identity or mapping verification failed",
+    "theme_token": "pseudocode.navigation"
+  },
+  "generation_guard": {
+    "require_matching_source_path": true,
+    "require_loaded_source_map": true,
+    "require_matching_digest": false,
+    "require_matching_source_sha256": false
+  },
+  "line_parser_precedence": "before_source_map",
+  "pseudocode_to_hex": {
+    "triggers": ["caret", "selection"],
+    "selection_anchor": "start_line",
+    "scroll_hex": "center",
+    "highlight_mode": "ranges",
+    "merge_adjacent_ranges": false
+  },
+  "hex_to_pseudocode": {
+    "triggers": ["caret", "selection"],
+    "prefer": "innermost_span",
+    "highlight_lines": true
+  },
+  "debounce_ms": {
+    "pseudocode_to_hex": 16,
+    "hex_to_pseudocode": 16
+  },
+  "hex_highlight_theme_token": "pseudocode.navigation",
+  "status_messages": {
+    "analysis_running": "Pseudocode navigation: analysis is still running",
+    "no_file": "Pseudocode navigation: no file is loaded",
+    "no_pseudocode": "Pseudocode navigation: no rendered pseudocode is available",
+    "source_map_unavailable": "Pseudocode navigation: source map is unavailable; run Disassemble again",
+    "source_path_missing": "Pseudocode navigation: render has no source-file identity; run Disassemble again",
+    "source_path_mismatch": "Pseudocode navigation: pseudocode belongs to a different loaded file",
+    "resolution_error": "Pseudocode navigation: address resolution failed ({error})",
+    "no_offset": "Pseudocode navigation: no file offset for line {line}",
+    "outside_file": "Pseudocode navigation: resolved offset 0x{offset:X} is outside file size 0x{file_size:X}",
+    "goto_failed": "Pseudocode navigation: hex view could not go to 0x{offset:X}",
+    "success": "Pseudocode navigation: moved hex view to file offset 0x{offset:X}",
+    "success_virtual_address": "Pseudocode navigation: mapped VA 0x{virtual_address:X} to file offset 0x{offset:X}"
+  },
+  "fallback_line_parsers": [
+    {
+      "id": "decompiler_file_comment",
+      "pattern": "file=0x([0-9A-Fa-f]+)",
+      "file_offset_group": 1,
+      "coordinate_space": "file_offset"
+    },
+    {
+      "id": "decompiler_virtual_address",
+      "pattern": "va=0x([0-9A-Fa-f]+)",
+      "file_offset_group": 1,
+      "coordinate_space": "virtual_address"
+    },
+    {
+      "id": "unresolved_byte",
+      "pattern": "data_0x([0-9A-Fa-f]+)\\[(\\d+)\\]",
+      "file_offset_group": 1,
+      "length_group": 2,
+      "coordinate_space": "file_offset"
+    },
+    {
+      "id": "semantic_occurrence",
+      "pattern": "\\.offset\\s*=\\s*0x([0-9A-Fa-f]+)(?:ULL)?\\s*,\\s*\\.length\\s*=\\s*(\\d+)U",
+      "file_offset_group": 1,
+      "length_group": 2,
+      "coordinate_space": "file_offset"
+    },
+    {
+      "id": "byte_marker",
+      "pattern": "@byte:0x([0-9A-Fa-f]+)",
+      "file_offset_group": 1,
+      "coordinate_space": "file_offset"
+    }
+  ],
+  "semantic_block_mappings": [
+    {
+      "id": "repeated_plaintext_cluster",
+      "start_pattern": "cluster_(\\d+):\\s+verified\\s+repeated_.*cluster",
+      "identity_group": 1,
+      "end_pattern": "^\\s*};\\s*$",
+      "end_match_ordinal": 2,
+      "anchor_pattern": "\\.offset\\s*=\\s*0x([0-9A-Fa-f]+)(?:ULL)?\\s*,\\s*\\.length\\s*=\\s*(\\d+)U",
+      "file_offset_group": 1,
+      "length_group": 2,
+      "coordinate_space": "file_offset"
+    }
+  ],
+  "pe_address_resolution": {
+    "enabled": true,
+    "module": "src.plugins.pe.address_map"
+  }
+}

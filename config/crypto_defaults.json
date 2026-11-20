@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "xor_start_offset": 16,
+  "found_score_threshold": 8,
+  "min_entropy_drop": 0.35,
+  "min_anchor_hits_for_promotion": 1,
+  "identity_reject": true,
+  "sha256_match_promotes": true,
+  "min_structural_improvements": 1,
+  "min_cross_window_agreement": 2,
+  "stage2_score_gap": 3,
+  "xor_period_inference": {
+    "minimum_period": 3,
+    "maximum_period": 64,
+    "minimum_samples": 32
+  },
+  "key_length_top_k": 2,
+  "xor_lane_sample_bytes": 512,
+  "promotion_policy": {
+    "sha_match_requires_evidence_pass": true
+  },
+  "probe_phases": [
+    {
+      "id": "xor_l2_sweep",
+      "milestones": [
+        "M7"
+      ],
+      "engine": {
+        "xor_sweep": true,
+        "include_known": true,
+        "uses_cursor": true,
+        "single_shot": false,
+        "default_window_ref": "crypto_defaults.xor_start_offset",
+        "sweep_limit_ref": "probe_pipeline.xor_l2_sweep_limit",
+        "batch_ref": "probe_pipeline.exhaustive_key_batch"
+      }
+    },
+    {
+      "id": "xor_repeating_infer",
+      "milestones": [
+        "M8"
+      ],
+      "engine": {
+        "include_infer_xor": true,
+        "include_known": false,
+        "uses_cursor": false,
+        "single_shot": true,
+        "sample_window_ref": "case.decrypt.m8_probe_window"
+      }
+    },
+    {
+      "id": "extended_crypto_byte",
+      "milestones": [
+        "M9"
+      ],
+      "engine": {
+        "include_extended_crypto": true,
+        "include_byte_transforms": true,
+        "include_known": false,
+        "uses_cursor": false,
+        "single_shot": true,
+        "sample_window_ref": "case.decrypt.m8_probe_window"
+      }
+    }
+  ],
+  "probe_pipeline": {
+    "cheap_top_k": 8,
+    "cheap_min_score": 1,
+    "stage2_top_k": 4,
+    "stage2_cap_policy": "min",
+    "default_key_batch": 16,
+    "exhaustive_key_batch": 25600,
+    "sweep_key_limit": 25600,
+    "xor_l2_sweep_limit": 2560,
+    "sweep_single_byte_limit": 256,
+    "log_progress": true,
+    "include_timing": true,
+    "stage2_budget_ms": 5000,
+    "aes_stage2_min_score": 8
+  },
+  "stage2_policy": {
+    "mode": "adaptive",
+    "max_survivors_ref": "probe_pipeline.cheap_top_k",
+    "min_survivors_ref": "probe_pipeline.stage2_top_k",
+    "score_gap_threshold_ref": "stage2_score_gap",
+    "budget_ms_ref": "probe_pipeline.stage2_budget_ms"
+  },
+  "classifier": {
+    "entropy_high_threshold": 7.2,
+    "entropy_low_threshold": 4.5,
+    "skip_crypto_on_compression": true
+  },
+  "scoring_profiles": {
+    "xor": {
+      "signals": [
+        {
+          "id": "marker_hits",
+          "weight": 2,
+          "max_per_marker": 4
+        },
+        {
+          "id": "printable_ratio",
+          "thresholds": [
+            {
+              "min": 0.45,
+              "bonus": 2
+            },
+            {
+              "min": 0.65,
+              "bonus": 2
+            }
+          ]
+        },
+        {
+          "id": "entropy_drop",
+          "thresholds": [
+            {
+              "min": 0.35,
+              "bonus": 1
+            },
+            {
+              "min": 0.75,
+              "bonus": 1
+            }
+          ],
+          "down_weight": true
+        },
+        {
+          "id": "plaintext_profile_similarity",
+          "thresholds": [
+            {
+              "min": 0.72,
+              "bonus": 1
+            },
+            {
+              "min": 0.88,
+              "bonus": 2
+            }
+          ]
+        }
+      ]
+    },
+    "aes": {
+      "signals": [
+        {
+          "id": "marker_hits",
+          "weight": 2,
+          "max_per_marker": 4
+        },
+        {
+          "id": "printable_ratio",
+          "thresholds": [
+            {
+              "min": 0.45,
+              "bonus": 2
+            },
+            {
+              "min": 0.65,
+              "bonus": 2
+            }
+          ]
+        },
+        {
+          "id": "entropy_drop",
+          "thresholds": [
+            {
+              "min": 0.35,
+              "bonus": 2
+            },
+            {
+              "min": 0.75,
+              "bonus": 2
+            }
+          ]
+        },
+        {
+          "id": "plaintext_profile_similarity",
+          "thresholds": [
+            {
+              "min": 0.72,
+              "bonus": 1
+            },
+            {
+              "min": 0.88,
+              "bonus": 2
+            }
+          ]
+        }
+      ]
+    },
+    "byte_arith": {
+      "signals": [
+        {
+          "id": "marker_hits",
+          "weight": 2,
+          "max_per_marker": 4
+        },
+        {
+          "id": "printable_ratio",
+          "thresholds": [
+            {
+              "min": 0.4,
+              "bonus": 2
+            }
+          ]
+        },
+        {
+          "id": "zero_byte_structure",
+          "bonus": 2
+        },
+        {
+          "id": "plaintext_profile_similarity",
+          "thresholds": [
+            {
+              "min": 0.72,
+              "bonus": 1
+            },
+            {
+              "min": 0.88,
+              "bonus": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scoring_signals": [
+    {
+      "id": "marker_hits"
+    },
+    {
+      "id": "known_string_recovery"
+    },
+    {
+      "id": "utf8_validity"
+    },
+    {
+      "id": "ascii_validity"
+    },
+    {
+      "id": "zero_byte_structure"
+    },
+    {
+      "id": "repeating_record_consistency"
+    },
+    {
+      "id": "delimiter_frequency"
+    },
+    {
+      "id": "cross_window_structural_similarity"
+    },
+    {
+      "id": "entropy_drop"
+    },
+    {
+      "id": "plaintext_profile_similarity"
+    }
+  ],
+  "reference_sha256": "",
+  "probe_windows": [
+    {
+      "name": "initial_window",
+      "offset": 0,
+      "length": 4096
+    }
+  ],
+  "milestone_verify_profiles": {
+    "M7": {
+      "promotion_path": [
+        "structured_result",
+        "transform_evidence_present",
+        "promote_allowed_true",
+        "decrypt_candidate_promoted",
+        "artifact_sha_changed"
+      ],
+      "phase_complete_path": [
+        "structured_result",
+        "phase_completed_for_expected_phase",
+        "sweep_exhausted",
+        "no_fatal_probe_error"
+      ],
+      "transform_evidence_required_when": [
+        "stage2_candidates_present",
+        "promotion_path_attempted"
+      ]
+    },
+    "M8": {
+      "promotion_path": [
+        "structured_result",
+        "transform_evidence_present",
+        "cross_window_validation",
+        "artifact_sha_matches_reference_or_structural"
+      ],
+      "phase_complete_path": [
+        "structured_result",
+        "phase_completed_for_expected_phase",
+        "sweep_exhausted",
+        "no_fatal_probe_error"
+      ],
+      "transform_evidence_required_when": [
+        "stage2_candidates_present",
+        "promotion_path_attempted"
+      ]
+    }
+  },
+  "known_keys": [
+    {
+      "name": "ac240_xor_0x94",
+      "key_hex": "94",
+      "algorithm": "xor_single_byte",
+      "provenance": "AC240 family single-byte XOR"
+    },
+    {
+      "name": "basic_xor_0x55",
+      "key_hex": "55",
+      "algorithm": "xor_single_byte",
+      "provenance": "legacy XOR candidate"
+    },
+    {
+      "name": "basic_xor_0xaa",
+      "key_hex": "aa",
+      "algorithm": "xor_single_byte",
+      "provenance": "legacy XOR candidate"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["operation", "graph_id", "results", "truncated"],
+  "properties": {"operation": {"type": "string"}, "graph_id": {"type": "string"}, "results": {"type": "array"}, "truncated": {"type": "boolean"}},
+  "additionalProperties": false
+}

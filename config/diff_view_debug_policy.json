@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "policy_id": "diff-view-debug",
+  "revision": 2,
+  "binary_diff_config": {
+    "required_keys": [
+      "schema_version",
+      "user_state_path",
+      "analysis_chunk_bytes",
+      "changed_range_limit",
+      "visualization_max_samples",
+      "block_size",
+      "alignment_max_shift",
+      "alignment_probe_samples",
+      "alignment_min_improvement",
+      "default_mode",
+      "modes",
+      "pair_policy",
+      "file_dialog"
+    ],
+    "user_state_required_keys": ["schema_version", "path_a", "path_b", "mode_id"]
+  },
+  "manifest": {
+    "source_path_fields": ["source.path", "source_path"],
+    "file_b_path_fields": ["artifact_path", "output.path", "output.candidate_path"],
+    "changed_bytes_fields": ["changed_bytes", "metrics.changed_bytes"]
+  },
+  "investigation": {
+    "decision_filename": "decision.json",
+    "unresolved_bytes_fields": ["unresolved_bytes"],
+    "status_fields": ["status"]
+  },
+  "report": {
+    "mismatch_classes": [
+      "ui_path_b_differs_from_manifest_file_b",
+      "manifest_changed_bytes_differs_from_raw_byte_count",
+      "investigation_unresolved_nonzero_while_raw_diff_zero",
+      "ui_paths_missing_on_disk",
+      "cli_path_b_overrides_user_state"
+    ]
+  }
+}

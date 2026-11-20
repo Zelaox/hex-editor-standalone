@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "baseline_sha256", "variant_sha256", "operation", "expected_change"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "baseline_sha256": {"type": "string"},
+    "variant_sha256": {"type": "string"},
+    "operation": {"type": "string"},
+    "expected_change": {"type": "object"}
+  },
+  "additionalProperties": true
+}

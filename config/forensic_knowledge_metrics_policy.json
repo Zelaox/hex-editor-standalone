@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "policy_id": "forensic-knowledge-metrics",
+  "revision": 1,
+  "display_decimal_places": 2,
+  "display_labels": {
+    "byte_ownership": "Byte ownership",
+    "structural_knowledge": "Structural knowledge",
+    "semantic_knowledge": "Semantic knowledge",
+    "plaintext_readable": "Plaintext-readable"
+  },
+  "structural_admission": {
+    "ownership_gate_id": "structural_metadata",
+    "ownership_gate_value": "passed",
+    "representation_states": ["tested"],
+    "dependency_edge_type": "length_of",
+    "dependency_state": "verified"
+  },
+  "semantic_admission": {
+    "coverage_classes": ["verified_plaintext"],
+    "presentation_tiers": ["semantic_plaintext"],
+    "parser_learning_states": []
+  },
+  "inputs": {
+    "require_full_decode_run": true,
+    "require_preserved_run_when_preserved_bytes": true
+  }
+}

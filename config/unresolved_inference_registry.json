@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "registry_id": "unresolved-inference-registry",
+  "revision": 1,
+  "detectors": {
+    "boundaries": [{"id": "coverage-neighbor-boundaries", "module": "src.services.unresolved_inference.core", "callable": "infer_boundaries"}],
+    "representations": [{"id": "fixed-width-integers", "module": "src.services.unresolved_inference.core", "callable": "infer_representations"}],
+    "dependencies": [{"id": "adjacent-length-count", "module": "src.services.unresolved_inference.core", "callable": "infer_dependencies"}]
+  },
+  "graph_compiler": {"module": "src.services.unresolved_inference.core", "callable": "compile_binary_semantic_graph"},
+  "ownership_compiler": {"module": "src.services.unresolved_inference.core", "callable": "compile_ownership_proofs"},
+  "gate_runner": {"module": "src.services.unresolved_inference.core", "callable": "run_unresolved_gates"}
+}

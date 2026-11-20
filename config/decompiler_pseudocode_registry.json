@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "registry_id": "hex-editor-decompiler-pseudocode",
+  "revision": 1,
+  "architectures": {
+    "x86": {
+      "capstone_arch": "CS_ARCH_X86",
+      "modes": ["CS_MODE_32", "CS_MODE_64"]
+    }
+  },
+  "pseudocode_templates": {
+    "function_header": "verified void region_entry_{region_index}() /* file_offset=0x{offset:X} */ {",
+    "instruction_line": "    /* va=0x{virtual_address:X} file=0x{file_offset:X} */ {mnemonic} {operands};",
+    "function_footer": "}"
+  }
+}

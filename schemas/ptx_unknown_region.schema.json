@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["region_id", "span", "classification", "features", "neighbor_anchor_ids", "confidence"],
+  "properties": {
+    "region_id": {"type": "string"},
+    "span": {"type": "object", "required": ["offset", "length"]},
+    "classification": {"const": "unknown"},
+    "features": {"type": "object"},
+    "neighbor_anchor_ids": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"const": "unknown"}
+  },
+  "additionalProperties": true
+}

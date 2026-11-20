@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "default_profile_id": "pe-generic-discovery",
+  "profiles": [
+    {
+      "profile_id": "pe-generic-discovery",
+      "format_plugin": "pe",
+      "revision": 1,
+      "applies_when": {
+        "layout_facts": ["mz_signature", "pe_signature"],
+        "required_evidence": []
+      },
+      "provenance": {
+        "source": "generic_discovery",
+        "confidence": "experimental"
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "artifact_root": "data/artifacts/hex_editor",
+  "materialization": {
+    "under_subdir": "alternate_scope_gemma_live",
+    "manifest_operation": "materialize_gemma_scope_candidate"
+  },
+  "rails": [
+    {
+      "rail_id": "full_decode",
+      "artifact_subdir": "full_decode_runs",
+      "run_glob": "*/run.json",
+      "identity_roles": ["source", "parent"],
+      "verify_module": "src.services.full_decode",
+      "verify_callable": "verify_full_decode_run",
+      "inspect_callable": "inspect_full_decode_run",
+      "selected_candidate_id_field": "selected_candidate_id",
+      "candidate_manifest_artifact_key": "candidate_manifest",
+      "candidate_bytes_artifact_key": "candidate"
+    },
+    {
+      "rail_id": "unresolved_inference",
+      "artifact_subdir": "unresolved_inference_runs",
+      "run_glob": "*/run.json",
+      "identity_roles": ["source", "parent", "candidate"],
+      "verify_module": "src.services.unresolved_inference",
+      "verify_callable": "verify_unresolved_inference_run",
+      "inspect_callable": "inspect_unresolved_inference_run",
+      "upstream_field": "upstream_run_id",
+      "semantic_graph_artifact_key": "semantic_graph",
+      "graph_index_artifact_key": "semantic_graph_index",
+      "candidate_manifest_artifact_key": "candidate_manifest"
+    },
+    {
+      "rail_id": "local_transform",
+      "artifact_subdir": "local_transform_runs",
+      "run_glob": "*/run.json",
+      "identity_roles": ["source", "parent"],
+      "verify_module": "src.services.local_transform",
+      "verify_callable": "verify_local_transform_run",
+      "inspect_callable": "inspect_local_transform_run",
+      "selected_candidate_id_field": "selected_candidate_id"
+    },
+    {
+      "rail_id": "record_family",
+      "artifact_subdir": "record_family_runs",
+      "run_glob": "*/run.json",
+      "identity_roles": ["source", "parent"],
+      "verify_module": "src.services.record_family",
+      "verify_callable": "verify_record_family_run",
+      "inspect_callable": "inspect_record_family_run",
+      "candidate_ids_field": "candidate_ids"
+    },
+    {
+      "rail_id": "preserved_binary_inference",
+      "artifact_subdir": "preserved_binary_inference_runs",
+      "run_glob": "*/run.json",
+      "identity_roles": ["source", "parent", "candidate"],
+      "verify_module": "src.services.preserved_binary_inference",
+      "verify_callable": "verify_preserved_binary_inference_run",
+      "inspect_callable": "inspect_preserved_binary_inference_run",
+      "upstream_field": "upstream_run_id",
+      "candidate_manifest_artifact_key": "candidate_manifest"
+    }
+  ],
+  "selection": {
+    "newest_verified_strategy": "mtime_desc",
+    "scan_limit": 256
+  },
+  "hash_verification": {
+    "re_read_identities_on_resolve": true,
+    "cross_rail_checks": [
+      {
+        "id": "unresolved_candidate_matches_full_decode",
+        "left_rail": "unresolved_inference",
+        "left_path": "candidate.sha256",
+        "right_rail": "full_decode",
+        "right_path": "candidate.sha256"
+      },
+      {
+        "id": "unresolved_upstream_exists",
+        "left_rail": "unresolved_inference",
+        "left_path": "upstream_run_id",
+        "right_rail": "full_decode",
+        "right_path": "run_id"
+      },
+      {
+        "id": "preserved_upstream_exists",
+        "left_rail": "preserved_binary_inference",
+        "left_path": "upstream_run_id",
+        "right_rail": "full_decode",
+        "right_path": "run_id"
+      }
+    ]
+  }
+}

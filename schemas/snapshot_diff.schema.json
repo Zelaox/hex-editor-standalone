@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SnapshotDiff",
+  "type": "object",
+  "required": ["raw", "parsed", "runtime"],
+  "properties": {
+    "raw": {"type": "object"},
+    "parsed": {"type": "object"},
+    "runtime": {"type": "object"}
+  },
+  "additionalProperties": true
+}

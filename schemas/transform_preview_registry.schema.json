@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "registry_id", "revision", "families"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "registry_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["family_id", "preview_safe", "hook", "length_relation"],
+        "properties": {
+          "family_id": {"type": "string"},
+          "preview_safe": {"type": "boolean"},
+          "module": {"type": ["string", "null"]},
+          "hook": {"type": "string"},
+          "length_relation": {"enum": ["one_to_one", "block", "one_to_many", "many_to_one"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

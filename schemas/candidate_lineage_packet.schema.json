@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate_lineage_packet.schema.json",
+  "title": "CandidateLineagePacket",
+  "type": "object",
+  "required": ["schema_version", "operation", "query_identity", "verified", "chain_ok", "nodes", "edges", "hash_checks", "newest_selector"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "operation": {"type": "string", "const": "candidate_lineage_resolve"},
+    "query_identity": {
+      "type": "object",
+      "required": ["sha256", "role"],
+      "properties": {
+        "sha256": {"type": "string"},
+        "role": {"type": "string"}
+      }
+    },
+    "verified": {"type": "boolean"},
+    "chain_ok": {"type": "boolean"},
+    "nodes": {"type": "array", "items": {"type": "object"}},
+    "edges": {"type": "array", "items": {"type": "object"}},
+    "hash_checks": {"type": "array", "items": {"type": "object"}},
+    "alternates": {"type": "array", "items": {"type": "object"}},
+    "newest_selector": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FieldLayoutCandidate",
+  "allOf": [{"$ref": "evidence_cluster.schema.json"}],
+  "properties": {"rule_kind": {"const": "field_layout"}, "declaration": {"type": "object"}}
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "policy_id": "candidate-debug-report",
+  "revision": 1,
+  "lineage_policy_path": "config/candidate_lineage_policy.json",
+  "full_decode_rail_id": "full_decode",
+  "run_required_keys": [
+    "run_id",
+    "run_root",
+    "source",
+    "parent",
+    "artifacts"
+  ],
+  "identity_required_keys": [
+    "path",
+    "sha256",
+    "size"
+  ],
+  "artifact_keys": {
+    "candidate": "candidate",
+    "candidate_manifest": "candidate_manifest",
+    "gates": "gates",
+    "decision": "decision",
+    "coverage": "coverage",
+    "semantic_report": "semantic_report"
+  },
+  "candidate_sidecar_files": {
+    "proof_spans": "proof_spans.json",
+    "inverse": "inverse.json",
+    "manifest": "manifest.json"
+  },
+  "manifest_fields": {
+    "candidate_id": "candidate_id",
+    "changed_bytes": "changed_bytes",
+    "output_sha256": "output_sha256",
+    "parent_sha256": "parent_sha256",
+    "source_sha256": "source_sha256",
+    "unresolved_bytes": "unresolved_bytes",
+    "gate_statuses": "gate_statuses",
+    "provider_candidate_ids": "selected_provider_candidate_ids",
+    "proof_owned_changed_bytes": "proof_owned_changed_bytes"
+  },
+  "decision_fields": {
+    "status": "status",
+    "selected_candidate_id": "selected_candidate_id",
+    "unresolved_bytes": "unresolved_bytes",
+    "verified_decryption": "verified_decryption",
+    "promotion_eligible": "promotion_eligible",
+    "provider_candidate_ids": "provider_candidate_ids"
+  },
+  "reference_resolution": {
+    "require_reference": true,
+    "fixture_registry_path": "config/hex_regression_fixtures.json",
+    "fixture_reference_role": "reference_ptx"
+  },
+  "analysis": {
+    "sha256_chunk_bytes": 1048576,
+    "scope_confinement_unconfined_sample_limit": 16,
+    "provider_id_sample_limit": 8
+  },
+  "report": {
+    "default_output_path": "data/reports/candidate-debug.md",
+    "json_output_suffix": ".json",
+    "batch_output_path": "data/reports/candidate-debug.md",
+    "batch_json_output_path": "data/reports/candidate-debug.json"
+  },
+  "batch_compare": {
+    "fixture_registry_path": "config/hex_regression_fixtures.json",
+    "default_bundle_id": "",
+    "reference_role": "reference_ptx",
+    "candidate_roles": [],
+    "run_bindings": []
+  }
+}

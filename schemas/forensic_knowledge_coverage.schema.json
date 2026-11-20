@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "file_size",
+    "semantic_coverage_bytes",
+    "structural_only_bytes",
+    "owned_but_unlabeled_bytes",
+    "unowned_bytes",
+    "verified_plaintext_bytes",
+    "percentages",
+    "policy_digest",
+    "inputs",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "file_size": {"type": "integer", "minimum": 1},
+    "semantic_coverage_bytes": {"type": "integer", "minimum": 0},
+    "structural_only_bytes": {"type": "integer", "minimum": 0},
+    "owned_but_unlabeled_bytes": {"type": "integer", "minimum": 0},
+    "unowned_bytes": {"type": "integer", "minimum": 0},
+    "verified_plaintext_bytes": {"type": "integer", "minimum": 0},
+    "percentages": {
+      "type": "object",
+      "required": ["byte_ownership", "structural_knowledge", "semantic_knowledge", "plaintext_readable"],
+      "properties": {
+        "byte_ownership": {"type": "number"},
+        "structural_knowledge": {"type": "number"},
+        "semantic_knowledge": {"type": "number"},
+        "plaintext_readable": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "policy_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "inputs": {"type": "object"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}}
+  }
+}

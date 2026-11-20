@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "policy_id": "forensic-investigation-orchestrator",
+  "revision": 1,
+  "stages": [
+    {
+      "stage_id": "investigation_debug",
+      "module": "src.services.investigation_debug",
+      "callable": "run_investigation_debug_e2e",
+      "requires": ["source_path", "parent_path"]
+    }
+  ]
+}

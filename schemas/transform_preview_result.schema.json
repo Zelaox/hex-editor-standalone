@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "operation",
+    "mode",
+    "state",
+    "source_sha256",
+    "offset",
+    "length",
+    "source_mutated"
+  ],
+  "properties": {
+    "operation": {"const": "transform_preview_inspect"},
+    "mode": {"type": "string"},
+    "state": {"type": "string"},
+    "truth_state": {"type": "string"},
+    "source_sha256": {"type": "string"},
+    "offset": {"type": "integer", "minimum": 0},
+    "length": {"type": "integer", "minimum": 0},
+    "decoded_text": {"type": "string"},
+    "provider": {"type": "string"},
+    "source_mutated": {"const": false},
+    "diagnostics": {"type": "array", "items": {"type": "string"}},
+    "chain_steps": {"type": "array"},
+    "conflicts": {"type": "array"},
+    "composite_spans": {"type": "array"},
+    "composite_rows": {"type": "array"},
+    "coverage_gaps": {"type": "array"},
+    "source_output_mapping": {"type": "object"}
+  },
+  "additionalProperties": true
+}

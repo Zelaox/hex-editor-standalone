@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-pseudocode-ir",
+  "revision": 1,
+  "navigation_policy_path": "config/pseudocode_navigation_policy.json",
+  "source_map": {
+    "byte_marker_prefix": "@byte:",
+    "byte_marker_value": "file_offset_only",
+    "include_line_markers_in_text": true,
+    "max_entries": 4096
+  },
+  "learning_db_augmentation": {
+    "enabled": true,
+    "proof_span_query_limit": 256,
+    "parser_observation_query_limit": 128
+  },
+  "graph_adapter": {
+    "enabled": true,
+    "semantic_policy_path": "config/semantic_pseudocode_policy.json"
+  }
+}

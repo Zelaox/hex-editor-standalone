@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PtxSourceBinding",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "binding_kind",
+    "bound_path",
+    "source_sha256",
+    "source_size",
+    "parser_policy_revision",
+    "pipeline_policy_revision"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "binding_kind": {"enum": ["filesystem", "archive", "materialization"]},
+    "bound_path": {"type": "string"},
+    "source_sha256": {"type": "string", "minLength": 64, "maxLength": 64},
+    "source_size": {"type": "integer", "minimum": 0},
+    "parser_policy_revision": {"type": "integer"},
+    "pipeline_policy_revision": {"type": "integer"},
+    "archive_id": {"type": "string"},
+    "materialization_run_id": {"type": "string"},
+    "materialization_rail": {"type": "string"},
+    "candidate_path": {"type": "string"},
+    "spec_digest": {"type": "string"}
+  },
+  "additionalProperties": true
+}

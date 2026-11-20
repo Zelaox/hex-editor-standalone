@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "registry_id": "hex-editor-format-detect",
+  "revision": 2,
+  "header_read_bytes": 100,
+  "footer_read_bytes": 48,
+  "storage_rules": [
+    {"id": "leveldb_current", "probe": "probe_current", "parser": "leveldb_current", "region_class": "structured_data", "confidence": 0.99, "prefix_hex": "4d414e49464553542d"},
+    {"id": "sqlite_wal", "probe": "probe_wal", "parser": "sqlite_wal_records", "region_class": "structured_data", "confidence": 0.99},
+    {"id": "sqlite", "probe": "probe_sqlite", "parser": "sqlite_records", "region_class": "structured_data", "confidence": 0.99, "prefix_hex": "53514c69746520666f726d6174203300"},
+    {"id": "leveldb_sstable", "probe": "probe_sstable", "parser": "leveldb_sstable", "region_class": "structured_data", "confidence": 0.99, "footer_hex": "57fb808b247547db"},
+    {"id": "leveldb_log", "probe": "probe_writebatch", "parser": "leveldb_log", "region_class": "structured_data", "confidence": 0.95},
+    {"id": "leveldb_manifest", "probe": "probe_manifest", "parser": "leveldb_manifest", "region_class": "structured_data", "confidence": 0.9},
+    {"id": "json", "probe": "probe_json", "parser": "json_records", "region_class": "structured_data", "confidence": 0.95},
+    {"id": "protobuf", "probe": "probe_protobuf", "parser": "protobuf_records", "region_class": "structured_data", "confidence": 0.5, "requires_hint": true}
+  ],
+  "delegate_router_module": "src.runtime.format_router",
+  "delegate_router_callable": "detect_format_plugin",
+  "prefix_rules": [
+    {
+      "format_plugin": "pe",
+      "region_class": "executable_code",
+      "confidence": 0.92,
+      "prefix_hex": "4d5a",
+      "max_leading_skip_bytes": 0
+    },
+    {
+      "format_plugin": "rtf",
+      "region_class": "structured_data",
+      "confidence": 0.95,
+      "prefix_hex": "7b5c727466",
+      "max_leading_skip_bytes": 0
+    },
+    {
+      "format_plugin": "html",
+      "region_class": "structured_data",
+      "confidence": 0.92,
+      "prefix_hex": "3c21444f43545950",
+      "max_leading_skip_bytes": 256,
+      "ascii_case_insensitive": true
+    },
+    {
+      "format_plugin": "html",
+      "region_class": "structured_data",
+      "confidence": 0.9,
+      "prefix_hex": "3c68746d6c",
+      "max_leading_skip_bytes": 256,
+      "ascii_case_insensitive": true
+    }
+  ],
+  "plugin_defaults": {
+    "pe": {
+      "region_class": "executable_code",
+      "confidence": 0.9
+    },
+    "ptx": {
+      "region_class": "structured_data",
+      "confidence": 0.85
+    },
+    "rtf": {
+      "region_class": "structured_data",
+      "confidence": 0.95
+    },
+    "html": {
+      "region_class": "structured_data",
+      "confidence": 0.9
+    },
+    "unknown": {
+      "region_class": "unknown_data",
+      "confidence": 0.0
+    }
+  }
+}

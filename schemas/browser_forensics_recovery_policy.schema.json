@@ -1,0 +1,26 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema", "type":"object", "additionalProperties":false,
+ "required":["schema_version","revision","max_pages","max_candidates","max_text_chars","max_nodes","v8_versions","blink_versions","protected_storage","profiles","viewer_title","fuzz_harnesses","indexer_id","open_action","open_failed"],
+ "properties": {
+  "schema_version":{"const":1},"revision":{"type":"integer","minimum":1},
+  "heap":{"type":"object","additionalProperties":false,"required":["max_numeric_values","max_strings","max_string_chars","max_nodes","max_edges","max_objects"],"properties":{"max_numeric_values":{"type":"integer","minimum":1},"max_strings":{"type":"integer","minimum":1},"max_string_chars":{"type":"integer","minimum":1},"max_nodes":{"type":"integer","minimum":1},"max_edges":{"type":"integer","minimum":1},"max_objects":{"type":"integer","minimum":1}}},
+  "indexer_id":{"type":"string","minLength":1},
+  "open_action":{"type":"string"},"open_failed":{"type":"string"},
+  "fuzz_harnesses":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["v8_value","indexeddb_key"]}},
+  "max_pages":{"type":"integer","minimum":1},"max_candidates":{"type":"integer","minimum":1},"max_text_chars":{"type":"integer","minimum":1},"max_nodes":{"type":"integer","minimum":1},
+  "v8_versions":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"integer","minimum":13,"maximum":16}},
+  "blink_versions":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"integer","minimum":17,"maximum":21}},
+  "protected_storage":{"const":"windows_dpapi_current_user"},"viewer_title":{"type":"string"},
+  "profiles":{"type":"array","minItems":1,"items":{"oneOf":[
+   {"type":"object","additionalProperties":false,"required":["id","revision","adapter","text_fields","identity_fields","thread_fields","sender_fields","timestamp_fields","encrypted_fields","known_fields"],"properties":{
+    "id":{"type":"string"},"revision":{"type":"integer","minimum":1},"adapter":{"const":"structured_object"},
+    "text_fields":{"$ref":"#/$defs/names"},"identity_fields":{"$ref":"#/$defs/names"},"thread_fields":{"$ref":"#/$defs/names"},"sender_fields":{"$ref":"#/$defs/names"},"timestamp_fields":{"$ref":"#/$defs/names"},"encrypted_fields":{"$ref":"#/$defs/names"},"known_fields":{"$ref":"#/$defs/names"}
+   }},
+   {"type":"object","additionalProperties":false,"required":["id","revision","adapter","required_root","origins","origin_key","threads_key","rows_key","text_key","thread_key","label_key","source_key"],"properties":{
+    "id":{"type":"string"},"revision":{"type":"integer","minimum":1},"adapter":{"const":"saved_dom_export"},"required_root":{"type":"object","additionalProperties":{"type":["string","integer","boolean"]}},"origins":{"$ref":"#/$defs/names"},
+    "origin_key":{"type":"string"},"threads_key":{"type":"string"},"rows_key":{"type":"string"},"text_key":{"type":"string"},"thread_key":{"type":"string"},"label_key":{"type":"string"},"source_key":{"type":"string"}
+   }}
+  ]}}
+ },
+ "$defs":{"names":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}}
+}

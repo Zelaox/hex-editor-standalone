@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BinaryWaterfallPayload",
+  "type": "object",
+  "required": ["schema_version", "snapshot_id", "format_plugin", "ranges"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string"},
+    "format_plugin": {"type": "string"},
+    "source_sha256": {"type": "string"},
+    "ranges": {"type": "array"},
+    "coverage_summary": {"type": "object"},
+    "anchors": {"type": "array"},
+    "unknown_regions": {"type": "array"},
+    "record_families": {"type": "array"},
+    "selection_contract": {"type": "object"}
+  },
+  "additionalProperties": true
+}

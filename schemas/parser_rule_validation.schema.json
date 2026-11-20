@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ParserRuleValidation",
+  "type": "object",
+  "required": ["validation_id", "candidate_id", "promotion_profile_id", "checks", "eligible", "review_required", "next_state", "promotion_allowed"],
+  "properties": {
+    "eligible": {"type": "boolean"},
+    "promotion_allowed": {"const": false},
+    "checks": {"type": "object", "additionalProperties": {"type": "boolean"}}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PEExecutionMergeView",
+  "type": "object",
+  "required": ["schema_version", "static_snapshot_id", "runtime_snapshot_id", "crosslinks"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "static_snapshot_id": {"type": "string"},
+    "runtime_snapshot_id": {"type": "string"},
+    "crosslinks": {"type": "array"},
+    "merged_runtime_nodes": {"type": "array"},
+    "static_node_count": {"type": "integer"},
+    "runtime_node_count": {"type": "integer"}
+  },
+  "additionalProperties": true
+}

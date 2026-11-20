@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "policy_id": "binary-decoder-registry",
+  "revision": 1,
+  "policy_ref": "representation_policy.json",
+  "families": [
+    {
+      "id": "text_ascii",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.text_encoding", "decode": "decode_text_candidate"},
+      "parameters": {"encoding": "ascii"}
+    },
+    {
+      "id": "text_utf8",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.text_encoding", "decode": "decode_text_candidate"},
+      "parameters": {"encoding": "utf-8"}
+    },
+    {
+      "id": "text_latin1",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.text_encoding", "decode": "decode_text_candidate"},
+      "parameters": {"encoding": "latin-1"}
+    },
+    {
+      "id": "text_utf16_le",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.text_encoding", "decode": "decode_text_candidate"},
+      "parameters": {"encoding": "utf-16-le"}
+    },
+    {
+      "id": "text_utf16_be",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.text_encoding", "decode": "decode_text_candidate"},
+      "parameters": {"encoding": "utf-16-be"}
+    },
+    {
+      "id": "integer_fixed",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.integer_fixed", "decode": "decode_integer_candidates"},
+      "parameters_ref": "integer_sweep"
+    },
+    {
+      "id": "float_fixed",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.float_fixed", "decode": "decode_float_candidates"},
+      "parameters_ref": "float_sweep"
+    },
+    {
+      "id": "bcd_packed",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.bcd", "decode": "decode_bcd_packed_candidates"},
+      "parameters_ref": "bcd_sweep"
+    },
+    {
+      "id": "bcd_unpacked",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.bcd", "decode": "decode_bcd_unpacked_candidates"},
+      "parameters_ref": "bcd_sweep"
+    },
+    {
+      "id": "bitfield_extract",
+      "layer": "decode",
+      "enabled": true,
+      "impl": {"module": "src.services.decoders.bitfield", "decode": "decode_bitfield_candidates"},
+      "parameters_ref": "bitfield_sweep"
+    },
+    {
+      "id": "varint_leb128",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.varint", "decode": "decode_varint_candidates"},
+      "parameters_ref": null
+    },
+    {
+      "id": "zigzag_varint",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.varint", "decode": "decode_zigzag_candidates"},
+      "parameters_ref": null
+    },
+    {
+      "id": "fixed_point",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.fixed_point", "decode": "decode_fixed_point_candidates"},
+      "parameters_ref": null
+    },
+    {
+      "id": "timestamp_dos",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.timestamp", "decode": "decode_dos_timestamp"},
+      "parameters_ref": null
+    },
+    {
+      "id": "timestamp_filetime",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.timestamp", "decode": "decode_filetime_timestamp"},
+      "parameters_ref": null
+    },
+    {
+      "id": "guid_uuid",
+      "layer": "decode",
+      "enabled": false,
+      "impl": {"module": "src.services.decoders.guid", "decode": "decode_guid_candidates"},
+      "parameters_ref": null
+    }
+  ]
+}

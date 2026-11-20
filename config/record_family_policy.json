@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "policy_id": "evidence-driven-record-family-proof",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/record_family_runs",
+  "seed": {
+    "minimum_printable_run_bytes": 8,
+    "minimum_occurrences": 3,
+    "maximum_seed_bytes": 512,
+    "maximum_seeds": 4096,
+    "maximum_occurrences_per_seed": 128
+  },
+  "neighborhood": {
+    "radii_bytes": [16, 32, 64, 128],
+    "maximum_total_measured_bytes": 4194304
+  },
+  "boundary": {
+    "minimum_shared_prefix_bytes": 1,
+    "minimum_shared_suffix_bytes": 0,
+    "minimum_invariant_prefix_bytes": 1,
+    "minimum_invariant_suffix_bytes": 0,
+    "maximum_envelope_bytes": 1024,
+    "maximum_context_extension_bytes": 512,
+    "maximum_framing_scan_bytes": 32,
+    "holdout_boundary_strategy_preference": ["shared-context", "masked-invariant-context"],
+    "negative_control_samples": 8,
+    "strategies": ["masked-invariant-context", "shared-context", "zero-terminator", "alignment-padding"]
+  },
+  "family": {
+    "minimum_training_occurrences": 2,
+    "minimum_holdout_occurrences": 1,
+    "minimum_occurrence_distance_bytes": 1,
+    "maximum_families": 128,
+    "cluster_features": ["seed_length", "boundary_signature", "transform_relation_signature"]
+  },
+  "materialization": {
+    "maximum_scopes_per_family": 256,
+    "maximum_changed_bytes_per_candidate": 262144,
+    "maximum_combination_size": 8,
+    "maximum_candidates": 512
+  },
+  "validation": {
+    "require_source_preserved": true,
+    "require_parent_preserved": true,
+    "require_inverse_replay": true,
+    "require_holdout": true,
+    "require_printable_non_regression": true,
+    "require_size_preserved": true,
+    "require_transform_lane_consistency": true
+  },
+  "objectives": [
+    {"id": "verified_family_count", "direction": "maximize"},
+    {"id": "heldout_occurrence_count", "direction": "maximize"},
+    {"id": "supported_plaintext_bytes", "direction": "maximize"},
+    {"id": "printable_bytes", "direction": "maximize"},
+    {"id": "unknown_bytes", "direction": "minimize"},
+    {"id": "changed_bytes", "direction": "minimize"}
+  ],
+  "finding_ledger": {
+    "root": "data/artifacts/hex_editor/finding_ledger",
+    "maximum_summary_chars": 256
+  },
+  "model_boundary": {
+    "allowed_actions": ["rank_existing_family", "rank_existing_candidate", "request_registered_measurement"],
+    "forbidden_fields": ["offset", "start", "end", "key_hex", "parameter", "mutation_bytes", "promotion_allowed", "verified_decryption"]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-decompiler-pseudocode",
+  "revision": 1,
+  "registry_path": "config/decompiler_pseudocode_registry.json",
+  "max_instructions_per_region": 96,
+  "max_executable_regions": 16,
+  "include_cfg_comment": true,
+  "section_characteristics_executable": [
+    "IMAGE_SCN_MEM_EXECUTE"
+  ]
+}

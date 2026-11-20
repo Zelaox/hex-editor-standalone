@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "policy_id": "hex-editor-pseudocode-merge",
+  "revision": 1,
+  "precedence": [
+    "ledger_protected",
+    "format_structural",
+    "executable_code",
+    "unknown_data"
+  ],
+  "coalescence": {
+    "enabled": true,
+    "min_emit_span_bytes": 32,
+    "coalesce_adjacent_same_producer": true,
+    "coalesce_adjacent_compatible_producer": true,
+    "compatible_producer_groups": [
+      ["structural"]
+    ],
+    "max_raw_regions_after_classify": 512,
+    "max_producer_switches_per_document": 64,
+    "max_regions_in_pseudocode_view": 128,
+    "micro_gap_fill_producer_id": "unknown",
+    "emit_coalescence_audit": true
+  },
+  "overlap_resolution": {
+    "ledger_blocks_merge": true,
+    "structural_wins_over_unknown_min_confidence": 0.5
+  },
+  "producer_modes": {
+    "decompiler": { "mode": "replace_span" },
+    "structural": { "mode": "replace_span" },
+    "unknown": { "mode": "replace_span", "semantic_fallback": "scoped_only" }
+  },
+  "generic_whole_file_forbidden_when": [
+    {
+      "format_plugin": "pe",
+      "requires_region_class_any": ["executable_code"]
+    }
+  ],
+  "gap_unknown_producer": {
+    "strategy": "bytes_only"
+  }
+}

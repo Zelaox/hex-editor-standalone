@@ -1,0 +1,16 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,
+ "required":["schema_version","revision","max_runs","max_rows","max_output_bytes","history_statuses","candidate_statuses","media"],
+ "properties":{
+  "schema_version":{"const":1},"revision":{"type":"integer","minimum":1},
+  "max_runs":{"type":"integer","minimum":1},"max_rows":{"type":"integer","minimum":1},"max_output_bytes":{"type":"integer","minimum":1},
+  "history_statuses":{"type":"array","items":{"enum":["live_dom_text_observation"]}},
+  "candidate_statuses":{"type":"array","items":{"enum":["structured_message_candidate","saved_dom_text_candidate","unbound_blob_text_candidate"]}},
+  "media":{"type":"object","additionalProperties":false,"required":["max_hits_per_file","max_items","max_media_bytes","max_dimension","max_segments","formats"],"properties":{
+   "max_hits_per_file":{"type":"integer","minimum":1},"max_items":{"type":"integer","minimum":1},"max_media_bytes":{"type":"integer","minimum":1},"max_dimension":{"type":"integer","minimum":1},"max_segments":{"type":"integer","minimum":1},
+   "formats":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","signature_hex","offset","extension","mime","validator"],"properties":{
+    "id":{"type":"string","pattern":"^[a-z0-9_]+$"},"signature_hex":{"type":"string","pattern":"^(?:[0-9a-f]{2})+$"},"offset":{"type":"integer","minimum":0},"extension":{"enum":[".png",".jpg",".webp",".mp4"]},"mime":{"enum":["image/png","image/jpeg","image/webp","video/mp4"]},"validator":{"enum":["png","jpeg","webp","mp4"]}
+   }}}
+  }}
+ }
+}

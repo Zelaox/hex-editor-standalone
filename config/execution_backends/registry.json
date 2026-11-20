@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "backends": [
+    {
+      "backend_id": "local_isolated_runner",
+      "module": "src.plugins.pe.execution_backends.local_isolated_runner",
+      "description": "Trusted-only local subprocess launch with timeout and exit capture; not a sandbox",
+      "allowed_modes": [
+        "trusted"
+      ],
+      "enforces_network_policy": false,
+      "enforces_child_process_policy": false
+    },
+    {
+      "backend_id": "stub_runner",
+      "module": "src.plugins.pe.execution_backends.stub_runner",
+      "description": "Non-executing deterministic observer stub for restricted/sandbox fallback",
+      "allowed_modes": [
+        "restricted",
+        "sandbox"
+      ],
+      "executes_target": false,
+      "enforces_network_policy": true,
+      "enforces_child_process_policy": true
+    }
+  ]
+}

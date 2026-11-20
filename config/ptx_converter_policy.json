@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "policy_id": "ptx-converter",
+  "revision": 1,
+  "enabled": false,
+  "formats": {
+    "cpr": {
+      "enabled": false,
+      "require_verified_clips": true
+    },
+    "studio_one": {
+      "enabled": false,
+      "require_verified_clips": true
+    },
+    "ptx_rebuild": {
+      "enabled": true,
+      "encrypt_default": false
+    }
+  }
+}

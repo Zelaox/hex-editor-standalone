@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "registry_id": "hex-editor-learning-db",
+  "revision": 3,
+  "indexers": [
+    {
+      "indexer_id": "private_message_recovery", "source_kind": "private_message_recovery",
+      "backfill_glob": "message-recovery-*/summary.json",
+      "records": [{"table": "forensic_runs", "upsert_key": ["run_id"], "fields": {
+        "run_id": "run_id", "case_id": "case_id", "capture_id": "capture_id",
+        "analysis_identity_digest": "analysis_identity_digest", "normalized_result_digest": "normalized_result_digest",
+        "status": "status", "artifact_path": "$context.artifact_path"
+      }, "timestamp_fields": {"indexed_at": "insert_only"}}]
+    },
+    {
+      "indexer_id": "browser_forensic_run", "source_kind": "browser_forensic_run",
+      "backfill_glob": "browser-forensics-*/manifest.json",
+      "records": [{"table": "forensic_runs", "upsert_key": ["run_id"], "fields": {
+        "run_id": "run_id", "case_id": "case_id", "capture_id": "capture_id",
+        "analysis_identity_digest": "analysis_identity_digest", "normalized_result_digest": "normalized_result_digest",
+        "status": "status", "artifact_path": "$context.artifact_path"
+      }, "timestamp_fields": {"indexed_at": "insert_only"}}],
+      "source_records": [{"table": "forensic_acquisitions", "upsert_key": ["association_id"], "fields": {
+        "association_id": "$context.association_id", "case_id": "$context.case_id", "capture_id": "$context.capture_id",
+        "source_sha256": "sha256", "relative_path": "path", "acquired_at": "acquired_at"
+      }, "timestamp_fields": {"indexed_at": "insert_only"}}],
+      "finding_records": [{"table": "findings", "upsert_key": ["finding_id"], "fields": {
+        "finding_id": "$context.scoped_finding_id", "kind": "finding_type", "state": "validation_status",
+        "source_sha256": "source_sha256", "span_offset": "$context.span_offset", "span_length": "$context.span_length",
+        "producer_run_id": "$context.run_id", "summary": "finding_type", "artifact_path": "$context.artifact_path"
+      }, "timestamp_fields": {"indexed_at": "insert_only"}}]
+    },
+    {
+      "indexer_id": "rail_run",
+      "source_kind": "rail_run",
+      "lineage_policy_path": "config/candidate_lineage_policy.json",
+      "candidate_manifest_glob": "candidates/*/manifest.json",
+      "records": [
+        {
+          "table": "sources",
+          "upsert_key": ["source_sha256"],
+          "fields": {
+            "source_sha256": "source.sha256",
+            "size_bytes": "source.size",
+            "source_path": "source.path",
+            "format_plugin": "$context.format_plugin"
+          },
+          "timestamp_fields": {
+            "first_indexed_at": "insert_only",
+            "last_indexed_at": "always"
+          }
+        },
+        {
+          "table": "runs",
+          "upsert_key": ["run_id"],
+          "fields": {
+            "run_id": "run_id",
+            "rail_id": "$context.rail_id",
+            "status": "status",
+            "source_sha256": "source.sha256",
+            "parent_sha256": "parent.sha256",
+            "candidate_sha256": "candidate.sha256",
+            "policy_digest": "policy_digest",
+            "registry_digest": "registry_digest",
+            "run_root": "run_root",
+            "run_path": "$context.run_path",
+            "selected_candidate_id": "selected_candidate_id",
+            "verified_decryption": "$context.decision_verified_decryption",
+            "promotion_eligible": "$context.decision_promotion_eligible",
+            "unresolved_bytes": "$context.decision_unresolved_bytes",
+            "upstream_run_id": "upstream_run_id",
+            "owned_preserved_bytes": "$context.decision_owned_preserved_bytes",
+            "unowned_preserved_bytes": "$context.decision_unowned_preserved_bytes",
+            "structural_metadata_bytes": "$context.decision_structural_metadata_bytes"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ],
+      "candidate_records": [
+        {
+          "table": "candidates",
+          "upsert_key": ["candidate_id"],
+          "fields": {
+            "candidate_id": "candidate_id",
+            "rail_id": "$context.rail_id",
+            "run_id": "$context.run_id",
+            "source_sha256": "source_sha256",
+            "parent_sha256": "parent_sha256",
+            "output_sha256": "output_sha256",
+            "changed_bytes": "changed_bytes",
+            "state": "$context.candidate_state",
+            "rule_kind": "$context.rule_kind",
+            "verified_decryption": "verified_decryption",
+            "promotion_eligible": "promotion_eligible",
+            "artifact_path": "artifact_path"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ]
+    },
+    {
+      "indexer_id": "parser_learning_run",
+      "source_kind": "parser_learning_run",
+      "parser_learning_policy_path": "config/parser_learning_policy.json",
+      "records": [
+        {
+          "table": "learning_events",
+          "upsert_key": ["event_id"],
+          "fields": {
+            "event_id": "$context.event_id",
+            "event_kind": "$literal.parser_learning_run",
+            "entity_id": "$context.parser_learning_run_root",
+            "rail_id": "$literal.parser_learning",
+            "payload_json": "$context.payload_json"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ],
+      "observation_records": [
+        {
+          "table": "parser_observations",
+          "upsert_key": ["observation_id"],
+          "fields": {
+            "observation_id": "observation_id",
+            "source_digest": "source_digest",
+            "region_id": "region_id",
+            "decoder_id": "measurement.decoder.decoder_id",
+            "status": "status",
+            "format_plugin": "$context.format_plugin",
+            "parser_learning_run_root": "$context.parser_learning_run_root"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ],
+      "candidate_records": [
+        {
+          "table": "candidates",
+          "upsert_key": ["candidate_id"],
+          "fields": {
+            "candidate_id": "candidate_id",
+            "rail_id": "$literal.parser_learning",
+            "run_id": "$context.parser_learning_run_id",
+            "source_sha256": "$context.source_digest",
+            "parent_sha256": "$literal.null",
+            "output_sha256": "$literal.null",
+            "changed_bytes": "$literal.0",
+            "state": "state",
+            "rule_kind": "rule_kind",
+            "verified_decryption": "$literal.0",
+            "promotion_eligible": "promotion_allowed",
+            "artifact_path": "$context.parser_learning_run_root"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ]
+    },
+    {
+      "indexer_id": "pseudocode_region_map",
+      "source_kind": "pseudocode_region_map",
+      "summary_filename": "summary.json",
+      "records": [
+        {
+          "table": "findings",
+          "upsert_key": ["finding_id"],
+          "fields": {
+            "finding_id": "$context.finding_id",
+            "kind": "pseudocode_region_map",
+            "state": "verified",
+            "source_sha256": "source.sha256",
+            "span_offset": 0,
+            "span_length": "source.size",
+            "producer_run_id": "digest",
+            "summary": "operation",
+            "artifact_path": "region_map_path"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        },
+        {
+          "table": "learning_events",
+          "upsert_key": ["event_id"],
+          "fields": {
+            "event_id": "$context.event_id",
+            "event_kind": "pseudocode_region_map",
+            "entity_id": "digest",
+            "rail_id": "region_routed_pseudocode",
+            "payload_json": "$context.payload_json"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ]
+    },
+    {
+      "indexer_id": "finding_ledger",
+      "source_kind": "finding_ledger",
+      "record_glob": "records/*/*.json",
+      "records": [
+        {
+          "table": "findings",
+          "upsert_key": ["finding_id"],
+          "fields": {
+            "finding_id": "finding_id",
+            "kind": "kind",
+            "state": "state",
+            "source_sha256": "source_sha256",
+            "span_offset": "span.offset",
+            "span_length": "span.length",
+            "producer_run_id": "producer.run_id",
+            "summary": "summary",
+            "artifact_path": "$context.artifact_path"
+          },
+          "timestamp_fields": {
+            "indexed_at": "always"
+          }
+        }
+      ]
+    }
+  ]
+}

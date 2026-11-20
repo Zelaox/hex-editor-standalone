@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "policy_id": "semantic-plaintext-tiers",
+  "revision": 3,
+  "tiers": {
+    "semantic_plaintext": {
+      "presentation_label": "semantic_plaintext",
+      "truth_state": "verified"
+    },
+    "verified_printable_bytes": {
+      "presentation_label": "verified_printable_bytes",
+      "truth_state": "verified"
+    },
+    "repeated_semantic_cluster": {
+      "presentation_label": "repeated_semantic_cluster",
+      "truth_state": "verified"
+    },
+    "repeated_printable_cluster": {
+      "presentation_label": "repeated_printable_cluster",
+      "truth_state": "observed"
+    }
+  },
+  "classification": {
+    "minimum_length": 1,
+    "disallowed_char_pattern": "[`{}|\\\\^~<>]",
+    "gates": {
+      "maximum_dominant_char_ratio": 0.55,
+      "minimum_unique_char_ratio": 0.12,
+      "minimum_alphabetic_or_digit_ratio": 0.35,
+      "maximum_non_alphanumeric_ratio": 0.35
+    },
+    "structured_pattern_sources": [
+      {
+        "config_path": "config/ptx_parse_policy.json",
+        "field_path": "timecode_extraction.regex_patterns"
+      }
+    ],
+    "semantic_label_pattern_sources": [
+      {
+        "config_path": "config/ptx_parse_policy.json",
+        "field_path": "semantic_label_patterns"
+      }
+    ],
+    "require_gates_for_semantic_labels": true
+  },
+  "presentation": {
+    "verified_printable_bytes_comment": "coverage_class=verified_plaintext; printable bytes only — semantic field meaning unknown"
+  },
+  "cluster_preview": {
+    "include_preview_tier": true
+  }
+}

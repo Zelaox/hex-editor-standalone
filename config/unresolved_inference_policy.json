@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "policy_id": "unresolved-byte-ownership-inference",
+  "revision": 1,
+  "artifact_root": "data/artifacts/hex_editor/unresolved_inference_runs",
+  "topology": {
+    "cluster_max_gap_bytes": 16,
+    "maximum_cluster_spans": 256,
+    "context_before_bytes": 32,
+    "context_after_bytes": 32,
+    "alignment_widths": [1, 2, 4, 8, 16]
+  },
+  "inference": {
+    "integer_widths": [1, 2, 4, 8],
+    "endian_modes": ["little", "big"],
+    "maximum_hypotheses_per_span": 32,
+    "minimum_independent_occurrences": 2,
+    "maximum_graph_query_depth": 16,
+    "maximum_graph_query_results": 4096
+  },
+  "materialization": {
+    "maximum_candidates": 256,
+    "maximum_changed_bytes": 1048576,
+    "allow_classification_only_candidates": true
+  },
+  "validation": {
+    "require_upstream_verified": true,
+    "require_source_preserved": true,
+    "require_parent_preserved": true,
+    "require_candidate_preserved": true,
+    "require_coverage_complete": true,
+    "require_graph_valid": true,
+    "require_inverse_replay": true,
+    "require_scope_confinement": true,
+    "require_ascii_roundtrip": true
+  },
+  "objectives": [
+    {"id": "verified_ownership_bytes", "direction": "maximize"},
+    {"id": "verified_graph_edges", "direction": "maximize"},
+    {"id": "unresolved_bytes", "direction": "minimize"},
+    {"id": "changed_bytes", "direction": "minimize"},
+    {"id": "orphan_nodes", "direction": "minimize"}
+  ],
+  "model_boundary": {
+    "allowed_actions": ["rank_existing_hypothesis", "request_registered_measurement", "prioritize_existing_cluster"],
+    "forbidden_fields": ["offset", "start", "end", "length", "bytes", "bytes_hex", "key", "key_hex", "iv", "nonce", "scope", "transform_parameter", "promotion_allowed", "verified_decryption"]
+  }
+}

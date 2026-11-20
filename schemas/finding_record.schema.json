@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "finding_id", "kind", "state", "source_sha256", "span", "producer", "evidence_refs", "counterexample_refs", "supersedes", "summary", "authority"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "finding_id": {"type": "string"},
+    "kind": {"type": "string"},
+    "state": {"enum": ["observed", "supported", "inconclusive", "falsified", "superseded", "experimental_verified", "promoted", "reverted"]},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "span": {"type": "object", "required": ["offset", "length"], "properties": {"offset": {"type": "integer", "minimum": 0}, "length": {"type": "integer", "minimum": 0}}},
+    "producer": {"type": "object"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "counterexample_refs": {"type": "array", "items": {"type": "string"}},
+    "supersedes": {"type": "array", "items": {"type": "string"}},
+    "summary": {"type": "string"},
+    "authority": {"type": "object"}
+  }
+}

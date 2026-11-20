@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "operation", "offset", "length", "representation", "decoder_candidates", "interpreter_signals"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "operation": {"const": "representation_brief"},
+    "offset": {"type": "integer", "minimum": 0},
+    "length": {"type": "integer", "minimum": 0},
+    "representation": {"type": "object"},
+    "decoder_candidates": {"type": "array"},
+    "interpreter_signals": {"type": "array"}
+  },
+  "additionalProperties": true
+}
